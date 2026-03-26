@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 
@@ -9,8 +9,26 @@ import { environment } from '../../environments/environment';
 export class Supabase {
   private supabase: SupabaseClient;
 
+  // Session state
+  currentUser = signal<any>(null);
+  
   constructor() {
+    // Client initialization
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+
+    // Session initialization
+    this.initSession();
+  }
+
+  private async initSession() {
+    // Check if user is already signed in
+    const { data } = await this.supabase.auth.getSession();
+    this.currentUser.set(data.session?.user ?? null);
+
+    // Listen for auth state changes
+    this.supabase.auth.onAuthStateChange((_event, session) => {
+      this.currentUser.set(session?.user ?? null);
+    });
   }
 
   /**
@@ -32,5 +50,15 @@ export class Supabase {
    */
   get auth() {
     return this.supabase.auth;
+  }
+
+  /**
+   * Sign out of Supabase
+   */
+  async signOut() {
+    const { error } = await this.supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error.message);
+    }
   }
 }
