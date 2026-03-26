@@ -5,13 +5,13 @@
 
 <a *ngIf="link" 
    [routerLink]="link" 
-   [class]="getClasses()"
+   [ngClass]="getClasses()"
    class="cursor-pointer no-underline inline-flex items-center justify-center">
   <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
 </a>
 
 <button *ngIf="!link" 
-        [class]="getClasses()" 
+        [ngClass]="getClasses()" 
         type="button">
   <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
 </button>
