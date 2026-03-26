@@ -8,9 +8,15 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
 
   // Check for the session
-  const { data } = await supabase.auth.getSession();
+  let { data: { session } } = await supabase.auth.getSession();
 
-  if (data.session) {
+  if (!session) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const secondCheck = await supabase.auth.getSession();
+    session = secondCheck.data.session;
+  }
+
+  if (session) {
     return true;
   } else {
     router.navigate(['/login']);
