@@ -19,11 +19,6 @@ export class App implements OnInit {
     this.supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth event:', event);
 
-      if (event === 'SIGNED_IN' && session)  {
-        console.log('User signed in, redirecting...');
-        this.router.navigate(['/dashboard']);
-      }
-
       if (event === 'SIGNED_OUT') {
         console.log('User signed out, redirecting...');
         this.router.navigate(['/login']);
