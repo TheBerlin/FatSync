@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { Supabase } from '../../services/supabase';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [CommonModule],
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  public supabase = inject(Supabase);
+  
   isPaid: boolean = false;
   user = {name: "Alex"};
 
