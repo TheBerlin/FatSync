@@ -13,7 +13,10 @@ export class Supabase {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
-  // Sign in with Google
+  /**
+   * Sign in with Google
+   * @returns Supabase Auth response
+   */
   async signInWithGoogle() {
     return await this.supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -21,5 +24,13 @@ export class Supabase {
         redirectTo: `${window.location.origin}/dashboard`
       }
     });
+  }
+
+  /**
+   * Get the Supabase Auth client
+   * @returns Supabase Auth client
+   */
+  get auth() {
+    return this.supabase.auth;
   }
 }
