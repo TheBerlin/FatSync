@@ -1,0 +1,23 @@
+@reference "../../../styles.css";
+
+.cta-section {
+  @apply py-32 px-8 overflow-hidden;
+}
+.cta-container {
+  @apply max-w-5xl mx-auto bg-primary rounded-[3rem] p-12 lg:p-24 text-center relative overflow-hidden;
+}
+.cta-bg-gradient {
+  @apply absolute inset-0 bg-gradient-to-br from-primary to-primary-container rounded-[3rem] opacity-90 transition-opacity;
+}
+.cta-blob {
+  @apply absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl;
+}
+.cta-content {
+  @apply relative z-10 flex flex-col items-center;
+}
+.cta-title {
+  @apply text-4xl lg:text-7xl font-headline font-extrabold text-white mb-10 leading-tight;
+}
+.cta-subtitle {
+  @apply text-white/80 text-xl max-w-2xl mx-auto mb-12;
+}

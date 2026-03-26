@@ -1,0 +1,113 @@
+@reference "../../../styles.css";
+
+.hero-section {
+  @apply relative px-8 py-20 lg:py-32 overflow-hidden;
+}
+.hero-container {
+  @apply max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16;
+}
+.hero-content {
+  @apply flex-1 text-left z-10;
+}
+.hero-badge {
+  @apply inline-block px-4 py-1.5 rounded-full bg-blue-cream/30 text-primary font-label text-xs font-bold tracking-widest uppercase mb-6;
+}
+.hero-title {
+  @apply text-6xl lg:text-8xl font-headline font-extrabold text-on-surface leading-[1.05] tracking-tighter mb-8;
+}
+.hero-description {
+  @apply text-xl text-on-surface-variant max-w-xl leading-relaxed mb-10;
+}
+.hero-actions {
+  @apply flex flex-wrap gap-4;
+}
+.hero-visual {
+  @apply flex-1 relative flex justify-center;
+}
+.hero-blob {
+  @apply absolute rounded-full blur-3xl;
+}
+.hero-blob-top {
+  @apply -top-12 -left-12 w-64 h-64 bg-tertiary-container/20 animate-pulse;
+}
+.hero-blob-bottom {
+  @apply -bottom-12 -right-12 w-80 h-80 bg-blue-cream/20;
+}
+.hero-card {
+  @apply relative bg-surface-container-low p-3 rounded-xl;
+  box-shadow: 0 48px 48px -12px rgba(36, 26, 7, 0.06);
+  width: 100%;
+  max-width: 360px;
+  transition: transform 0.3s ease;
+}
+
+.hero-card:hover {
+  transform: scale(1.15);
+}
+.hero-img {
+  @apply rounded-lg shadow-sm border-0 w-full h-auto object-contain block;
+}
+
+/* Demo Video Modal */
+.demo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(36, 26, 7, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modal-fade-in 0.2s ease;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.demo-modal-box {
+  position: relative;
+  width: 90vw;
+  max-width: 960px;
+  background: #241a07;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 64px 80px -12px rgba(36, 26, 7, 0.5);
+  animation: modal-slide-up 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes modal-slide-up {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.demo-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s ease;
+}
+
+.demo-modal-close:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+.demo-video {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+  background: #000;
+}

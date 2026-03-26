@@ -1,0 +1,26 @@
+@reference "../../../styles.css";
+
+.footer-container {
+  @apply bg-surface-container-low w-full rounded-t-[3rem] mt-20;
+}
+.footer-inner {
+  @apply flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-12 py-16 gap-10;
+}
+.footer-brand {
+  @apply flex flex-col gap-4 items-center md:items-start;
+}
+.footer-logo {
+  @apply text-lg font-bold text-[#241a07] font-headline tracking-tight;
+}
+.footer-tagline {
+  @apply text-sm text-[#241a07]/60 font-body;
+}
+.footer-links {
+  @apply flex flex-wrap justify-center gap-8;
+}
+.footer-link {
+  @apply text-[#241a07]/60 text-sm font-body tracking-wide hover:text-[#86a542] transition-colors opacity-80 hover:opacity-100;
+}
+.footer-copyright {
+  @apply text-sm text-[#241a07]/60 font-body;
+}

@@ -1,0 +1,36 @@
+@reference "../../../styles.css";
+
+.problem-section {
+  @apply bg-surface-container-low py-32 px-8;
+}
+.problem-container {
+  @apply max-w-7xl mx-auto;
+}
+.problem-header {
+  @apply mb-20 text-center;
+}
+.problem-title {
+  @apply text-4xl lg:text-6xl font-headline font-bold tracking-tight mb-6;
+}
+.problem-subtitle {
+  @apply text-on-surface-variant text-lg max-w-2xl mx-auto;
+}
+.problem-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-12;
+}
+.problem-card {
+  transition: transform 0.2s ease;
+  @apply flex flex-col gap-6 p-8 bg-surface-container rounded-lg hover:bg-surface-container-high hover:scale-[1.10] transition-all;
+}
+.problem-card-offset {
+  @apply md:mt-12;
+}
+.problem-icon-container {
+  @apply w-16 h-16 rounded-full bg-error-container/50 flex items-center justify-center text-error mb-4;
+}
+.problem-card-title {
+  @apply text-2xl font-headline font-bold;
+}
+.problem-card-text {
+  @apply text-on-surface-variant leading-relaxed;
+}

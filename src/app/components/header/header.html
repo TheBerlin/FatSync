@@ -1,0 +1,13 @@
+<nav class="nav-container">
+  <div class="nav-inner">
+    <div class="nav-logo">FatSecret x Notion</div>
+    <div class="nav-links">
+      <a [routerLink]="['/']" fragment="process" class="nav-link">Process</a>
+      <a [routerLink]="['/']" fragment="security" class="nav-link">Security</a>
+      <a [routerLink]="['/']" fragment="pricing" class="nav-link">Pricing</a>
+    </div>
+    <div class="nav-actions">
+      <app-button [link]="['/login']" variant="primary" size="sm">Connect</app-button>
+    </div>
+  </div>
+</nav>

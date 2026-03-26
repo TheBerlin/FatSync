@@ -1,0 +1,51 @@
+@reference "../../../styles.css";
+
+.pricing-section {
+  @apply py-32 px-8 relative bg-surface-container-low/50;
+}
+.pricing-container {
+  @apply max-w-7xl mx-auto;
+}
+.pricing-header {
+  @apply text-center mb-16;
+}
+.pricing-title {
+  @apply text-4xl lg:text-6xl font-headline font-bold tracking-tight mb-4;
+}
+.pricing-subtitle {
+  @apply text-on-surface-variant;
+}
+.pricing-box-wrapper {
+  @apply max-w-md mx-auto relative;
+}
+.pricing-badge {
+  @apply absolute -top-4 -right-4 bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full z-20 transform rotate-12;
+}
+.pricing-card {
+  @apply bg-surface-container-lowest p-12 rounded-xl text-center relative z-10 border border-outline-variant/10;
+  box-shadow: 0 48px 48px -12px rgba(36, 26, 7, 0.06);
+}
+.pricing-card-title {
+  @apply font-headline text-primary font-bold uppercase tracking-[0.2em] text-sm;
+}
+.pricing-price-wrapper {
+  @apply mt-8 flex items-baseline justify-center gap-1;
+}
+.pricing-currency {
+  @apply text-4xl font-bold font-headline;
+}
+.pricing-amount {
+  @apply text-8xl font-black font-headline tracking-tighter;
+}
+.pricing-features {
+  @apply mt-12 space-y-5 text-left text-on-surface-variant;
+}
+.pricing-feature {
+  @apply flex items-center gap-3;
+}
+.pricing-feature-icon {
+  @apply text-tertiary-container;
+}
+.pricing-footer-text {
+  @apply mt-6 text-xs text-on-surface-variant/60 font-medium;
+}

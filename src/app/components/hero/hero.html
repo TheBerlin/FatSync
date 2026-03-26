@@ -1,0 +1,36 @@
+<section class="hero-section">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Your FatSecret Data, <span class="text-primary">Naturally</span> in Notion.
+      </h1>
+      <p class="hero-description">
+        Stop juggling tabs. Automatically sync your calories, macros, and weight progress directly to your Notion workspace with editorial-grade precision.
+      </p>
+      <div class="hero-actions">
+        <app-button variant="primary" size="md">Get Started for Free</app-button>
+        <app-button variant="secondary" size="md" icon="play_circle" (click)="openModal()">Watch Demo</app-button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-blob hero-blob-bottom"></div>
+      <div class="hero-card">
+        <img alt="App Screenshot" class="hero-img" src="screenshot.jpg"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video Modal -->
+<div class="demo-modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="demo-modal-box" (click)="$event.stopPropagation()">
+    <button class="demo-modal-close" (click)="closeModal()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <video class="demo-video" controls autoplay>
+      <source src="demo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+

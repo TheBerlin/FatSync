@@ -1,0 +1,22 @@
+@reference "../../../styles.css";
+
+.nav-container {
+  @apply fixed top-0 w-full z-50 bg-[#fff8f3]/80 backdrop-blur-xl shadow-xl shadow-[#241a07]/5;
+}
+.nav-inner {
+  @apply flex justify-between items-center max-w-7xl mx-auto px-8 py-4;
+}
+.nav-logo {
+  @apply text-2xl font-black text-[#241a07] font-headline tracking-tight;
+}
+.nav-links {
+  @apply hidden md:flex items-center space-x-10;
+}
+.nav-link {
+  @apply font-headline font-bold tracking-tight text-[#241a07]/70 hover:text-[#984800] transition-colors active:scale-95 duration-200;
+  cursor: pointer;
+  user-select: none;
+}
+.nav-actions {
+  @apply flex items-center gap-4;
+}

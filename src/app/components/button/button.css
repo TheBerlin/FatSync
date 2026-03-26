@@ -1,0 +1,68 @@
+@reference "../../../styles.css";
+
+.btn-base {
+  @apply rounded-full font-headline font-bold tracking-tight flex items-center justify-center gap-2 cursor-pointer select-none;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-base:active {
+  transform: scale(0.95);
+}
+
+/* Ripple layer */
+.btn-base::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.18);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.btn-base:active::after {
+  opacity: 1;
+}
+
+.btn-primary {
+  @apply bg-primary text-on-primary shadow-lg shadow-primary/20 bg-gradient-to-br from-primary to-primary-container hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-surface-container-high text-on-surface hover:bg-surface-container-highest;
+}
+
+.btn-secondary::after {
+  background: rgba(36, 26, 7, 0.08);
+}
+
+.btn-white {
+  @apply bg-white text-primary shadow-2xl hover:scale-110;
+}
+
+.btn-white::after {
+  background: rgba(152, 72, 0, 0.08);
+}
+
+.btn-sm {
+  @apply px-8 py-2.5 text-base;
+}
+
+.btn-md {
+  @apply px-10 py-5 text-lg;
+}
+
+.btn-lg {
+  @apply px-10 py-5 text-xl;
+}
+
+.btn-xl {
+  @apply px-12 py-6 text-xl font-extrabold;
+}
+
+.btn-full {
+  @apply w-full;
+}

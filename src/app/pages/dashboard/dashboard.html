@@ -1,0 +1,84 @@
+<section class="min-h-screen pt-32 pb-20 px-8 bg-background overflow-hidden relative">
+  <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-tertiary-container/5 rounded-full blur-[120px] -z-10"></div>
+  
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+      <div>
+        <h1 class="text-5xl font-headline font-extrabold tracking-tighter text-on-surface">
+          Your <span class="text-primary text-mango-blade">Metrics.</span>
+        </h1>
+      </div>
+      <div class="bg-surface-container-low px-6 py-3 rounded-2xl editorial-shadow flex items-center gap-4">
+        <div class="w-3 h-3 rounded-full bg-tertiary animate-pulse"></div>
+        <span class="text-sm font-bold text-on-surface-variant">System Status: Active</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <div class="lg:col-span-2 bg-surface-container-low p-10 rounded-[3rem] relative overflow-hidden group">
+        <div class="relative z-10">
+          <h3 class="text-3xl font-headline font-bold mb-8">Data Flow</h3>
+          
+          <div class="flex flex-wrap gap-12 items-center">
+            <div class="relative w-40 h-40 flex items-center justify-center">
+              <svg class="w-full h-full rotate-[-90deg]">
+                <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="12" fill="transparent" class="text-surface-container-highest" />
+                <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="12" fill="transparent" class="text-tertiary" stroke-dasharray="440" stroke-dashoffset="110" stroke-linecap="round" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-4xl font-headline font-black text-on-surface">75%</span>
+                <span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Health Score</span>
+              </div>
+            </div>
+
+            <div class="flex-1 space-y-6">
+              <div class="flex justify-between items-center border-b border-on-surface/5 pb-2">
+                <span class="text-on-surface-variant">Last Sync</span>
+                <span class="font-bold">Today, 08:42 AM</span>
+              </div>
+              <div class="flex justify-between items-center border-b border-on-surface/5 pb-2">
+                <span class="text-on-surface-variant">Data Points</span>
+                <span class="font-bold">2,481 transferred</span>
+              </div>
+              <button class="bg-primary text-white px-8 py-3 rounded-full font-headline font-bold hover:scale-105 transition-all shadow-lg shadow-primary/20">
+                Sync Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-inverse-surface p-10 rounded-[3rem] text-surface flex flex-col justify-between">
+        <h3 class="text-2xl font-headline font-bold mb-8 italic">Integrations</h3>
+        
+        <div class="space-y-6">
+          <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-tertiary flex items-center justify-center text-on-tertiary">
+                <span class="material-symbols-outlined text-sm">check</span>
+              </div>
+              <span class="font-bold">FatSecret</span>
+            </div>
+            <span class="text-xs opacity-60">Connected</span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-dashed border-white/20">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-surface-container-highest/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm text-surface">link</span>
+              </div>
+              <span class="font-bold">Notion</span>
+            </div>
+            <button class="text-xs bg-primary px-3 py-1 rounded-full font-bold">Connect</button>
+          </div>
+        </div>
+
+        <p class="mt-8 text-[10px] uppercase tracking-[0.2em] opacity-40 leading-relaxed">
+          Your tokens are AES-256 Encrypted
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>

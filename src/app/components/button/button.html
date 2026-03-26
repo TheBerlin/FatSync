@@ -1,0 +1,17 @@
+<ng-template #buttonContent>
+  <span *ngIf="icon" class="material-symbols-outlined">{{ icon }}</span>
+  <ng-content></ng-content>
+</ng-template>
+
+<a *ngIf="link" 
+   [routerLink]="link" 
+   [class]="getClasses()"
+   class="cursor-pointer no-underline inline-flex items-center justify-center">
+  <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+</a>
+
+<button *ngIf="!link" 
+        [class]="getClasses()" 
+        type="button">
+  <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+</button>
