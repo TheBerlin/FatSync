@@ -1,18 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join(__dirname, 'src/environments/environment.ts');
+const targetPath = path.join(__dirname, './src/environments/environment.ts');
 
 const envConfigFile = `export const environment = {
-production: true,
-supabaseUrl: '${process.env['SUPABASE_URL'] || ''}',
-supabaseKey: '${process.env['SUPABASE_KEY'] || ''}',
+  production: true,
+  supabaseUrl: '${process.env.SUPABASE_URL || ''}',
+  supabaseKey: '${process.env.SUPABASE_KEY || ''}'
 };
 `;
 
-const dir = path.join(__dirname, './src/environments');
+const dir = path.dirname(targetPath);
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
 }
 
-fs.writeFileSync(targetPath, envConfigFile);
+try {
+    fs.writeFileSync(targetPath, envConfigFile);
+} catch (err) {
+    console.error('Error writing environment file:', err);
+    process.exit(1);
+}
