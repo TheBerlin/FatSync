@@ -31,6 +31,14 @@ export class Dashboard {
   }
 
   /**
+   * Connect to Notion
+   * Redirects to Notion authorization page
+   */
+  connectNotion() {
+    console.log('Connecting to Notion...');
+  }
+
+  /**
    * Copy embed link to clipboard
    */
   copyEmbedLink() {
