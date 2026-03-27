@@ -1,8 +1,7 @@
 <app-header></app-header>
 
-<!-- @if (supabase.userProfile() && !supabase.userProfile().is_premium) { -->
-   @if (isDashboard() && true) {
-  <div class="banner-wrapper ">
+@if (isDashboard() && !supabase.userProfile()?.is_premium) {
+  <div class="banner-wrapper">
     <div class="premium-badge">
       <div class="badge-content">
         <span class="material-symbols-outlined lock-icon">lock</span>
@@ -12,27 +11,28 @@
         </div>
       </div>
       <div class="divider"></div>
-      <button class="upgrade-link" >
-        Upgrade
-      </button>
+      <button class="upgrade-link">Upgrade</button>
     </div>
   </div>
 }
 
 <main>
-  <router-outlet></router-outlet> 
+  <router-outlet></router-outlet>
 </main>
 
 @if (isVisible()) {
-  <button 
-  (click)="scrollToTop()" 
-  class="back-to-top"
-  type="button"
-  aria-label="Вернуться наверх">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-  </svg>
-</button>
+  <button (click)="scrollToTop()" class="back-to-top" type="button" aria-label="Вернуться наверх">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke="currentColor"
+      class="size-6"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+    </svg>
+  </button>
 }
 
 <app-footer></app-footer>
