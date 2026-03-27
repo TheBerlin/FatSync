@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from '../../services/supabase';
 
 @Component({
@@ -9,6 +9,7 @@ import { Supabase } from '../../services/supabase';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
+
 export class Dashboard {
   public supabase = inject(Supabase);
   
@@ -20,5 +21,19 @@ export class Dashboard {
 
   handleSync() {
     console.log("Syncing data...");
+  }
+
+  userProfile = signal<any>(null);
+  /**
+   * Check if user has a premium plan
+   */
+  ngOnInit() {
+    console.log("Checking user profile...");
+    this.supabase.auth.getUser().then(user => {
+      this.userProfile.set(user);
+      console.log(user);
+
+      
+    });
   }
 }
