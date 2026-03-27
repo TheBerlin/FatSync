@@ -14,19 +14,19 @@ import { filter, map } from 'rxjs';
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-  private supabase = inject(Supabase);
+  public supabase = inject(Supabase);
   private router = inject(Router);
 
   isVisible = signal(false);
   private readonly SCROLL_THRESHOLD = 300;
 
-  
   /**
    * Handle window scroll event
-  */
+   */
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const verticalOffset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const verticalOffset =
+      window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 
     this.isVisible.set(verticalOffset > this.SCROLL_THRESHOLD);
   }
@@ -56,9 +56,9 @@ export class App implements OnInit {
 
   isDashboard = toSignal(
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(() => this.router.url.includes('/dashboard'))
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.router.url.includes('/dashboard')),
     ),
-    { initialValue: false }
+    { initialValue: false },
   );
 }
