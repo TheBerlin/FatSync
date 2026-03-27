@@ -5,13 +5,12 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-
 export class Supabase {
   private supabase: SupabaseClient;
 
   // Session state
   currentUser = signal<any>(null);
-  
+
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
     this.initSession();
@@ -39,8 +38,8 @@ export class Supabase {
     return await this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`
-      }
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
     });
   }
 
@@ -62,6 +61,7 @@ export class Supabase {
 
   /**
    * Get user profile
+   * If profile doesn't exist, create it
    * @returns User profile
    */
   userProfile = signal<any>(null);
@@ -72,8 +72,31 @@ export class Supabase {
       .eq('id', userId)
       .single();
 
-      if (!error) this.userProfile.set(data);
-  } 
+    if (error && error.code === 'PGRST116') {
+      const { data: newProfile, error: insertError } = await this.supabase
+        .from('profiles')
+        .insert([
+          {
+            id: userId,
+            email: this.currentUser()?.email,
+            is_premium: true,
+            fs_connected: false,
+            notion_connected: false,
+            widget_token: crypto.randomUUID(),
+          },
+        ])
+        .select()
+        .single();
+
+      if (!insertError) {
+        this.userProfile.set(newProfile);
+      } else {
+        console.error('Error creating profile:', insertError.message);
+      }
+    } else if (!error) {
+      this.userProfile.set(data);
+    }
+  }
 
   private async handleAuthState(session: any) {
     const user = session?.user ?? null;
