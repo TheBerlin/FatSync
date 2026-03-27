@@ -13,21 +13,21 @@ export class Supabase {
   currentUser = signal<any>(null);
   
   constructor() {
-    // Client initialization
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-
-    // Session initialization
     this.initSession();
   }
 
+  /**
+   * Initialize session
+   * Check if user is already signed in
+   * Listen for auth state changes
+   */
   private async initSession() {
-    // Check if user is already signed in
     const { data } = await this.supabase.auth.getSession();
-    this.currentUser.set(data.session?.user ?? null);
+    this.handleAuthState(data.session);
 
-    // Listen for auth state changes
     this.supabase.auth.onAuthStateChange((_event, session) => {
-      this.currentUser.set(session?.user ?? null);
+      this.handleAuthState(session);
     });
   }
 
@@ -57,8 +57,30 @@ export class Supabase {
    */
   async signOut() {
     const { error } = await this.supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error.message);
-    }
+    if (error) console.error('Error signing out:', error.message);
+  }
+
+  /**
+   * Get user profile
+   * @returns User profile
+   */
+  userProfile = signal<any>(null);
+  async getUserProfile(userId: string) {
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .select('is_premium')
+      .eq('id', userId)
+      .single();
+
+      if (!error) this.userProfile.set(data);
+      console.log(this.userProfile);
+  }
+
+  private async handleAuthState(session: any) {
+    const user = session?.user ?? null;
+    this.currentUser.set(user);
+
+    if (user) await this.getUserProfile(user.id);
+    else this.userProfile.set(null);
   }
 }
