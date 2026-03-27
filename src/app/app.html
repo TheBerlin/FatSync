@@ -1,5 +1,24 @@
 <app-header></app-header>
 
+<!-- @if (supabase.userProfile() && !supabase.userProfile().is_premium) { -->
+   @if (isDashboard() && true) {
+  <div class="banner-wrapper ">
+    <div class="premium-badge">
+      <div class="badge-content">
+        <span class="material-symbols-outlined lock-icon">lock</span>
+        <div class="badge-text">
+          <strong>Free Plan</strong>
+          <span>Limited access to connections</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <button class="upgrade-link" >
+        Upgrade
+      </button>
+    </div>
+  </div>
+}
+
 <main>
   <router-outlet></router-outlet> 
 </main>

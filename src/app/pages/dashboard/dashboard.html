@@ -1,6 +1,6 @@
 <section class="min-h-screen pt-32 pb-20 px-8 bg-background overflow-hidden relative">
   <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-tertiary-container/5 rounded-full blur-[120px] -z-10"></div>
-  
+
   <div class="max-w-6xl mx-auto">
     <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
       <div>
@@ -42,7 +42,7 @@
                 <span class="text-on-surface-variant">Data Points</span>
                 <span class="font-bold">2,481 transferred</span>
               </div>
-              <button class="bg-primary text-white px-8 py-3 rounded-full font-headline font-bold hover:scale-105 transition-all shadow-lg shadow-primary/20 cursor-pointer">
+              <button class="bg-primary text-white px-8 py-3 rounded-full font-headline font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 cursor-pointer">
                 Sync Now
               </button>
             </div>
@@ -50,35 +50,115 @@
         </div>
       </div>
 
-      <div class="bg-inverse-surface p-10 rounded-[3rem] text-surface flex flex-col justify-between">
-        <h3 class="text-2xl font-headline font-bold mb-8 italic">Integrations</h3>
-        
-        <div class="space-y-6">
-          <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl">
-            <div class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-full bg-tertiary flex items-center justify-center text-on-tertiary">
-                <span class="material-symbols-outlined text-sm">check</span>
-              </div>
-              <span class="font-bold">FatSecret</span>
-            </div>
-            <span class="text-xs opacity-60">Connected</span>
-          </div>
+      <div class="bg-inverse-surface p-10 rounded-[3rem] text-surface flex flex-col justify-between transition-all duration-500">
+  <h3 class="text-2xl font-headline font-bold mb-8 italic">Integrations</h3>
 
-          <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-dashed border-white/20">
-            <div class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-full bg-surface-container-highest/20 flex items-center justify-center">
-                <span class="material-symbols-outlined text-sm text-surface">link</span>
-              </div>
-              <span class="font-bold">Notion</span>
-            </div>
-            <button class="text-xs bg-primary px-3 py-1 rounded-full font-bold cursor-pointer">Connect</button>
+  <div class="space-y-6">
+    
+    <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl transition-opacity"
+         [class.opacity-30]="!supabase.userProfile()?.is_premium">
+      
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 min-w-[2.5rem] rounded-full bg-white flex items-center justify-center overflow-hidden p-2 shadow-sm">
+          <img src="/fatsecret_logo.png" 
+               class="max-w-8 max-h-8 object-contain" 
+               alt="Logo">
+        </div>
+        <span class="font-bold">FatSecret</span>
+      </div>
+      
+      @if (supabase.userProfile()?.is_premium) {
+        <div class="flex items-center gap-2 text-tertiary">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          <span class="text-xs font-medium">Connected</span>
+        </div>
+      } @else {
+        <span class="material-symbols-outlined text-sm opacity-40">lock</span>
+      }
+    </div>
+
+    <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-dashed border-white/20 transition-opacity"
+         [class.opacity-30]="!supabase.userProfile()?.is_premium">
+      
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 min-w-[2.5rem] rounded-full bg-white flex items-center justify-center overflow-hidden p-2 shadow-sm">
+          <img src="/notion_logo.png" 
+               class="max-w-full max-h-full object-contain" 
+               alt="Logo">
+        </div>
+        <span class="font-bold">Notion</span>
+      </div>
+
+      @if (supabase.userProfile()?.is_premium) {
+        <button class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md">
+          Connect
+        </button>
+      } @else {
+        <span class="material-symbols-outlined text-sm opacity-40">lock</span>
+      }
+    </div>
+  </div>
+
+  @if (!supabase.userProfile()?.is_premium) {
+    <p class="mt-4 text-[10px] text-primary font-bold animate-pulse text-center">
+      Upgrade to Premium to unlock
+    </p>
+  }
+
+  <p class="mt-8 text-[10px] uppercase tracking-[0.2em] opacity-40 leading-relaxed text-center">
+    Your tokens are AES-256 Encrypted
+  </p>
+</div>
+
+<div class="lg:col-span-3 bg-surface-container-low p-10 rounded-[3rem] relative overflow-hidden group border border-on-surface/5">
+  <div class="flex flex-col lg:flex-row gap-12">
+    
+    <div class="flex-1 space-y-8">
+      <div>
+        <h3 class="text-3xl font-headline font-bold mb-2">Widget Control</h3>
+        <p class="text-on-surface-variant text-sm">Some text here...</p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-background/50 rounded-2xl border border-on-surface/5">
+          <span class="font-bold text-sm">Appearance Mode</span>
+          <div class="flex bg-surface-container-highest p-1 rounded-full">
+            <button class="px-4 py-1.5 rounded-full text-xs font-bold bg-primary text-white cursor-pointer">Dark</button>
+            <button class="px-4 py-1.5 rounded-full text-xs font-bold opacity-50 cursor-pointer">Light</button>
           </div>
         </div>
 
-        <p class="mt-8 text-[10px] uppercase tracking-[0.2em] opacity-40 leading-relaxed">
-          Your tokens are AES-256 Encrypted
-        </p>
+        @if (supabase.userProfile()?.is_premium) {
+          <div class="p-6 bg-tertiary/10 rounded-3xl border border-tertiary/20">
+            <span class="text-[10px] uppercase font-black text-tertiary tracking-[0.2em] block mb-4">Your Embed URL</span>
+            <div class="flex gap-2">
+              <code class="flex-1 bg-background/80 p-3 rounded-xl text-xs overflow-hidden text-ellipsis whitespace-nowrap border border-on-surface/5">
+                https://fetti-notion.vercel.app/embed/{{supabase.currentUser()?.id}}
+              </code>
+              <button class="bg-tertiary text-on-tertiary p-3 rounded-xl hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-sm">content_copy</span>
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="p-8 bg-inverse-surface rounded-3xl text-center relative group/btn overflow-hidden">
+            <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+            <span class="material-symbols-outlined text-primary mb-3 text-3xl">workspace_premium</span>
+            <p class="text-sm font-bold text-surface mb-2">Embed Link Locked</p>
+            <p class="text-[10px] text-surface/60 mb-6 px-4">Get Premium to integrate this widget directly into your Notion workspace.</p>
+            <button class="w-full bg-primary text-white py-3 rounded-full font-bold text-xs shadow-lg shadow-primary/30 cursor-pointer">
+              Upgrade to Unlock
+            </button>
+          </div>
+        }
       </div>
+    </div>
+<div class="flex-1 flex flex-col items-center justify-center">
+      <span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-[0.3em] mb-6">Notion Live Preview</span>
+    </div>
+
+  </div>
+</div>
 
     </div>
   </div>

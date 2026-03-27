@@ -1,8 +1,10 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Footer } from './components/footer/footer';
 import { Header } from './components/header/header';
 import { Supabase } from './services/supabase';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -51,4 +53,12 @@ export class App implements OnInit {
   }
 
   protected readonly title = signal('frontend-landing');
+
+  isDashboard = toSignal(
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.router.url.includes('/dashboard'))
+    ),
+    { initialValue: false }
+  );
 }

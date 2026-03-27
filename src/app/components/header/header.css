@@ -2,6 +2,7 @@
 
 .nav-container {
   @apply fixed top-0 w-full z-50 bg-[#fff8f3]/80 backdrop-blur-xl shadow-xl shadow-[#241a07]/5;
+  z-index: 100;
 }
 .nav-inner {
   @apply flex justify-between items-center max-w-7xl mx-auto px-8 py-4;
