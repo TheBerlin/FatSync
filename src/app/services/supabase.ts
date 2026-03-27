@@ -68,13 +68,12 @@ export class Supabase {
   async getUserProfile(userId: string) {
     const { data, error } = await this.supabase
       .from('profiles')
-      .select('is_premium')
+      .select('*')
       .eq('id', userId)
       .single();
 
       if (!error) this.userProfile.set(data);
-      console.log(this.userProfile);
-  }
+  } 
 
   private async handleAuthState(session: any) {
     const user = session?.user ?? null;

@@ -9,31 +9,32 @@ import { Supabase } from '../../services/supabase';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-
 export class Dashboard {
   public supabase = inject(Supabase);
-  
-  isPaid: boolean = false;
-  user = {name: "Alex"};
 
   notionConnected: boolean = true;
   fatSecretConnected: boolean = true;
 
   handleSync() {
-    console.log("Syncing data...");
+    console.log('Syncing data...');
   }
 
-  userProfile = signal<any>(null);
   /**
-   * Check if user has a premium plan
+   * Connect to FatSecret
+   * Redirects to FatSecret authorization page
    */
-  ngOnInit() {
-    console.log("Checking user profile...");
-    this.supabase.auth.getUser().then(user => {
-      this.userProfile.set(user);
-      console.log(user);
+  userProfile = this.supabase.userProfile;
+  connectFatSecret() {
+    const profile = this.userProfile();
+    if (profile?.email)
+      window.location.href = `/api/fs-authorize?email=${encodeURIComponent(profile.email)}`;
+  }
 
-      
-    });
+  /**
+   * Copy embed link to clipboard
+   */
+  copyEmbedLink() {
+    const url = `https://fetti-notion.vercel.app/embed/${this.userProfile()?.widget_token}`;
+    navigator.clipboard.writeText(url);
   }
 }
