@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from '../../services/supabase';
-import { max } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
