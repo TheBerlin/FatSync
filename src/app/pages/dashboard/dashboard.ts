@@ -94,6 +94,10 @@ export class Dashboard {
     this.stopLoading();
   }
 
+  /**
+   * Disconnect Notion
+   * Removes Notion integration from user profile
+   */
   async disconnectNotion() {
     const userId = this.supabase.currentUser()?.id;
     if (!userId) return;
@@ -108,5 +112,21 @@ export class Dashboard {
 
     if (error) console.error('Error disconnecting Notion:', error);
     else console.log('Notion disconnected successfully');
+  }
+
+  async disconnectFatSecret() {
+    const userId = this.supabase.currentUser()?.id;
+    if (!userId) return;
+
+    if (!confirm('Disconnect FatSecret?')) return;
+
+    const { error } = await this.supabase.updateProfile(userId, {
+      fs_access_token: null,
+      fs_secret_token_secret: null,
+      fs_connected: false,
+    });
+
+    if (error) console.error('Error disconnecting FatSecret:', error);
+    else console.log('FatSecret disconnected successfully');
   }
 }

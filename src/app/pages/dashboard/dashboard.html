@@ -100,17 +100,32 @@
 
             @if (supabase.userProfile()?.is_premium) {
               @if (supabase.userProfile()?.fs_connected) {
-                <div class="flex items-center gap-2 text-tertiary">
-                  <span class="material-symbols-outlined text-base">check_circle</span>
-                  <span class="text-xs font-medium">Connected</span>
-                </div>
+                <button
+                  (click)="disconnectFatSecret()"
+                  class="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-tertiary/20 text-tertiary hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-200"
+                  title="Disconnect FatSecret"
+                >
+                  <span class="material-symbols-outlined text-base group-hover:hidden"
+                    >check_circle</span
+                  >
+                  <span class="text-xs font-medium group-hover:hidden">Connected</span>
+
+                  <span class="material-symbols-outlined text-base hidden group-hover:inline"
+                    >link_off</span
+                  >
+                  <span class="text-xs font-medium hidden group-hover:inline">Disconnect</span>
+                </button>
               } @else {
                 <button
                   (click)="connectFatSecret()"
-                  [disabled]="!supabase.userProfile()?.email"
-                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="isFatSecretLoading() || !supabase.userProfile()?.email"
+                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-all text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[75px] min-h-[32px]"
                 >
-                  Connect
+                  @if (isFatSecretLoading()) {
+                    <div class="loader fade-in"></div>
+                  } @else {
+                    <span>Connect</span>
+                  }
                 </button>
               }
             } @else {
