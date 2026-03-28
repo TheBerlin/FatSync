@@ -3,49 +3,86 @@
     <div class="solution-header-layout">
       <div class="solution-title-wrapper">
         <span class="solution-badge">The Solution</span>
-        <h2 class="solution-title">Seamless Integration. <br/><span class="text-tertiary-container">Beautiful Data.</span></h2>
+        <h2 class="solution-title">
+          Seamless Integration. <br /><span class="text-tertiary-container">Beautiful Data.</span>
+        </h2>
       </div>
-      <p class="solution-subtitle">Everything you log in FatSecret appears in your Notion database as if by magic.</p>
+      <p class="solution-subtitle">
+        Everything you log in FatSecret appears in your Notion database as if by magic.
+      </p>
     </div>
     <div class="solution-grid">
       <!-- One-Click Sync -->
       <div class="solution-card solution-card-light group hover:scale-[1.01] transition-transform">
-        <div class="solution-card-content">
+        <div class="solution-card-content relative z-10">
           <h4 class="solution-card-title text-on-surface">One-Click Sync</h4>
-          <p class="solution-card-text text-on-surface-variant">Authorize once, and your data flows forever. No tokens, no complex APIs, just results.</p>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.0" stroke="currentColor" class="size-16 material-symbols-outlined solution-card-icon text-primary group-hover:scale-110">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-          </svg>
+          <p class="solution-card-text text-on-surface-variant">
+            Authorize once, and your data flows forever. No tokens, no complex APIs, just results.
+          </p>
+          <hugeicons-icon
+            [icon]="ArrowIcon"
+            [size]="64"
+            color="#000000"
+            [strokeWidth]="1.5"
+            class="absolute top-10 right-0 opacity-75 group-hover:opacity-85 group-hover:rotate-10 transition-all duration-500"
+          ></hugeicons-icon>
         </div>
       </div>
       <!-- Macro Breakdown -->
-      <div class="solution-card solution-card-vibrant group hover:scale-[1.01] transition-transform">
+      <div
+        class="solution-card solution-card-vibrant group hover:scale-[1.01] transition-transform"
+      >
         <div class="solution-card-content">
           <h4 class="solution-card-title text-on-tertiary-container">Macro Breakdown</h4>
-          <p class="solution-card-text opacity-90 text-on-tertiary-container">Protein, Fats, and Carbs are automatically categorized and ready for Notion visualizations.</p>
-          <span class="material-symbols-outlined solution-card-icon text-on-tertiary-container group-hover:rotate-12">nutrition</span>
+          <p class="solution-card-text opacity-90 text-on-tertiary-container">
+            Protein, Fats, and Carbs are automatically categorized and ready for Notion
+            visualizations.
+          </p>
+          <hugeicons-icon
+            [icon]="FruitIcon"
+            [size]="64"
+            color="#000000"
+            [strokeWidth]="1.5"
+            class="absolute top-10 right-0 opacity-75 group-hover:opacity-85 group-hover:rotate-10 transition-all duration-500"
+          ></hugeicons-icon>
         </div>
       </div>
       <!-- Weight Tracking -->
-      <div class="solution-card-compact solution-card-compact-light group hover:scale-[1.01] transition-transform">
+      <div
+        class="solution-card-compact solution-card-compact-light group hover:scale-[1.01] transition-transform"
+      >
         <div class="solution-icon-wrap solution-icon-wrap-blue text-on-surface">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-          </svg>  
+          <hugeicons-icon
+            [icon]="CalendarIcon"
+            [size]="32"
+            color="#000000"
+            [strokeWidth]="1.5"
+          ></hugeicons-icon>
         </div>
         <div>
           <h4 class="solution-card-compact-title text-on-surface">Weight Tracking</h4>
-          <p class="text-on-surface-variant">Daily weigh-ins synced instantly to your progress journals.</p>
+          <p class="text-on-surface-variant">
+            Daily weigh-ins synced instantly to your progress journals.
+          </p>
         </div>
       </div>
       <!-- Set it and Forget it -->
-      <div class="solution-card-compact solution-card-compact-outline group hover:scale-[1.01] transition-transform">
+      <div
+        class="solution-card-compact solution-card-compact-outline group hover:scale-[1.01] transition-transform"
+      >
         <div class="solution-icon-wrap solution-icon-wrap-amber text-on-secondary-container">
-          <span class="material-symbols-outlined">auto_mode</span>
+          <hugeicons-icon
+            [icon]="AutoModeiIcon"
+            [size]="32"
+            color="#000000"
+            [strokeWidth]="1.5"
+          ></hugeicons-icon>
         </div>
         <div>
           <h4 class="solution-card-compact-title text-on-surface">Set it and Forget it</h4>
-          <p class="text-on-surface-variant">The background worker handles everything. Just focus on your training.</p>
+          <p class="text-on-surface-variant">
+            The background worker handles everything. Just focus on your training.
+          </p>
         </div>
       </div>
     </div>

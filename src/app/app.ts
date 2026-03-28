@@ -5,15 +5,18 @@ import { Header } from './components/header/header';
 import { Supabase } from './services/supabase';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { HugeiconsIconComponent } from '@hugeicons/angular';
+import { ArrowUp02Icon } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [Header, Footer, RouterModule],
+  imports: [Header, Footer, RouterModule, HugeiconsIconComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit {
+  ArrowIcon = ArrowUp02Icon;
   public supabase = inject(Supabase);
   private router = inject(Router);
 
