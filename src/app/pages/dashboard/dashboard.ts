@@ -26,8 +26,10 @@ export class Dashboard {
   userProfile = this.supabase.userProfile;
   connectFatSecret() {
     const profile = this.userProfile();
-    if (profile?.email)
-      window.location.href = `/api/fs-authorize?email=${encodeURIComponent(profile.email)}`;
+    if (profile?.email) {
+      const url = `/api/fs-authorize?email=${encodeURIComponent(profile.email)}`;
+      window.open(url, '_blank');
+    }
   }
 
   /**
@@ -36,8 +38,10 @@ export class Dashboard {
    */
   connectNotion() {
     const profile = this.userProfile();
-    if (profile?.email)
-      window.location.href = `/api/notion-authorize?email=${encodeURIComponent(profile.email)}`;
+    if (profile?.email) {
+      const url = `/api/notion-authorize?email=${encodeURIComponent(profile.email)}`;
+      window.open(url, '_blank');
+    }
   }
 
   /**
