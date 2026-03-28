@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from '../../services/supabase';
 
 @Component({
@@ -38,10 +38,13 @@ export class Dashboard {
    */
   connectNotion() {
     const profile = this.userProfile();
-    if (profile?.email) {
-      const url = `/api/notion-authorize?email=${encodeURIComponent(profile.email)}`;
-      window.open(url, '_blank');
-    }
+    if (!profile?.email) return;
+
+    this.isNotionLoading.set(true);
+
+    const url = `/api/notion-authorize?email=${encodeURIComponent(profile.email)}`;
+
+    window.open(url, '_blank');
   }
 
   /**
@@ -50,5 +53,25 @@ export class Dashboard {
   copyEmbedLink() {
     const url = `https://fetti-notion.vercel.app/embed/${this.userProfile()?.widget_token}`;
     navigator.clipboard.writeText(url);
+  }
+
+  isNotionLoading = signal(false);
+  isFatSecretLoading = signal(false);
+  @HostListener('window:focus', [])
+  async onWindowFocus() {
+    // Если анимация запущена и мы вернулись в окно
+    if (this.isNotionLoading()) {
+      const userId = this.supabase.currentUser()?.id;
+      if (userId) {
+        // Ждем секунду, чтобы бэкенд успел сохранить токены
+        setTimeout(async () => {
+          await this.supabase.getUserProfile(userId);
+          this.isNotionLoading.set(false); // Выключаем только здесь!
+        }, 1000);
+      } else {
+        // Если что-то пошло не так, всё равно выключаем лоадер через время
+        this.isNotionLoading.set(false);
+      }
+    }
   }
 }

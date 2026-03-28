@@ -144,10 +144,14 @@
               } @else {
                 <button
                   (click)="connectNotion()"
-                  [disabled]="!supabase.userProfile()?.email"
-                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="isNotionLoading() || !supabase.userProfile()?.email"
+                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-all text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[70px]"
                 >
-                  Connect
+                  @if (isNotionLoading()) {
+                    <div class="loader fade-in"></div>
+                  } @else {
+                    <span>Connect</span>
+                  }
                 </button>
               }
             } @else {
