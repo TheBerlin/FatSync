@@ -146,8 +146,7 @@
                 <button
                   (click)="connectNotion()"
                   [disabled]="isNotionLoading() || !supabase.userProfile()?.email"
-                  class="relative flex items-center justify-center min-h-[32px] bg-primary text-on-primary rounded-full font-bold shadow-md transition-all duration-300 text-xs disabled:opacity-70"
-                  [class.px-4]="!isNotionLoading()"
+                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-all text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[75px] min-h-[32px]"
                   [class.w-[40px]]="isNotionLoading()"
                   [class.px-0]="isNotionLoading()"
                 >
