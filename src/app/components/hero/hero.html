@@ -5,21 +5,26 @@
         Your FatSecret Data, <span class="text-primary">Naturally</span> in Notion.
       </h1>
       <p class="hero-description">
-        Stop juggling tabs. Automatically sync your calories, macros, and weight progress directly to your Notion workspace with editorial-grade precision.
+        Stop juggling tabs. Automatically sync your calories, macros, and weight progress directly
+        to your Notion workspace with editorial-grade precision.
       </p>
       <div class="hero-actions">
         <app-button variant="primary" size="md">Get Started for Free</app-button>
         <app-button variant="secondary" size="md" (click)="openModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.0" stroke="currentColor" class="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-          </svg>
-          Watch Demo</app-button>
+          <hugeicons-icon
+            [icon]="PlayIcon"
+            [size]="24"
+            color="#000000"
+            [strokeWidth]="2"
+          ></hugeicons-icon>
+          Watch Demo
+        </app-button>
       </div>
     </div>
     <div class="hero-visual">
       <div class="hero-blob hero-blob-bottom"></div>
       <div class="hero-card">
-        <img alt="App Screenshot" class="hero-img" src="screenshot.jpg"/>
+        <img alt="App Screenshot" class="hero-img" src="screenshot.jpg" />
       </div>
     </div>
   </div>
@@ -32,9 +37,8 @@
       <span class="material-symbols-outlined">close</span>
     </button>
     <video class="demo-video" controls autoplay>
-      <source src="demo.mp4" type="video/mp4">
+      <source src="demo.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   </div>
 </div>
-
