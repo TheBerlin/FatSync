@@ -45,3 +45,7 @@ Thumbs.db
 
 # Environment variables
 .env
+src/app/pages/dashboard-test/dashboard-test.css
+src/app/pages/dashboard-test/dashboard-test.ts
+src/app/pages/dashboard-test/dashboard-test.spec.ts
+src/app/pages/dashboard-test/dashboard-test.html
