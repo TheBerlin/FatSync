@@ -1,8 +1,9 @@
 <nav class="nav-container">
   <div class="nav-inner">
     <div class="nav-logo">FatSync</div>
-    
+
     <div class="nav-links">
+      <a [routerLink]="['https://fat-sync.vercel.app']" class="nav-link">Home</a>
       <a [routerLink]="['/']" fragment="process" class="nav-link">Process</a>
       <a [routerLink]="['/']" fragment="security" class="nav-link">Security</a>
       <a [routerLink]="['/']" fragment="pricing" class="nav-link">Pricing</a>
@@ -16,8 +17,8 @@
     (click)="supabase.signOut()" 
     variant="secondary" 
     size="sm">
-    Logout
-  </app-button>
+            Logout
+          </app-button>
 
   <div class="absolute top-full mt-3 px-4 py-2 
               bg-inverse-surface text-surface text-xs font-bold
@@ -26,16 +27,16 @@
               whitespace-nowrap editorial-shadow z-50
               translate-y-[-10px] group-hover:translate-y-0">
     
-    Currently signed in as 
-    <span class="text-primary-container">
-      {{ supabase.currentUser()?.email }}
-    </span>
+            Currently signed in as
+            <span class="text-primary-container">
+              {{ supabase.currentUser()?.email }}
+            </span>
 
     <div class="absolute -top-1 left-1/2 -translate-x-1/2 
                 w-2 h-2 bg-inverse-surface rotate-45">
     </div>
-  </div>
-</div>
+          </div>
+        </div>
       } @else {
         <app-button 
           [link]="['/login']" 
