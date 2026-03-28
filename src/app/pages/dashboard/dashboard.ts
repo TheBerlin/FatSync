@@ -35,7 +35,9 @@ export class Dashboard {
    * Redirects to Notion authorization page
    */
   connectNotion() {
-    console.log('Connecting to Notion...');
+    const profile = this.userProfile();
+    if (profile?.email)
+      window.location.href = `/api/notion-authorize?email=${encodeURIComponent(profile.email)}`;
   }
 
   /**

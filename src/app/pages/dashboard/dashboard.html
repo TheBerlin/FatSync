@@ -107,7 +107,8 @@
               } @else {
                 <button
                   (click)="connectFatSecret()"
-                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md"
+                  [disabled]="!supabase.userProfile()?.email"
+                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Connect
                 </button>
@@ -143,7 +144,8 @@
               } @else {
                 <button
                   (click)="connectNotion()"
-                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md"
+                  [disabled]="!supabase.userProfile()?.email"
+                  class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-transform text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Connect
                 </button>
