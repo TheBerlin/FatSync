@@ -55,21 +55,22 @@ export class Dashboard {
     navigator.clipboard.writeText(url);
   }
 
+  /**
+   * Handle window focus event
+   * Reload user profile to update connection status
+   */
   isNotionLoading = signal(false);
   isFatSecretLoading = signal(false);
   @HostListener('window:focus', [])
   async onWindowFocus() {
-    // Если анимация запущена и мы вернулись в окно
     if (this.isNotionLoading()) {
       const userId = this.supabase.currentUser()?.id;
       if (userId) {
-        // Ждем секунду, чтобы бэкенд успел сохранить токены
         setTimeout(async () => {
           await this.supabase.getUserProfile(userId);
-          this.isNotionLoading.set(false); // Выключаем только здесь!
+          this.isNotionLoading.set(false);
         }, 1000);
       } else {
-        // Если что-то пошло не так, всё равно выключаем лоадер через время
         this.isNotionLoading.set(false);
       }
     }
