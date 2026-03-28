@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from '../../services/supabase';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,9 +42,9 @@ export class Dashboard {
     if (!profile?.email) return;
 
     this.isNotionLoading.set(true);
+    this.startStatusPolling();
 
     const url = `/api/notion-authorize?email=${encodeURIComponent(profile.email)}`;
-
     window.open(url, '_blank');
   }
 
@@ -59,17 +60,37 @@ export class Dashboard {
    * Handle window focus event
    * Reload user profile to update connection status
    */
-  isNotionLoading = signal(false);
-  isFatSecretLoading = signal(false);
-  @HostListener('window:focus', [])
-  async onWindowFocus() {
-    if (this.isNotionLoading()) {
-      const userId = this.supabase.currentUser()?.id;
-      if (userId) {
-        await this.supabase.getUserProfile(userId);
+  private checkStatusInterval: any;
+  private startStatusPolling() {
+    if (this.checkStatusInterval) clearInterval(this.checkStatusInterval);
 
-        this.isNotionLoading.set(false);
+    let attemps = 0;
+    const maxAttemps = 10;
+
+    this.checkStatusInterval = setInterval(async () => {
+      attemps++;
+      const userId = this.supabase.currentUser()?.id;
+
+      if (userId) {
+        const updatedProfile = (await this.supabase.getUserProfile(userId)) as any;
+        if (updatedProfile?.notion_connected) this.stopLoading();
       }
+
+      if (attemps >= maxAttemps) this.stopLoading();
+    }, 2000);
+  }
+
+  isFatSecretLoading = signal(false);
+  isNotionLoading = signal(false);
+  private stopLoading() {
+    this.isNotionLoading.set(false);
+    if (this.checkStatusInterval) {
+      clearInterval(this.checkStatusInterval);
+      this.checkStatusInterval = null;
     }
+  }
+
+  ngOnDestroy() {
+    this.stopLoading();
   }
 }
