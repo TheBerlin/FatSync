@@ -95,8 +95,17 @@ export class Supabase {
         .select()
         .single();
 
-      if (!insertError) this.userProfile.set(newProfile);
-    } else if (!error) this.userProfile.set(data);
+      if (!insertError) {
+        this.userProfile.set(newProfile);
+        return newProfile;
+      }
+
+      return null;
+    } else if (!error) {
+      this.userProfile.set(data);
+      return data;
+    }
+    return null;
   }
 
   /**
@@ -109,5 +118,18 @@ export class Supabase {
 
     if (user) await this.getUserProfile(user.id);
     else this.userProfile.set(null);
+  }
+
+  async updateProfile(userId: string, updates: any) {
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (!error && data) this.userProfile.set(data);
+
+    return { data, error };
   }
 }

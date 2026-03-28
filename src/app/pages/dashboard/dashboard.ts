@@ -93,4 +93,20 @@ export class Dashboard {
   ngOnDestroy() {
     this.stopLoading();
   }
+
+  async disconnectNotion() {
+    const userId = this.supabase.currentUser()?.id;
+    if (!userId) return;
+
+    if (!confirm('Disconnect Notion?')) return;
+
+    const { error } = await this.supabase.updateProfile(userId, {
+      notion_token: null,
+      notion_db_id: null,
+      notion_connected: false,
+    });
+
+    if (error) console.error('Error disconnecting Notion:', error);
+    else console.log('Notion disconnected successfully');
+  }
 }
