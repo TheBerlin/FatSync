@@ -37,13 +37,11 @@ export default async function handler(req, res) {
       process.env.SUPABASE_SERVICE_ROLE_KEY,
     );
 
-    const dbId = data.duplicated_template_id || data.page_id || null;
-
     const { error: updateError } = await supabase
       .from('profiles')
       .update({
-        notion_access_token: data.access_token,
-        notion_database_id: dbId,
+        notion_token: data.access_token,
+        notion_db_id: data.duplicated_template_id || null,
         notion_connected: true,
       })
       .eq('email', email);
