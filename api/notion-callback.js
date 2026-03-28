@@ -16,6 +16,7 @@ export default async function handler(req, res) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Basic ${authHeader}`,
+        'Notion-Version': '2022-06-28',
       },
       body: JSON.stringify({
         grant_type: 'authorization_code',
@@ -26,18 +27,23 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    if (data.error) throw new Error(data.error_description || data.error);
+    if (data.error) {
+      console.error('Notion OAuth Error: ', data);
+      throw new Error(data.error_description || data.error);
+    }
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY,
     );
 
+    const dbId = data.duplicated_template_id || data.page_id || null;
+
     const { error: updateError } = await supabase
       .from('profiles')
       .update({
         notion_access_token: data.access_token,
-        notion_database_id: data.duplicated_template_id || null,
+        notion_database_id: dbId,
         notion_connected: true,
       })
       .eq('email', email);
