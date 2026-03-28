@@ -66,11 +66,8 @@ export class Dashboard {
     if (this.isNotionLoading()) {
       const userId = this.supabase.currentUser()?.id;
       if (userId) {
-        setTimeout(async () => {
-          await this.supabase.getUserProfile(userId);
-          this.isNotionLoading.set(false);
-        }, 1000);
-      } else {
+        await this.supabase.getUserProfile(userId);
+
         this.isNotionLoading.set(false);
       }
     }

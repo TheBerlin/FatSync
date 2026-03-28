@@ -1,31 +1,36 @@
-/* Твой лоадер от Uiverse, адаптированный под размер py-1.5 */
 .loader {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  border-top-color: transparent;
-  animation: rot1 1.2s linear infinite;
-  display: inline-block;
-  vertical-align: middle;
+  border-top-color: #ffffff;
+
+  animation: rot1 1s linear infinite !important;
+
+  display: block;
+  will-change: transform;
 }
 
 @keyframes rot1 {
+  from {
+    transform: rotate(0deg);
+  }
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Мягкое появление без изменения геометрии */
 .fade-in {
-  animation: fadeIn 0.2s ease-in forwards;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: scale(0.5);
   }
   to {
     opacity: 1;
+    transform: scale(1);
   }
 }
