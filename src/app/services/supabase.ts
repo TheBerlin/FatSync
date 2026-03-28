@@ -12,7 +12,13 @@ export class Supabase {
   currentUser = signal<any>(null);
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    });
     this.initSession();
   }
 
@@ -26,7 +32,8 @@ export class Supabase {
     this.handleAuthState(data.session);
 
     this.supabase.auth.onAuthStateChange((_event, session) => {
-      this.handleAuthState(session);
+      if (_event === 'SIGNED_IN' || _event === 'INITIAL_SESSION') this.handleAuthState(session);
+      else if (_event === 'SIGNED_OUT') this.handleAuthState(null);
     });
   }
 
@@ -88,16 +95,14 @@ export class Supabase {
         .select()
         .single();
 
-      if (!insertError) {
-        this.userProfile.set(newProfile);
-      } else {
-        console.error('Error creating profile:', insertError.message);
-      }
-    } else if (!error) {
-      this.userProfile.set(data);
-    }
+      if (!insertError) this.userProfile.set(newProfile);
+    } else if (!error) this.userProfile.set(data);
   }
 
+  /**
+   * Handle auth state change
+   * @param session Supabase auth session
+   */
   private async handleAuthState(session: any) {
     const user = session?.user ?? null;
     this.currentUser.set(user);
