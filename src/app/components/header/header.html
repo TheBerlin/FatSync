@@ -76,7 +76,12 @@
     [class.translate-x-full]="!isMenuOpen"
   >
     <div class="flex flex-col gap-8">
-      <a [routerLink]="['/']" (click)="toggleMenu()" class="text-2xl font-bold">Home</a>
+      <a
+        [routerLink]="['/']"
+        (click)="toggleMenu()"
+        class="text-2xl font-bold text-on-surface-variant"
+        >Home</a
+      >
       <a
         [routerLink]="['/']"
         fragment="process"

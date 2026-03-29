@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class Supabase {
   // Session state
   currentUser = signal<any>(null);
 
-  constructor() {
+  constructor(private router: Router) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
       auth: {
         persistSession: true,
@@ -63,6 +64,7 @@ export class Supabase {
    */
   async signOut() {
     const { error } = await this.supabase.auth.signOut();
+    this.router.navigate(['/']);
     if (error) console.error('Error signing out:', error.message);
   }
 
