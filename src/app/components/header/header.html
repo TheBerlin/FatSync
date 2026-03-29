@@ -107,9 +107,10 @@
           <a
             [routerLink]="['/dashboard']"
             (click)="toggleMenu()"
-            class="text-2xl font-bold text-on-surface-variant"
+            class="text-2xl font-bold text-primary"
             >Dashboard</a
           >
+<<<<<<< HEAD
           <a
             [routerLink]="['/']"
             fragment="pricing"
@@ -124,6 +125,11 @@
               class="flex items-center"
             ></hugeicons-icon
           ></a>
+=======
+          <app-button (click)="supabase.signOut(); toggleMenu()" variant="secondary" size="md"
+            >Logout</app-button
+          >
+>>>>>>> parent of e05439a (design: move auth actions to side menu for better UX)
         </div>
       } @else {
         <app-button [link]="['/login']" (click)="toggleMenu()" variant="primary" size="lg"

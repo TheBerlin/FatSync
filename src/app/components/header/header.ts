@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Login } from '../../pages/login/login';
 import { Supabase } from '../../services/supabase';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
-import { Cancel01Icon, Logout05Icon, Menu01Icon } from '@hugeicons/core-free-icons';
+import { Cancel01Icon, Menu01Icon } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,6 @@ import { Cancel01Icon, Logout05Icon, Menu01Icon } from '@hugeicons/core-free-ico
 export class Header {
   MenuIcon = Menu01Icon;
   CloseIcon = Cancel01Icon;
-  LogoutIcon = Logout05Icon;
   public supabase = inject(Supabase);
 
   isMenuOpen = false;
