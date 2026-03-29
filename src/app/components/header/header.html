@@ -107,12 +107,22 @@
           <a
             [routerLink]="['/dashboard']"
             (click)="toggleMenu()"
-            class="text-2xl font-bold text-primary"
+            class="text-2xl font-bold text-on-surface-variant"
             >Dashboard</a
           >
-          <app-button (click)="supabase.signOut(); toggleMenu()" variant="secondary" size="md"
-            >Logout</app-button
-          >
+          <a
+            [routerLink]="['/']"
+            fragment="pricing"
+            (click)="supabase.signOut()"
+            class="text-2xl font-bold text-red-500"
+            >Logout
+            <hugeicons-icon
+              [icon]="LogoutIcon"
+              [size]="22"
+              color="#000000"
+              [strokeWidth]="2"
+            ></hugeicons-icon
+          ></a>
         </div>
       } @else {
         <app-button [link]="['/login']" (click)="toggleMenu()" variant="primary" size="lg"
