@@ -113,14 +113,15 @@
           <a
             [routerLink]="['/']"
             fragment="pricing"
-            (click)="supabase.signOut()"
-            class="text-2xl font-bold text-red-500"
+            (click)="supabase.signOut(); toggleMenu()"
+            class="text-2xl font-bold text-red-500 flex items-center gap-2"
             >Logout
             <hugeicons-icon
               [icon]="LogoutIcon"
-              [size]="22"
+              [size]="24"
               color="#000000"
               [strokeWidth]="2"
+              calss="flex items-center"
             ></hugeicons-icon
           ></a>
         </div>
