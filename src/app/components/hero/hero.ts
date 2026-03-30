@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Button } from '../button/button';
 import { CommonModule } from '@angular/common';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { PlayIcon } from '@hugeicons/core-free-icons';
+import { Supabase } from '../../services/supabase';
 
 @Component({
   selector: 'app-hero',
@@ -17,6 +18,9 @@ export class Hero {
 
   // Modal
   isModalOpen = false;
+
+  // Supabase
+  supabase = inject(Supabase);
 
   openModal() {
     this.isModalOpen = true;

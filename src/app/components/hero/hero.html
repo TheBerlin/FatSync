@@ -9,7 +9,12 @@
         to your Notion workspace with editorial-grade precision.
       </p>
       <div class="hero-actions">
-        <app-button variant="primary" size="md">Get Started for Free</app-button>
+        <app-button
+          [link]="supabase.currentUser() ? ['/dashboard'] : ['/login']"
+          variant="primary"
+          size="md"
+          >{{ supabase.currentUser() ? 'Go to Dashboard' : 'Get Started for Free' }}</app-button
+        >
         <app-button variant="secondary" size="md" (click)="openModal()">
           <hugeicons-icon
             [icon]="PlayIcon"
@@ -31,14 +36,16 @@
 </section>
 
 <!-- Video Modal -->
-<div class="demo-modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
-  <div class="demo-modal-box" (click)="$event.stopPropagation()">
-    <button class="demo-modal-close" (click)="closeModal()" aria-label="Close">
-      <span class="material-symbols-outlined">close</span>
-    </button>
-    <video class="demo-video" controls autoplay>
-      <source src="demo.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+@if (isModalOpen) {
+  <div class="demo-modal-backdrop" (click)="closeModal()">
+    <div class="demo-modal-box" (click)="$event.stopPropagation()">
+      <button class="demo-modal-close" (click)="closeModal()" aria-label="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <video class="demo-video" controls autoplay playsinline>
+        <source src="demo.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
   </div>
-</div>
+}
