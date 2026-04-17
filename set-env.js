@@ -3,10 +3,12 @@ const path = require('path');
 
 const targetPath = path.join(__dirname, './src/environments/environment.ts');
 
+
+
 const envConfigFile = `export const environment = {
   production: true,
-  supabaseUrl: '${process.env.SUPABASE_URL || ''}',
-  supabaseKey: '${process.env.SUPABASE_KEY || ''}'
+  supabaseUrl: '${process.env.SUPABASE_URL || 'https://placeholder.supabase.co'}',
+  supabaseKey: '${process.env.SUPABASE_KEY || 'placeholder'}'
 };
 `;
 

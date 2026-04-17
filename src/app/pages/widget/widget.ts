@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, HostBinding } from '@angular/core';
+import { Component, inject, OnInit, signal, HostBinding, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
@@ -171,17 +171,17 @@ export class Widget implements OnInit {
     
     // Updates dataset colors
     if (this.lineChartData.datasets) {
-       this.lineChartData.datasets[0].borderColor = isDark ? '#60a5fa' : '#3b82f6';
-       this.lineChartData.datasets[0].pointBackgroundColor = isDark ? '#60a5fa' : '#3b82f6';
-       this.lineChartData.datasets[0].pointBorderColor = isDark ? '#60a5fa' : '#3b82f6';
+       (this.lineChartData.datasets[0] as any).borderColor = isDark ? '#60a5fa' : '#3b82f6';
+       (this.lineChartData.datasets[0] as any).pointBackgroundColor = isDark ? '#60a5fa' : '#3b82f6';
+       (this.lineChartData.datasets[0] as any).pointBorderColor = isDark ? '#60a5fa' : '#3b82f6';
 
-       this.lineChartData.datasets[1].borderColor = isDark ? '#fb923c' : '#f97316';
-       this.lineChartData.datasets[1].pointBackgroundColor = isDark ? '#fb923c' : '#f97316';
-       this.lineChartData.datasets[1].pointBorderColor = isDark ? '#fb923c' : '#f97316';
+       (this.lineChartData.datasets[1] as any).borderColor = isDark ? '#fb923c' : '#f97316';
+       (this.lineChartData.datasets[1] as any).pointBackgroundColor = isDark ? '#fb923c' : '#f97316';
+       (this.lineChartData.datasets[1] as any).pointBorderColor = isDark ? '#fb923c' : '#f97316';
 
-       this.lineChartData.datasets[2].borderColor = isDark ? '#4ade80' : '#22c55e';
-       this.lineChartData.datasets[2].pointBackgroundColor = isDark ? '#4ade80' : '#22c55e';
-       this.lineChartData.datasets[2].pointBorderColor = isDark ? '#4ade80' : '#22c55e';
+       (this.lineChartData.datasets[2] as any).borderColor = isDark ? '#4ade80' : '#22c55e';
+       (this.lineChartData.datasets[2] as any).pointBackgroundColor = isDark ? '#4ade80' : '#22c55e';
+       (this.lineChartData.datasets[2] as any).pointBorderColor = isDark ? '#4ade80' : '#22c55e';
        
        this.lineChartData = { ...this.lineChartData };
     }
