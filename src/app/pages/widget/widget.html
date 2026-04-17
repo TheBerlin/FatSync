@@ -1,61 +1,87 @@
-<div class="widget-container">
-  <div class="pagination-dots">
-    <span [class.active]="view() === 'main'" (click)="view.set('main')"></span>
-    <span [class.active]="view() === 'stats'" (click)="view.set('stats')"></span>
+<div class="widget-viewport">
+  <div class="widget-container" [class.stats-view]="view() === 'stats'">
+    <div class="pagination">
+      <span [class.active]="view() === 'main'" (click)="view.set('main')"></span>
+      <span [class.active]="view() === 'stats'" (click)="view.set('stats')"></span>
+    </div>
+
+    @if (view() === 'main') {
+      <div class="screen">
+        <div class="header-row">
+          <div class="weight-block">
+            <span class="label">Current Weight</span>
+            <div class="value">{{ currentWeight() }} <small>kg</small></div>
+          </div>
+          <hugeicons-icon [icon]="SunIcon" class="sun-icon"></hugeicons-icon>
+        </div>
+
+        <div class="calories-main">
+          <div class="cal-display">
+            <span class="current">{{ actualCalories() }}</span>
+            <span class="sep">/</span>
+            <span class="total">{{ goals()?.calories || 2230 }}</span>
+          </div>
+          <div class="label">Calories today</div>
+        </div>
+
+        <div class="macros-circles">
+          <div class="macro-item blue">
+            <div class="ring">
+              <span>{{ metrics()[0]?.carbs || 105 }}g</span><small>42%</small>
+            </div>
+            <span>Carbs</span>
+          </div>
+          <div class="macro-item orange">
+            <div class="ring">
+              <span>{{ metrics()[0]?.fat || 35 }}g</span><small>50%</small>
+            </div>
+            <span>Fats</span>
+          </div>
+          <div class="macro-item green">
+            <div class="ring">
+              <span>{{ metrics()[0]?.protein || 85 }}g</span><small>57%</small>
+            </div>
+            <span>Proteins</span>
+          </div>
+        </div>
+
+        <div class="action-area">
+          <button class="update-btn" (click)="syncWithFatSecret()">Update now</button>
+          <hugeicons-icon
+            [icon]="SettingsIcon"
+            class="settings-icon"
+            (click)="toggleSettings()"
+          ></hugeicons-icon>
+        </div>
+        <div class="footer-text">Updated a moment ago</div>
+      </div>
+    } @else {
+      <div class="screen stats-screen">
+        <div class="stats-header">
+          <h2>Statistics</h2>
+          <div class="period-selector">Last Week <i class="chevron-down"></i></div>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-placeholder">
+            <div class="y-axis">
+              <span>240</span><span>180</span><span>120</span><span>60</span><span>0</span>
+            </div>
+            <div class="chart-line-svg"></div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <span class="dot blue"></span> Carbs <span class="dot orange"></span> Fat
+          <span class="dot green"></span> Protein
+        </div>
+
+        <hugeicons-icon
+          [icon]="SettingsIcon"
+          class="settings-icon-stats"
+          (click)="toggleSettings()"
+        ></hugeicons-icon>
+      </div>
+    }
   </div>
-
-  @if (view() === 'main') {
-    <div class="main-screen">
-      <div class="top-row">
-        <div class="weight-info">
-          <span class="label">Current Weight</span>
-          <div class="value">{{ currentWeight() }} <small>kg</small></div>
-        </div>
-        <hugeicons-icon [icon]="SunIcon" class="theme-icon"></hugeicons-icon>
-      </div>
-
-      <div class="calories-section">
-        <div class="calories-display">
-          <span class="actual">{{ actualCalories() }}</span>
-          <span class="separator">/</span>
-          <span class="goal">{{ goals()?.calories || 2230 }}</span>
-        </div>
-        <span class="label">Calories today</span>
-      </div>
-
-      <div class="macros-grid">
-        <div class="macro-item">
-          <div class="progress-circle carbs">
-            <span class="macro-val">{{ metrics()[0]?.carbs || 105 }}g</span>
-          </div>
-          <span class="macro-label">Carbs</span>
-        </div>
-        <div class="macro-item">
-          <div class="progress-circle fats">
-            <span class="macro-val">{{ metrics()[0]?.fat || 35 }}g</span>
-          </div>
-          <span class="macro-label">Fats</span>
-        </div>
-        <div class="macro-item">
-          <div class="progress-circle proteins">
-            <span class="macro-val">{{ metrics()[0]?.protein || 85 }}g</span>
-          </div>
-          <span class="macro-label">Proteins</span>
-        </div>
-      </div>
-
-      <button class="update-btn" (click)="syncWithFatSecret()">Update now</button>
-      <div class="last-updated">Updated a moment ago</div>
-    </div>
-  } @else if (view() === 'stats') {
-    <div class="stats-screen">
-      <h2>Statistics</h2>
-      <div class="chart-container">
-        <div class="placeholder-chart"></div>
-      </div>
-    </div>
-  }
-
-  <hugeicons-icon [icon]="SettingsIcon" class="settings-btn" (click)="toggleSettings()">
-  </hugeicons-icon>
 </div>
