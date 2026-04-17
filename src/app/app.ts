@@ -20,13 +20,16 @@ export class App implements OnInit {
   public supabase = inject(Supabase);
   private router = inject(Router);
 
-  isWidgetRoute = toSignal(
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      map(() => this.router.url.includes('/widget') || this.router.url.includes('/embed')),
-    ),
-    { initialValue: false },
-  );
+  isWidgetRoute = signal(false);
+
+  constructor() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        const url = event.urlAfterRedirects || event.url;
+        this.isWidgetRoute.set(url.includes('/widget') || url.includes('/embed'));
+      });
+  }
 
   isDashboard = toSignal(
     this.router.events.pipe(
