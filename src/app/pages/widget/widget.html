@@ -1,0 +1,113 @@
+<div class="widget-layout">
+  @if (isLoading()) {
+    <div class="loading-state">Загрузка данных...</div>
+  } @else {
+    @if (view() === 'main') {
+      <div class="screen fade-in">
+        <div class="top-row">
+          <div class="weight-info">
+            <span class="label">Current Weight</span>
+            <div class="value">{{ currentWeight() }} kg</div>
+          </div>
+          <button class="icon-btn" (click)="toggleStats()">
+            <span class="material-symbols-outlined">analytics</span>
+          </button>
+        </div>
+
+        <div class="main-content">
+          <div class="calories-circle">
+            <h1>
+              {{ actualCalories() }}<span class="target">/{{ goals()?.target_calories }}</span>
+            </h1>
+            <p>Calories today</p>
+          </div>
+
+          <div class="macros-row">
+            <div class="macro">
+              <div class="circle carb"></div>
+              <span>Carbs</span>
+            </div>
+            <div class="macro">
+              <div class="circle fat"></div>
+              <span>Fats</span>
+            </div>
+            <div class="macro">
+              <div class="circle protein"></div>
+              <span>Proteins</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (view() === 'settings') {
+      <div class="screen fade-in">
+        <h2 class="screen-title">Target Settings</h2>
+        <div class="settings-form">
+          <div class="input-group">
+            <label>Calories Goal</label>
+            <input type="number" #cal [value]="goals()?.target_calories" />
+          </div>
+          <div class="input-grid">
+            <div class="input-group">
+              <label>Protein (g)</label>
+              <input type="number" #prot [value]="goals()?.target_protein" />
+            </div>
+            <div class="input-group">
+              <label>Fats (g)</label>
+              <input type="number" #fat [value]="goals()?.target_fat" />
+            </div>
+            <div class="input-group">
+              <label>Carbs (g)</label>
+              <input type="number" #carb [value]="goals()?.target_carbs" />
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn-secondary" (click)="view.set('main')">Cancel</button>
+            <button
+              class="btn-primary"
+              (click)="
+                saveSettings({
+                  target_calories: cal.value,
+                  target_protein: prot.value,
+                  target_fat: fat.value,
+                  target_carbs: carb.value,
+                })
+              "
+            >
+              Save Goals
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (view() === 'stats') {
+      <div class="screen fade-in">
+        <div class="stats-header">
+          <button (click)="view.set('main')">← Back</button>
+          <select class="dropdown">
+            <option>This Week</option>
+            <option>Month</option>
+          </select>
+        </div>
+
+        <div class="chart-container">
+          <p style="text-align: center; opacity: 0.5">[ Здесь будет график с 3 линиями ]</p>
+        </div>
+      </div>
+    }
+
+    <div class="widget-footer">
+      <div class="spacer"></div>
+      <div class="sync-section">
+        <button class="update-btn" (click)="syncWithFatSecret()">Update now</button>
+        <span class="last-sync">Updated a moment ago</span>
+      </div>
+      <button class="settings-trigger" (click)="toggleSettings()">
+        <hugeicons-icon [icon]="SettingsIcon" size="24"></hugeicons-icon>
+      </button>
+    </div>
+  }
+</div>

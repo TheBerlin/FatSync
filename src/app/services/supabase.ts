@@ -134,4 +134,35 @@ export class Supabase {
 
     return { data, error };
   }
+
+  async getProfileByWidgetToken(token: string) {
+    return await this.supabase.from('profiles').select('*').eq('widget_token', token).single();
+  }
+
+  async getUserGoals(userId: string) {
+    return await this.supabase.from('goals').select('*').eq('user_id', userId).single();
+  }
+
+  async getDailyMetrics(userId: string) {
+    return await this.supabase
+      .from('daily_metrics')
+      .select('*')
+      .eq('user_id', userId)
+      .order('data', { ascending: false })
+      .limit(30); // Get data for the last 30 days
+  }
+
+  async updateUserSettings(userId: string, goals: any) {
+    return await this.supabase.from('user_goals').upsert(
+      {
+        user_id: userId,
+        target_calories: goals.target_calories,
+        target_protein: goals.target_protein,
+        target_fat: goals.target_fat,
+        target_carbs: goals.target_carbs,
+        updated_at: new Date(),
+      },
+      { onConflict: 'user_id' },
+    );
+  }
 }

@@ -20,6 +20,22 @@ export class App implements OnInit {
   public supabase = inject(Supabase);
   private router = inject(Router);
 
+  isWidgetRoute = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.router.url.includes('/widget')),
+    ),
+    { initialValue: false },
+  );
+
+  isDashboard = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.router.url.includes('/dashboard')),
+    ),
+    { initialValue: false },
+  );
+
   isVisible = signal(false);
   private readonly SCROLL_THRESHOLD = 300;
 
@@ -56,12 +72,4 @@ export class App implements OnInit {
   }
 
   protected readonly title = signal('frontend-landing');
-
-  isDashboard = toSignal(
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      map(() => this.router.url.includes('/dashboard')),
-    ),
-    { initialValue: false },
-  );
 }
