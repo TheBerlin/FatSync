@@ -1,6 +1,8 @@
-<app-header></app-header>
+@if (!isWidgetRoute()) {
+  <app-header></app-header>
+}
 
-@if (isDashboard() && !supabase.userProfile()?.is_premium) {
+@if (isDashboard() && !supabase.userProfile()?.is_premium && !isWidgetRoute()) {
   <div class="banner-wrapper">
     <div class="premium-badge">
       <div class="badge-content">
@@ -20,7 +22,7 @@
   <router-outlet></router-outlet>
 </main>
 
-@if (isVisible()) {
+@if (isVisible() && !isWidgetRoute()) {
   <button (click)="scrollToTop()" class="back-to-top" type="button" aria-label="Вернуться наверх">
     <hugeicons-icon
       [icon]="ArrowIcon"
@@ -31,4 +33,6 @@
   </button>
 }
 
-<app-footer></app-footer>
+@if (!isWidgetRoute()) {
+  <app-footer></app-footer>
+}

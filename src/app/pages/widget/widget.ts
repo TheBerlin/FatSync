@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
-import { Sun01Icon, Settings02Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
+import { Sun01Icon, Moon02Icon, Settings02Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 
@@ -14,14 +14,23 @@ Chart.register(...registerables);
   standalone: true,
   imports: [CommonModule, HugeiconsIconComponent, BaseChartDirective],
   templateUrl: './widget.html',
+  styleUrls: ['./widget.css']
 })
 export class Widget implements OnInit {
   private route = inject(ActivatedRoute);
   private supabase = inject(Supabase);
 
   SunIcon = Sun01Icon;
+  MoonIcon = Moon02Icon;
   SettingsIcon = Settings02Icon;
   CancelIcon = Cancel01Icon;
+
+  theme = signal<'dark' | 'light'>('dark');
+  
+  @HostBinding('attr.data-theme')
+  get hostTheme() {
+    return this.theme();
+  }
 
   isLoading = signal(true);
   view = signal<'main' | 'settings' | 'stats'>('main');
@@ -114,6 +123,70 @@ export class Widget implements OnInit {
     }
   };
 
+  constructor() {
+    effect(() => {
+      this.updateChartTheme(this.theme());
+    });
+  }
+
+  updateChartTheme(theme: string) {
+    const isDark = theme === 'dark';
+    const gridColor = isDark ? '#3a3a3a' : '#e9e9e7';
+    const textColor = isDark ? '#999' : '#787774';
+    const bgTooltip = isDark ? '#1a1a1a' : '#f7f7f5';
+    const textTooltip = isDark ? '#fff' : '#37352f';
+
+    this.lineChartOptions = {
+        ...this.lineChartOptions,
+        scales: {
+            x: {
+                grid: { color: gridColor, drawTicks: false },
+                ticks: { color: textColor, font: { size: 12 } },
+                border: { display: false }
+            },
+            y: {
+                grid: { color: gridColor, drawTicks: false },
+                ticks: { color: textColor, font: { size: 12 } },
+                border: { display: false },
+                title: { display: true, text: 'Grams (g)', color: textColor, font: { size: 12 } }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: { color: textColor, usePointStyle: true, pointStyle: 'circle' },
+                position: 'bottom',
+            },
+            tooltip: {
+                backgroundColor: bgTooltip,
+                titleColor: textTooltip,
+                bodyColor: textTooltip,
+                borderColor: gridColor,
+                borderWidth: 1,
+                padding: 10,
+                boxPadding: 4,
+                usePointStyle: true,
+            }
+        }
+    };
+    
+    // Updates dataset colors
+    if (this.lineChartData.datasets) {
+       this.lineChartData.datasets[0].borderColor = isDark ? '#60a5fa' : '#3b82f6';
+       this.lineChartData.datasets[0].pointBackgroundColor = isDark ? '#60a5fa' : '#3b82f6';
+       this.lineChartData.datasets[0].pointBorderColor = isDark ? '#60a5fa' : '#3b82f6';
+
+       this.lineChartData.datasets[1].borderColor = isDark ? '#fb923c' : '#f97316';
+       this.lineChartData.datasets[1].pointBackgroundColor = isDark ? '#fb923c' : '#f97316';
+       this.lineChartData.datasets[1].pointBorderColor = isDark ? '#fb923c' : '#f97316';
+
+       this.lineChartData.datasets[2].borderColor = isDark ? '#4ade80' : '#22c55e';
+       this.lineChartData.datasets[2].pointBackgroundColor = isDark ? '#4ade80' : '#22c55e';
+       this.lineChartData.datasets[2].pointBorderColor = isDark ? '#4ade80' : '#22c55e';
+       
+       this.lineChartData = { ...this.lineChartData };
+    }
+  }
+
   async ngOnInit() {
     const token = this.route.snapshot.paramMap.get('token');
     if (token) {
@@ -156,6 +229,10 @@ export class Widget implements OnInit {
 
   closeSettings() {
     this.view.set('main');
+  }
+
+  toggleTheme() {
+    this.theme.set(this.theme() === 'dark' ? 'light' : 'dark');
   }
 
   async syncWithFatSecret() {
