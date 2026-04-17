@@ -23,7 +23,7 @@ export class App implements OnInit {
   isWidgetRoute = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
-      map(() => this.router.url.includes('/widget')),
+      map(() => this.router.url.includes('/widget') || this.router.url.includes('/embed')),
     ),
     { initialValue: false },
   );
