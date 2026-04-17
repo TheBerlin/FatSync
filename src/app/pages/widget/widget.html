@@ -1,135 +1,180 @@
-<div class="widget-viewport" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
-  <div class="widget-container">
-    <div class="pagination">
-      <span [class.active]="view() === 'main'" (click)="view.set('main')"></span>
-      <span [class.active]="view() === 'stats'" (click)="view.set('stats')"></span>
+@if (view() === 'settings') {
+<!-- Settings View -->
+<div class="min-h-screen bg-[#1a1a1a] flex items-center justify-center p-4 h-full w-full absolute top-0 left-0 z-50">
+  <div class="w-full max-w-md bg-[#2a2a2a] rounded-2xl p-8 relative">
+    <button class="absolute top-6 right-6 text-white/80 hover:text-white transition-colors cursor-pointer" (click)="closeSettings()">
+      <hugeicons-icon [icon]="CancelIcon" size="24"></hugeicons-icon>
+    </button>
+
+    <h1 class="text-white text-3xl font-semibold text-center mb-12">Settings</h1>
+
+    <div class="space-y-6">
+      <div class="space-y-2">
+        <label class="text-white text-sm block">Weight (kg)</label>
+        <input type="number" min="0" step="0.1" [value]="settingsWeight()" (input)="changeSettingsValue('weight', $event)" class="bg-[#3a3a3a] border-none text-white h-12 rounded-lg w-full px-4 outline-none">
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-white text-sm block">Carbohydrates (g)</label>
+        <input type="number" min="0" step="1" [value]="settingsCarbs()" (input)="changeSettingsValue('carbs', $event)" class="bg-[#3a3a3a] border-none text-white h-12 rounded-lg w-full px-4 outline-none">
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-white text-sm block">Fat (g)</label>
+        <input type="number" min="0" step="1" [value]="settingsFat()" (input)="changeSettingsValue('fat', $event)" class="bg-[#3a3a3a] border-none text-white h-12 rounded-lg w-full px-4 outline-none">
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-white text-sm block">Protein (g)</label>
+        <input type="number" min="0" step="1" [value]="settingsProtein()" (input)="changeSettingsValue('protein', $event)" class="bg-[#3a3a3a] border-none text-white h-12 rounded-lg w-full px-4 outline-none">
+      </div>
+
+      <div class="pt-6">
+        <button (click)="saveSettings()" class="w-full bg-white text-black hover:bg-gray-100 h-12 rounded-full text-base font-medium cursor-pointer">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+} @else {
+<div class="min-h-screen bg-[#1a1a1a] text-white p-8 relative flex flex-col" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+  <div class="max-w-2xl mx-auto w-full flex-1">
+    
+    <!-- Page Indicator -->
+    <div class="fixed top-8 left-1/2 transform -translate-x-1/2 flex items-center justify-center gap-2">
+      <div class="h-1.5 rounded-full transition-all duration-300" [ngClass]="view() === 'main' ? 'bg-white w-4' : 'bg-white/20 w-1.5 cursor-pointer'" (click)="setPage(0)"></div>
+      <div class="h-1.5 rounded-full transition-all duration-300" [ngClass]="view() === 'stats' ? 'bg-white w-4' : 'bg-white/20 w-1.5 cursor-pointer'" (click)="setPage(1)"></div>
     </div>
 
     @if (view() === 'main') {
-      <div class="screen">
-        <div class="header-row">
-          <div class="weight-info">
-            <span class="label">Current Weight</span>
-            <div class="value">{{ currentWeight() }} kg</div>
+      <!-- Header -->
+      <div class="flex justify-between items-start mb-12 mt-4">
+        <div>
+          <div class="text-gray-400 text-sm mb-1">Current Weight</div>
+          <div class="text-3xl font-bold">{{ currentWeight() }} kg</div>
+        </div>
+        <button class="text-white/80 hover:text-white transition-colors cursor-pointer">
+          <hugeicons-icon [icon]="SunIcon" size="28"></hugeicons-icon>
+        </button>
+      </div>
+
+      <!-- Calories -->
+      <div class="text-center mb-12">
+        <div class="text-6xl font-bold mb-2">
+          {{ actualCalories() }}
+          <span class="text-gray-400 text-4xl">/{{ goals()?.calories || 2230 }}</span>
+        </div>
+        <div class="text-gray-400 text-lg">Calories today</div>
+      </div>
+
+      <!-- Circular Progress -->
+      <div class="flex justify-center gap-8 mb-16 px-4">
+        <!-- Carbs -->
+        <div class="flex flex-col items-center gap-3">
+          <div class="relative w-[120px] h-[120px]">
+            <svg class="transform -rotate-90" width="120" height="120">
+              <circle cx="60" cy="60" r="54" stroke="#3a3a3a" stroke-width="8" fill="none"></circle>
+              <circle cx="60" cy="60" r="54" stroke="#60a5fa" stroke-width="8" fill="none"
+                [style.stroke-dasharray]="getCircumference()"
+                [style.stroke-dashoffset]="calculateOffset(getMetrics().carbs, goals()?.carbs)"
+                stroke-linecap="round" style="transition: stroke-dashoffset 0.5s ease;"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <div class="text-white text-2xl font-bold">{{ getMetrics().carbs || 0 }}<span class="text-base font-normal">g</span></div>
+              <div class="text-gray-400 text-sm">{{ calculatePercent(getMetrics().carbs, goals()?.carbs) }}%</div>
+            </div>
           </div>
-          <hugeicons-icon [icon]="SunIcon" class="sun-icon"></hugeicons-icon>
+          <div class="text-gray-400 text-sm">Carbs</div>
         </div>
 
-        <div class="calories-center">
-          <div class="cal-main">
-            {{ actualCalories() }}<span class="total">/{{ goals()?.calories || 2230 }}</span>
+        <!-- Fats -->
+        <div class="flex flex-col items-center gap-3">
+          <div class="relative w-[120px] h-[120px]">
+            <svg class="transform -rotate-90" width="120" height="120">
+               <circle cx="60" cy="60" r="54" stroke="#3a3a3a" stroke-width="8" fill="none"></circle>
+              <circle cx="60" cy="60" r="54" stroke="#fb923c" stroke-width="8" fill="none"
+                [style.stroke-dasharray]="getCircumference()"
+                [style.stroke-dashoffset]="calculateOffset(getMetrics().fat, goals()?.fat)"
+                stroke-linecap="round" style="transition: stroke-dashoffset 0.5s ease;"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <div class="text-white text-2xl font-bold">{{ getMetrics().fat || 0 }}<span class="text-base font-normal">g</span></div>
+              <div class="text-gray-400 text-sm">{{ calculatePercent(getMetrics().fat, goals()?.fat) }}%</div>
+            </div>
           </div>
-          <div class="label">Calories today</div>
+          <div class="text-gray-400 text-sm">Fats</div>
         </div>
 
-        <div class="progress-grid">
-          <div class="circle-item">
-            <div class="svg-box">
-              <svg viewBox="0 0 100 100">
-                <circle class="bg" cx="50" cy="50" r="45"></circle>
-                <circle
-                  class="prog carbs"
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  [style.stroke-dashoffset]="calculateOffset(metrics()[0]?.carbs, goals()?.carbs)"
-                ></circle>
-              </svg>
-              <div class="circle-text">
-                <span class="gram">{{ metrics()[0]?.carbs || 0 }}g</span>
-                <span class="percent"
-                  >{{ calculatePercent(metrics()[0]?.carbs, goals()?.carbs) }}%</span
-                >
-              </div>
+        <!-- Proteins -->
+        <div class="flex flex-col items-center gap-3">
+           <div class="relative w-[120px] h-[120px]">
+            <svg class="transform -rotate-90" width="120" height="120">
+               <circle cx="60" cy="60" r="54" stroke="#3a3a3a" stroke-width="8" fill="none"></circle>
+              <circle cx="60" cy="60" r="54" stroke="#4ade80" stroke-width="8" fill="none"
+                [style.stroke-dasharray]="getCircumference()"
+                [style.stroke-dashoffset]="calculateOffset(getMetrics().protein, goals()?.protein)"
+                stroke-linecap="round" style="transition: stroke-dashoffset 0.5s ease;"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <div class="text-white text-2xl font-bold">{{ getMetrics().protein || 0 }}<span class="text-base font-normal">g</span></div>
+              <div class="text-gray-400 text-sm">{{ calculatePercent(getMetrics().protein, goals()?.protein) }}%</div>
             </div>
-            <span class="label">Carbs</span>
           </div>
-
-          <div class="circle-item">
-            <div class="svg-box">
-              <svg viewBox="0 0 100 100">
-                <circle class="bg" cx="50" cy="50" r="45"></circle>
-                <circle
-                  class="prog fats"
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  [style.stroke-dashoffset]="calculateOffset(metrics()[0]?.fat, goals()?.fat)"
-                ></circle>
-              </svg>
-              <div class="circle-text">
-                <span class="gram">{{ metrics()[0]?.fat || 0 }}g</span>
-                <span class="percent"
-                  >{{ calculatePercent(metrics()[0]?.fat, goals()?.fat) }}%</span
-                >
-              </div>
-            </div>
-            <span class="label">Fats</span>
-          </div>
-
-          <div class="circle-item">
-            <div class="svg-box">
-              <svg viewBox="0 0 100 100">
-                <circle class="bg" cx="50" cy="50" r="45"></circle>
-                <circle
-                  class="prog proteins"
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  [style.stroke-dashoffset]="
-                    calculateOffset(metrics()[0]?.protein, goals()?.protein)
-                  "
-                ></circle>
-              </svg>
-              <div class="circle-text">
-                <span class="gram">{{ metrics()[0]?.protein || 0 }}g</span>
-                <span class="percent"
-                  >{{ calculatePercent(metrics()[0]?.protein, goals()?.protein) }}%</span
-                >
-              </div>
-            </div>
-            <span class="label">Proteins</span>
-          </div>
-        </div>
-
-        <div class="footer-row">
-          <button class="update-btn" (click)="syncWithFatSecret()">Update now</button>
-          <hugeicons-icon
-            [icon]="SettingsIcon"
-            class="settings-btn"
-            (click)="toggleSettings()"
-          ></hugeicons-icon>
+          <div class="text-gray-400 text-sm">Proteins</div>
         </div>
       </div>
-    } @else {
-      <div class="screen stats-screen">
-        <div class="stats-header">
-          <h2>Statistics</h2>
-          <div class="period-badge">Last Week</div>
-        </div>
 
-        <div class="chart-container">
-          <div class="fake-chart">
-            <div class="y-axis"><span>240</span><span>120</span><span>0</span></div>
-            <div class="lines">
-              <div class="line blue" style="height: 60%"></div>
-              <div class="line orange" style="height: 40%"></div>
-              <div class="line green" style="height: 55%"></div>
-            </div>
+      <!-- Update button -->
+      <div class="flex items-center justify-center">
+        <button class="bg-white text-black hover:bg-gray-100 h-14 px-12 rounded-full text-base font-medium cursor-pointer" (click)="syncWithFatSecret()">
+          Update now
+        </button>
+      </div>
+      <div class="text-center mt-4 text-gray-500 text-sm">
+        Updated a moment ago
+      </div>
+    } @else if (view() === 'stats') {
+      <div class="mt-4">
+        <h1 class="text-3xl font-bold mb-6">Statistics</h1>
+        
+        <div class="relative inline-block mb-8">
+          <select class="appearance-none bg-white text-black px-6 py-2 pr-10 rounded-full text-sm font-medium cursor-pointer focus:outline-none">
+            <option value="week">Last Week</option>
+            <option value="month">Last Month</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-black">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            </svg>
           </div>
         </div>
 
-        <div class="legend">
-          <span class="dot blue"></span> Carbs <span class="dot orange"></span> Fat
-          <span class="dot green"></span> Protein
+        <div class="bg-[#2a2a2a] rounded-2xl p-6 mb-8 w-full max-w-4xl h-[400px]">
+          <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
         </div>
 
-        <hugeicons-icon
-          [icon]="SettingsIcon"
-          class="settings-btn-alt"
-          (click)="toggleSettings()"
-        ></hugeicons-icon>
+        <div class="grid grid-cols-3 gap-4 pb-20">
+          <div class="bg-[#2a2a2a] rounded-xl p-4 text-center">
+            <div class="text-gray-400 text-sm mb-1">Avg Carbs</div>
+            <div class="text-2xl font-bold text-[#60a5fa]">201g</div>
+          </div>
+          <div class="bg-[#2a2a2a] rounded-xl p-4 text-center">
+            <div class="text-gray-400 text-sm mb-1">Avg Fat</div>
+            <div class="text-2xl font-bold text-[#fb923c]">53g</div>
+          </div>
+          <div class="bg-[#2a2a2a] rounded-xl p-4 text-center">
+            <div class="text-gray-400 text-sm mb-1">Avg Protein</div>
+            <div class="text-2xl font-bold text-[#4ade80]">127g</div>
+          </div>
+        </div>
       </div>
     }
   </div>
+
+  <!-- Settings button -->
+  <button class="fixed bottom-8 right-8 text-white/80 hover:text-white transition-colors cursor-pointer" (click)="toggleSettings()">
+    <hugeicons-icon [icon]="SettingsIcon" size="32"></hugeicons-icon>
+  </button>
 </div>
+}
