@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from '../../services/supabase';
+import { SafeUrlPipe } from '../../safeurlpipe-pipe';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, SafeUrlPipe],
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

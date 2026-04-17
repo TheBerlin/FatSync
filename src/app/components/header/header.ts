@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Button } from '../button/button';
 import { RouterLink } from '@angular/router';
-import { Login } from '../../pages/login/login';
 import { Supabase } from '../../services/supabase';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { Cancel01Icon, LogoutSquare01Icon, Menu01Icon } from '@hugeicons/core-free-icons';
@@ -9,7 +8,7 @@ import { Cancel01Icon, LogoutSquare01Icon, Menu01Icon } from '@hugeicons/core-fr
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [Button, RouterLink, Login, HugeiconsIconComponent],
+  imports: [Button, RouterLink, HugeiconsIconComponent],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
