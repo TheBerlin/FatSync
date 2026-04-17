@@ -1,4 +1,4 @@
-<div class="widget-container h-full w-full relative overflow-x-hidden" 
+<div class="widget-container h-full w-full relative" 
      (touchstart)="onTouchStart($event)" 
      (touchmove)="onTouchMove($event)" 
      (touchend)="onTouchEnd($event)">
@@ -10,37 +10,38 @@
     <div *ngIf="view() === 'main'" class="h-full flex flex-col items-center justify-between animate-fade-in">
       
       <!-- Top Row: Weight, Indicators, Theme -->
-      <div class="w-full flex justify-between items-start">
+      <div class="w-full flex justify-between items-start mb-4">
         <div class="flex flex-col">
-          <span class="text-sec text-[10px] font-medium uppercase tracking-wider mb-0.5">Current Weight</span>
-          <span class="text-main text-2xl font-bold tracking-tight">{{userWeight()}} <span class="text-base font-medium opacity-60">kg</span></span>
+          <span class="text-sec text-[10px] font-bold uppercase tracking-widest mb-0.5 opacity-60">Current Weight</span>
+          <span class="text-main text-2xl font-black tracking-tight">{{userWeight()}} <span class="text-base font-bold opacity-40">kg</span></span>
         </div>
         
-        <!-- Page Indicator Dots (Floating at top center) -->
-        <div class="flex gap-2 pt-1">
+        <!-- Page Indicator Dots -->
+        <div class="flex gap-2.5 pt-2">
           <div class="page-dot" [class.active]="view() === 'main'" (click)="setPage(0)"></div>
           <div class="page-dot" [class.active]="view() === 'stats'" (click)="setPage(1)"></div>
         </div>
 
-        <button (click)="toggleTheme()" class="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-          <hugeicons-icon [icon]="theme() === 'dark' ? SunIcon : MoonIcon" [size]="24" class="text-main"></hugeicons-icon>
+        <button (click)="toggleTheme()" 
+                class="p-2 -mr-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90">
+          <hugeicons-icon [icon]="theme() === 'dark' ? SunIcon : MoonIcon" [size]="20" class="text-main"></hugeicons-icon>
         </button>
       </div>
 
       <!-- Center: Calories Display -->
-      <div class="flex flex-col items-center my-6">
+      <div class="flex flex-col items-center my-4 overflow-visible">
         <div class="flex items-baseline gap-1.5">
           <span class="text-main text-6xl font-black tracking-tighter">{{calories().current}}</span>
-          <span class="text-sec text-3xl font-bold opacity-30">/{{calories().target}}</span>
+          <span class="text-sec text-3xl font-black opacity-20">/{{calories().target}}</span>
         </div>
-        <span class="text-sec text-base font-medium mt-1">Calories today</span>
+        <span class="text-sec text-sm font-bold mt-0.5 opacity-50">Calories today</span>
       </div>
 
-      <!-- Circular Progress Indicators -->
-      <div class="w-full flex justify-between items-center px-2 mb-8">
+      <!-- Circular Progress Indicators (Smaller: w-20 h-20) -->
+      <div class="w-full flex justify-around items-center px-4 my-6">
         <!-- Carbs -->
         <div class="flex flex-col items-center">
-          <div class="relative w-28 h-28 flex items-center justify-center">
+          <div class="relative w-22 h-22 flex items-center justify-center">
             <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
               <circle class="progress-bg" cx="50" cy="50" r="40" />
               <circle class="progress-active carbs-stroke" 
@@ -48,17 +49,17 @@
                       [style.strokeDasharray]="251.32" 
                       [style.strokeDashoffset]="251.32 - (getPercentageValue('carbs') / 100) * 251.32" />
             </svg>
-            <div class="absolute inset-0 flex flex-col items-center justify-center">
-              <span class="text-main text-base font-bold leading-none">{{getIntakeValue('carbs')}}<span class="text-[10px] ml-0.5 font-medium opacity-60">g</span></span>
-              <span class="text-sec text-[10px] font-bold mt-1">{{getPercentageValue('carbs')}}%</span>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pt-0.5">
+              <span class="text-main text-[13px] font-black leading-none">{{getIntakeValue('carbs')}}<span class="text-[8px] ml-0.5 font-bold opacity-40">g</span></span>
+              <span class="text-sec text-[8px] font-bold mt-1 opacity-50">{{getPercentageValue('carbs')}}%</span>
             </div>
           </div>
-          <span class="text-sec text-[10px] font-bold uppercase mt-3 tracking-widest">Carbs</span>
+          <span class="text-sec text-[9px] font-black uppercase mt-3 tracking-widest opacity-60">Carbs</span>
         </div>
 
         <!-- Fat -->
-        <div class="flex flex-col items-center">
-          <div class="relative w-28 h-28 flex items-center justify-center">
+        <div class="flex flex-col items-center mx-2">
+          <div class="relative w-22 h-22 flex items-center justify-center">
             <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
               <circle class="progress-bg" cx="50" cy="50" r="40" />
               <circle class="progress-active fat-stroke" 
@@ -66,17 +67,17 @@
                       [style.strokeDasharray]="251.32" 
                       [style.strokeDashoffset]="251.32 - (getPercentageValue('fat') / 100) * 251.32" />
             </svg>
-            <div class="absolute inset-0 flex flex-col items-center justify-center">
-              <span class="text-main text-base font-bold leading-none">{{getIntakeValue('fat')}}<span class="text-[10px] ml-0.5 font-medium opacity-60">g</span></span>
-              <span class="text-sec text-[10px] font-bold mt-1">{{getPercentageValue('fat')}}%</span>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pt-0.5">
+              <span class="text-main text-[13px] font-black leading-none">{{getIntakeValue('fat')}}<span class="text-[8px] ml-0.5 font-bold opacity-40">g</span></span>
+              <span class="text-sec text-[8px] font-bold mt-1 opacity-50">{{getPercentageValue('fat')}}%</span>
             </div>
           </div>
-          <span class="text-sec text-[10px] font-bold uppercase mt-3 tracking-widest">Fats</span>
+          <span class="text-sec text-[9px] font-black uppercase mt-3 tracking-widest opacity-60">Fats</span>
         </div>
 
         <!-- Protein -->
         <div class="flex flex-col items-center">
-          <div class="relative w-28 h-28 flex items-center justify-center">
+          <div class="relative w-22 h-22 flex items-center justify-center">
             <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
               <circle class="progress-bg" cx="50" cy="50" r="40" />
               <circle class="progress-active protein-stroke" 
@@ -84,111 +85,116 @@
                       [style.strokeDasharray]="251.32" 
                       [style.strokeDashoffset]="251.32 - (getPercentageValue('protein') / 100) * 251.32" />
             </svg>
-            <div class="absolute inset-0 flex flex-col items-center justify-center">
-              <span class="text-main text-base font-bold leading-none">{{getIntakeValue('protein')}}<span class="text-[10px] ml-0.5 font-medium opacity-60">g</span></span>
-              <span class="text-sec text-[10px] font-bold mt-1">{{getPercentageValue('protein')}}%</span>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pt-0.5">
+              <span class="text-main text-[13px] font-black leading-none">{{getIntakeValue('protein')}}<span class="text-[8px] ml-0.5 font-bold opacity-40">g</span></span>
+              <span class="text-sec text-[8px] font-bold mt-1 opacity-50">{{getPercentageValue('protein')}}%</span>
             </div>
           </div>
-          <span class="text-sec text-[10px] font-bold uppercase mt-3 tracking-widest">Proteins</span>
+          <span class="text-sec text-[9px] font-black uppercase mt-3 tracking-widest opacity-60">Proteins</span>
         </div>
       </div>
 
       <!-- Update Button -->
-      <div class="flex flex-col items-center gap-3 w-full">
-        <button (click)="updateNow()" class="widget-btn w-fit h-14 px-12 rounded-full text-base font-bold shadow-lg transition-all active:scale-95">
+      <div class="flex flex-col items-center gap-2.5 w-full mt-4">
+        <button (click)="updateNow()" 
+                class="widget-btn w-fit h-12 px-10 rounded-full text-sm font-black shadow-lg transition-all active:scale-95">
           Update now
         </button>
-        <span class="text-sec text-[11px] font-medium opacity-50">Updated {{lastUpdated()}}</span>
+        <span class="text-sec text-[10px] font-bold opacity-30 italic">Updated {{lastUpdated()}}</span>
       </div>
 
       <!-- Settings Icon (Floating Bottom Right) -->
-      <button (click)="view.set('settings')" class="absolute -bottom-2 -right-2 p-3 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors opacity-80 hover:opacity-100">
-        <hugeicons-icon [icon]="SettingsIcon" [size]="20" class="text-main"></hugeicons-icon>
+      <button (click)="view.set('settings')" 
+              class="absolute bottom-0 right-0 p-3 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90 z-20">
+        <hugeicons-icon [icon]="SettingsIcon" [size]="18" class="text-main opacity-40 hover:opacity-100"></hugeicons-icon>
       </button>
     </div>
 
     <!-- STATISTICS VIEW -->
-    <div *ngIf="view() === 'stats'" class="h-full flex flex-col animate-fade-in">
+    <div *ngIf="view() === 'stats'" class="h-full flex flex-col animate-fade-in overflow-hidden">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-main text-2xl font-black">Statistics</h1>
-        <button (click)="view.set('main')" class="p-2 -mr-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5">
-          <hugeicons-icon [icon]="CancelIcon" [size]="20" class="text-main"></hugeicons-icon>
+        <h1 class="text-main text-2xl font-black tracking-tight">Statistics</h1>
+        <button (click)="view.set('main')" class="p-1 -mr-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5">
+          <hugeicons-icon [icon]="CancelIcon" [size]="18" class="text-main"></hugeicons-icon>
         </button>
       </div>
 
-      <div class="relative w-max mb-6">
+      <div class="relative w-max mb-5">
         <select [value]="timePeriod()" (change)="changeTimePeriod($event)" 
-                class="appearance-none bg-transparent text-main text-xs font-bold cursor-pointer focus:outline-none border-none pr-6">
+                class="appearance-none bg-transparent text-main text-xs font-black cursor-pointer focus:outline-none border-none pr-5">
           <option value="week">Last Week</option>
           <option value="month">Last Month</option>
           <option value="year">Last Year</option>
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
-           <hugeicons-icon [icon]="ArrowIcon" [size]="14" class="text-sec opacity-60"></hugeicons-icon>
+           <hugeicons-icon [icon]="ArrowIcon" [size]="12" class="text-sec opacity-40"></hugeicons-icon>
         </div>
       </div>
 
-      <div class="widget-card rounded-[24px] p-5 mb-6 w-full flex-1 min-h-[180px]">
+      <div class="widget-card rounded-[24px] p-4 mb-8 w-full flex-1 max-h-[160px]">
         <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
       </div>
 
-      <div class="flex flex-col items-center gap-4 mb-4">
+      <!-- Statistics Labels (Stacked as in reference) -->
+      <div class="flex flex-col items-center gap-6 mb-2 overflow-visible">
         <div class="flex flex-col items-center">
-          <div class="text-sec text-[9px] font-bold uppercase tracking-widest mb-1 opacity-60">Avg Carbs</div>
-          <div class="text-xl font-black carbs-color leading-tight">{{ getAvg(0) }}g</div>
+          <div class="text-sec text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 opacity-60">AVG CARBS</div>
+          <div class="text-2xl font-black carbs-color leading-tight">{{ getAvg(0) }}g</div>
         </div>
-        <div class="flex flex-col items-center border-t border-b border-white/5 py-4 w-full">
-          <div class="text-sec text-[9px] font-bold uppercase tracking-widest mb-1 opacity-60">Avg Fat</div>
-          <div class="text-xl font-black fat-color leading-tight">{{ getAvg(1) }}g</div>
-        </div>
+        <div class="w-full h-[1px] bg-[var(--stroke-color)] max-w-[280px]"></div>
         <div class="flex flex-col items-center">
-          <div class="text-sec text-[9px] font-bold uppercase tracking-widest mb-1 opacity-60">Avg Protein</div>
-          <div class="text-xl font-black protein-color leading-tight">{{ getAvg(2) }}g</div>
+          <div class="text-sec text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 opacity-60">AVG FAT</div>
+          <div class="text-2xl font-black fat-color leading-tight">{{ getAvg(1) }}g</div>
+        </div>
+        <div class="w-full h-[1px] bg-[var(--stroke-color)] max-w-[280px]"></div>
+        <div class="flex flex-col items-center">
+          <div class="text-sec text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 opacity-60">AVG PROTEIN</div>
+          <div class="text-2xl font-black protein-color leading-tight">{{ getAvg(2) }}g</div>
         </div>
       </div>
     </div>
 
     <!-- SETTINGS VIEW -->
-    <div *ngIf="view() === 'settings'" class="h-full flex flex-col animate-fade-in">
+    <div *ngIf="view() === 'settings'" class="h-full flex flex-col animate-fade-in pr-1">
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-main text-2xl font-black">Settings</h1>
-        <button (click)="view.set('main')" class="p-2 -mr-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5">
-          <hugeicons-icon [icon]="CancelIcon" [size]="20" class="text-main"></hugeicons-icon>
+        <button (click)="view.set('main')" class="p-1 -mr-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5">
+          <hugeicons-icon [icon]="CancelIcon" [size]="18" class="text-main"></hugeicons-icon>
         </button>
       </div>
 
-      <div class="space-y-8 flex-1 overflow-y-auto pr-2">
+      <div class="space-y-8 flex-1 overflow-y-auto pr-2 custom-scroll">
         <div>
-          <label class="text-sec text-[10px] font-bold uppercase tracking-widest mb-3 block opacity-60">Personal Info</label>
+          <label class="text-sec text-[10px] font-black uppercase tracking-widest mb-3 block opacity-40">Personal Info</label>
           <div class="widget-card rounded-2xl p-5">
              <div class="flex justify-between items-center">
-               <span class="text-main font-semibold text-sm">Weight (kg)</span>
+               <span class="text-main font-bold text-sm">Weight (kg)</span>
                <input type="number" [(ngModel)]="settingsWeight" 
-                      class="bg-transparent text-right outline-none text-main font-bold text-lg w-20">
+                      class="bg-transparent text-right outline-none text-main font-black text-lg w-20">
              </div>
           </div>
         </div>
 
         <div>
-          <label class="text-sec text-[10px] font-bold uppercase tracking-widest mb-3 block opacity-60">Daily Targets (g)</label>
-          <div class="widget-card rounded-2xl p-5 space-y-4">
+          <label class="text-sec text-[10px] font-black uppercase tracking-widest mb-3 block opacity-40">Daily Targets (g)</label>
+          <div class="widget-card rounded-2xl p-5 space-y-5">
             <div class="flex justify-between items-center">
-              <span class="text-main font-semibold text-sm">Carbs</span>
-              <input type="number" [(ngModel)]="settingsGoals().carbs" class="bg-transparent text-right outline-none text-main font-bold text-lg w-20">
+              <span class="text-main font-bold text-sm">Carbs</span>
+              <input type="number" [(ngModel)]="settingsGoals().carbs" class="bg-transparent text-right outline-none text-main font-black text-lg w-20">
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-main font-semibold text-sm">Fat</span>
-              <input type="number" [(ngModel)]="settingsGoals().fat" class="bg-transparent text-right outline-none text-main font-bold text-lg w-20">
+              <span class="text-main font-bold text-sm">Fat</span>
+              <input type="number" [(ngModel)]="settingsGoals().fat" class="bg-transparent text-right outline-none text-main font-black text-lg w-20">
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-main font-semibold text-sm">Protein</span>
-              <input type="number" [(ngModel)]="settingsGoals().protein" class="bg-transparent text-right outline-none text-main font-bold text-lg w-20">
+              <span class="text-main font-bold text-sm">Protein</span>
+              <input type="number" [(ngModel)]="settingsGoals().protein" class="bg-transparent text-right outline-none text-main font-black text-lg w-20">
             </div>
           </div>
         </div>
       </div>
 
-      <button (click)="saveSettings()" class="w-full bg-blue-600 text-white rounded-2xl py-4 mt-6 font-bold text-base transition-all active:scale-95 shadow-lg">
+      <button (click)="saveSettings()" class="w-full bg-blue-600 text-white rounded-2xl py-4 mt-6 font-black text-base transition-all active:scale-95 shadow-xl">
         Save Changes
       </button>
     </div>

@@ -1,13 +1,13 @@
 :host([data-theme='dark']) {
-  --bg-main: #121212;
-  --bg-card: #1c1c1c;
+  --bg-main: #191919;
+  --bg-card: #1f1f1f;
   --bg-input: #2a2a2a;
   --text-main: #ffffff;
   --text-sec: #888888;
   --btn-bg: #ffffff;
   --btn-text: #000000;
   --btn-hover: #e5e5e5;
-  --stroke-color: #2a2a2a;
+  --stroke-color: rgba(255, 255, 255, 0.08);
   --accent-carbs: #3b82f6; 
   --accent-fat: #f97316;
   --accent-protein: #22c55e;
@@ -16,13 +16,13 @@
 :host([data-theme='light']) {
   --bg-main: #ffffff;
   --bg-card: #f7f7f5;
-  --bg-input: #e9e9e7;
-  --text-main: #37352f;
+  --bg-input: #eeeeee;
+  --text-main: #191919;
   --text-sec: #787774;
-  --btn-bg: #37352f;
+  --btn-bg: #191919;
   --btn-text: #ffffff;
-  --btn-hover: #504f4c;
-  --stroke-color: #e9e9e7;
+  --btn-hover: #333333;
+  --stroke-color: rgba(0, 0, 0, 0.08);
   --accent-carbs: #2563eb;
   --accent-fat: #ea580c;
   --accent-protein: #16a34a;
@@ -43,13 +43,14 @@
   width: 100%;
   max-width: 600px;
   min-height: 100%;
-  padding: 2.5rem;
+  padding: 2rem; /* Slightly reduced padding */
   background-color: var(--bg-main);
   color: var(--text-main);
   display: flex;
   flex-direction: column;
   position: relative;
   transition: background-color 0.3s ease;
+  overflow: visible; /* Ensure icons aren't clipped */
 }
 
 /* Circular Progress SVG Styles */
@@ -60,20 +61,20 @@
 .progress-bg {
   fill: none;
   stroke: var(--bg-input);
-  stroke-width: 10;
+  stroke-width: 12; /* Slightly thicker based on screenshot */
 }
 
 .progress-active {
   fill: none;
-  stroke-width: 10;
+  stroke-width: 12;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Page Indicator Dots */
 .page-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background-color: var(--text-main);
   opacity: 0.2;
