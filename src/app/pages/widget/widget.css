@@ -1,12 +1,17 @@
 /* widget.css */
+
 :host {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: transparent; /* Чтобы фон Notion не перекрывался */
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* Основной контейнер-рамка виджета */
 .widget-viewport {
   width: 500px;
   height: 330px;
@@ -14,73 +19,229 @@
   border-radius: 24px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.widget-container {
-  padding: 20px;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* Центрируем кнопку и иконку */
+/* Общий стиль для экранов внутри вьюпорта */
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+/* Пагинация (точки сверху) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 10px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.pagination span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination span.active {
+  background: #fff;
+  width: 14px;
+  border-radius: 3px;
+}
+
+/* ЭКРАН 1: Основной контент */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 15px;
+}
+
+.label {
+  color: #888;
+  font-size: 13px;
+  font-weight: 500;
+}
+.value {
+  font-size: 32px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+.sun-icon {
+  color: #fff;
+  font-size: 20px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.calories-main {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.cal-display {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+.sep {
+  color: #444;
+  margin: 0 4px;
+}
+.total {
+  color: #666;
+}
+
+/* Кольца макросов */
+.macros-circles {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+.macro-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #1a1a1a 0%, #121212 100%);
+}
+
+.ring span {
+  font-size: 13px;
+  font-weight: 700;
+}
+.ring small {
+  font-size: 10px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Цвета макросов */
+.macro-item.blue .ring {
+  border-top-color: #54a0ff;
+}
+.macro-item.orange .ring {
+  border-top-color: #ff9f43;
+}
+.macro-item.green .ring {
+  border-top-color: #1dd1a1;
+}
+.macro-item span:last-child {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Нижняя зона: Кнопка и Настройки */
 .action-area {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-top: 15px;
   width: 100%;
+  padding-bottom: 5px;
 }
 
 .update-btn {
   background: white;
   color: black;
   border: none;
-  padding: 10px 35px;
-  border-radius: 20px;
-  font-weight: 700;
+  padding: 10px 38px;
+  border-radius: 24px;
+  font-weight: 800;
+  font-size: 14px;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.update-btn:active {
+  transform: scale(0.95);
 }
 
 .settings-icon {
   position: absolute;
-  right: 10px; /* Иконка на уровне кнопки */
+  right: 0;
   color: #444;
+  font-size: 22px;
   cursor: pointer;
-  font-size: 20px;
+  transition: color 0.3s;
 }
 
-/* Стили для экрана статистики */
+.settings-icon:hover {
+  color: #fff;
+}
+
+.footer-text {
+  text-align: center;
+  font-size: 11px;
+  color: #444;
+  margin-top: 4px;
+}
+
+/* ЭКРАН 2: Статистика */
+.stats-screen h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 15px 0 10px 0;
+}
+
 .stats-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .period-selector {
-  background: #1a1a1a;
-  padding: 5px 12px;
+  background: #1e1e1e;
+  padding: 6px 14px;
   border-radius: 12px;
   font-size: 12px;
+  color: #bbb;
+  border: 1px solid #333;
 }
 
 .chart-box {
-  flex-grow: 1;
+  flex: 1;
+  background: #161616;
   border: 1px solid #222;
   border-radius: 16px;
-  margin: 10px 0;
-  background: rgba(255, 255, 255, 0.02);
+  margin: 12px 0;
+  padding: 15px;
+  position: relative;
 }
 
 .chart-legend {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  font-size: 11px;
-  color: #888;
+  gap: 16px;
+  font-size: 12px;
+  padding-bottom: 5px;
 }
 
 .dot {
@@ -88,8 +249,9 @@
   height: 8px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 4px;
+  margin-right: 5px;
 }
+
 .dot.blue {
   background: #54a0ff;
 }
@@ -98,4 +260,12 @@
 }
 .dot.green {
   background: #1dd1a1;
+}
+
+.settings-icon-stats {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  color: #444;
+  cursor: pointer;
 }
