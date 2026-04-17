@@ -67,9 +67,7 @@ export class Widget implements OnInit {
   }
 
   async syncWithFatSecret() {
-    // Здесь будет вызов твоего API для синхронизации
     console.log('Syncing with FatSecret...');
-    // После синхронизации вызываем loadAllData снова
   }
 
   /**
@@ -91,9 +89,13 @@ export class Widget implements OnInit {
     }
   }
 
+  private touchStart: number | null = null;
+  private touchEnd: number | null = null;
+  private readonly minSwipeDistance = 50;
+
   calculateOffset(value: number | undefined, max: number | undefined): number {
     const val = value || 0;
-    const m = max || 100;
+    const m = max || 1;
     const percentage = Math.min((val / m) * 100, 100);
     const circumference = 2 * Math.PI * 45;
     return circumference - (percentage / 100) * circumference;
@@ -102,5 +104,25 @@ export class Widget implements OnInit {
   calculatePercent(value: number | undefined, max: number | undefined): number {
     if (!max) return 0;
     return Math.round(Math.min(((value || 0) / max) * 100, 100));
+  }
+
+  onTouchStart(e: TouchEvent) {
+    this.touchEnd = null;
+    this.touchStart = e.targetTouches[0].clientX;
+  }
+
+  onTouchEnd(e: TouchEvent) {
+    this.touchEnd = e.changedTouches[0].clientX;
+    if (!this.touchStart || !this.touchEnd) return;
+
+    const distance = this.touchStart - this.touchEnd;
+    const isLeftSwipe = distance > this.minSwipeDistance;
+    const isRightSwipe = distance < -this.minSwipeDistance;
+
+    if (isLeftSwipe) {
+      this.view.set('stats');
+    } else if (isRightSwipe) {
+      this.view.set('main');
+    }
   }
 }
