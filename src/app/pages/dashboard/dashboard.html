@@ -232,9 +232,7 @@
                     <code
                       class="flex-1 bg-background/80 p-3 rounded-xl text-xs overflow-hidden text-ellipsis whitespace-nowrap border border-on-surface/5"
                     >
-                      https://fetti-notion.vercel.app/embed/{{
-                        supabase.userProfile()?.widget_token
-                      }}
+                      {{ getEmbedUrl() }}
                     </code>
                     <button
                       (click)="copyEmbedLink()"
@@ -291,8 +289,23 @@
           <div class="flex-1 flex flex-col items-center justify-center">
             <span
               class="text-[10px] uppercase font-bold text-on-surface-variant tracking-[0.3em] mb-6"
-              >Notion Live Preview</span
             >
+              Notion Live Preview
+            </span>
+
+            @if (supabase.userProfile()?.widget_token) {
+              <div
+                class="w-full max-w-[350px] aspect-[4/5] rounded-3xl overflow-hidden border border-on-surface/10 shadow-2xl"
+              >
+                <iframe
+                  [src]="getEmbedUrl() | safeUrl"
+                  style="width: 100%; height: 100%; border: none"
+                >
+                </iframe>
+              </div>
+            } @else {
+              <div class="opacity-20 italic">No token available</div>
+            }
           </div>
         </div>
       </div>

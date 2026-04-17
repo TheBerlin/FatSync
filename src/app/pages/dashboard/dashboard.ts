@@ -128,4 +128,15 @@ export class Dashboard {
     if (error) console.error('Error disconnecting FatSecret:', error);
     else console.log('FatSecret disconnected successfully');
   }
+
+  /**
+   * Get embed URL
+   * @returns Embed URL
+   */
+  getEmbedUrl(): string {
+    const token = this.supabase.userProfile()?.widget_token;
+    if (!token) return '';
+
+    return `${window.location.origin}/embed/${token}`;
+  }
 }
