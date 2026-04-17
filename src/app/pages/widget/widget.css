@@ -7,14 +7,13 @@
 }
 
 .widget-viewport {
-  width: 500px;
-  height: 330px;
-  background: #1a1a1a;
-  border-radius: 28px;
-  overflow: hidden;
-  color: white;
-  font-family: 'Inter', sans-serif;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  height: auto;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .screen {
@@ -25,7 +24,6 @@
   box-sizing: border-box;
 }
 
-/* Пагинация */
 .pagination {
   position: absolute;
   top: 15px;
@@ -47,7 +45,6 @@
   border-radius: 4px;
 }
 
-/* Dashboard */
 .header-row {
   display: flex;
   justify-content: space-between;
@@ -76,7 +73,6 @@
   font-size: 24px;
 }
 
-/* SVG Progress Circles */
 .progress-grid {
   display: flex;
   justify-content: space-around;
@@ -105,7 +101,7 @@ circle.bg {
   stroke: #2a2a2a;
 }
 circle.prog {
-  stroke-dasharray: 283; /* 2 * PI * 45 */
+  stroke-dasharray: 283;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.5s ease;
 }
@@ -136,7 +132,6 @@ circle.proteins {
   color: #666;
 }
 
-/* Footer */
 .footer-row {
   display: flex;
   justify-content: center;
@@ -161,7 +156,6 @@ circle.proteins {
   cursor: pointer;
 }
 
-/* Statistics Screen */
 .stats-header {
   display: flex;
   justify-content: space-between;
