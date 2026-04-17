@@ -57,7 +57,7 @@ export class Widget implements OnInit {
   });
 
   // Settings Temp State
-  settingsWeight = signal(75.5);
+  settingsWeight = 75.5;
   settingsGoals = signal({ carbs: 250, fat: 70, protein: 150 });
 
   // Chart Properties
@@ -68,33 +68,36 @@ export class Widget implements OnInit {
       {
         data: [180, 220, 195, 210, 175, 230, 200],
         label: 'Carbs',
-        borderColor: '#60a5fa',
-        pointBackgroundColor: '#60a5fa',
-        pointBorderColor: '#60a5fa',
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
         tension: 0.4,
-        borderWidth: 3,
-        pointRadius: 4,
-      },
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#3b82f6',
+        pointBorderColor: '#3b82f6',
+      } as any,
       {
         data: [50, 45, 55, 60, 48, 52, 58],
         label: 'Fat',
-        borderColor: '#fb923c',
-        pointBackgroundColor: '#fb923c',
-        pointBorderColor: '#fb923c',
+        borderColor: '#f97316',
+        backgroundColor: 'rgba(249, 115, 22, 0.1)',
         tension: 0.4,
-        borderWidth: 3,
-        pointRadius: 4,
-      },
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#f97316',
+        pointBorderColor: '#f97316',
+      } as any,
       {
         data: [120, 135, 110, 145, 128, 115, 140],
         label: 'Protein',
-        borderColor: '#4ade80',
-        pointBackgroundColor: '#4ade80',
-        pointBorderColor: '#4ade80',
+        borderColor: '#22c55e',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
         tension: 0.4,
-        borderWidth: 3,
-        pointRadius: 4,
-      }
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#22c55e',
+        pointBorderColor: '#22c55e',
+      } as any
     ]
   };
 
@@ -104,27 +107,25 @@ export class Widget implements OnInit {
     elements: { line: { tension: 0.4 } },
     scales: {
       x: {
-        grid: { color: '#3a3a3a', drawTicks: false },
-        ticks: { color: '#999', font: { size: 12 } },
+        grid: { display: false },
+        ticks: { color: '#666', font: { size: 10 } },
         border: { display: false }
       },
       y: {
-        grid: { color: '#3a3a3a', drawTicks: false },
-        ticks: { color: '#999', font: { size: 12 } },
-        border: { display: false },
-        title: { display: true, text: 'Grams (g)', color: '#999', font: { size: 12 } }
+        grid: { color: 'rgba(255,255,255,0.05)', drawTicks: false },
+        ticks: { color: '#666', font: { size: 10 }, stepSize: 50 },
+        border: { display: false }
       }
     },
     plugins: {
-      legend: { labels: { color: '#999', usePointStyle: true, pointStyle: 'circle' }, position: 'bottom' },
+      legend: { display: false },
       tooltip: {
-        backgroundColor: '#1a1a1a',
+        backgroundColor: '#1c1c1c',
         titleColor: '#fff',
         bodyColor: '#fff',
-        borderColor: '#3a3a3a',
+        borderColor: '#333',
         borderWidth: 1,
-        padding: 10,
-        boxPadding: 4,
+        padding: 8,
         usePointStyle: true,
       }
     }
@@ -151,7 +152,7 @@ export class Widget implements OnInit {
       const { data: profile } = await this.supabase.getProfileByWidgetToken(token);
       if (profile) {
         this.userWeight.set(profile.weight || 75.5);
-        this.settingsWeight.set(profile.weight || 75.5);
+        this.settingsWeight = profile.weight || 75.5;
 
         const [goalsRes, metricsRes] = await Promise.all([
           this.supabase.getUserGoals(profile.id),
@@ -175,30 +176,31 @@ export class Widget implements OnInit {
 
   updateChartTheme(theme: string) {
     const isDark = theme === 'dark';
-    const gridColor = isDark ? '#3a3a3a' : '#e9e9e7';
-    const textColor = isDark ? '#999' : '#787774';
-    const bgTooltip = isDark ? '#1a1a1a' : '#f7f7f5';
-    const textTooltip = isDark ? '#fff' : '#37352f';
+    const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+    const textColor = isDark ? '#666' : '#999';
 
-    this.lineChartOptions = {
-        ...this.lineChartOptions,
-        scales: {
-            x: { ...this.lineChartOptions?.scales?.['x'], grid: { color: gridColor, drawTicks: false }, ticks: { color: textColor } },
-            y: { ...this.lineChartOptions?.scales?.['y'], grid: { color: gridColor, drawTicks: false }, ticks: { color: textColor }, title: { color: textColor, text: 'Grams (g)', display: true } }
-        },
-        plugins: {
-            ...this.lineChartOptions?.plugins,
-            legend: { ...this.lineChartOptions?.plugins?.legend, labels: { color: textColor } },
-            tooltip: { ...this.lineChartOptions?.plugins?.tooltip, backgroundColor: bgTooltip, titleColor: textTooltip, bodyColor: textTooltip, borderColor: gridColor }
-        }
-    };
+    if (this.lineChartOptions?.scales?.['x']) {
+      (this.lineChartOptions.scales['x'] as any).ticks.color = textColor;
+    }
+    if (this.lineChartOptions?.scales?.['y']) {
+      (this.lineChartOptions.scales['y'] as any).grid.color = gridColor;
+      (this.lineChartOptions.scales['y'] as any).ticks.color = textColor;
+    }
     
     if (this.lineChartData.datasets) {
-       (this.lineChartData.datasets[0] as any).borderColor = isDark ? '#60a5fa' : '#3b82f6';
-       (this.lineChartData.datasets[1] as any).borderColor = isDark ? '#fb923c' : '#f97316';
-       (this.lineChartData.datasets[2] as any).borderColor = isDark ? '#4ade80' : '#22c55e';
+       this.lineChartData.datasets[0].borderColor = isDark ? '#3b82f6' : '#2563eb';
+       this.lineChartData.datasets[1].borderColor = isDark ? '#f97316' : '#ea580c';
+       this.lineChartData.datasets[2].borderColor = isDark ? '#22c55e' : '#16a34a';
+       
+       // Force point colors to avoid type collision but ensure they are updated
+       this.lineChartData.datasets.forEach((ds: any) => {
+         ds.pointBackgroundColor = ds.borderColor;
+         ds.pointBorderColor = ds.borderColor;
+       });
+
        this.lineChartData = { ...this.lineChartData };
     }
+    this.lineChartOptions = { ...this.lineChartOptions };
   }
 
   toggleTheme() {
@@ -215,24 +217,24 @@ export class Widget implements OnInit {
 
   async saveSettings() {
     this.targets.set({ ...this.settingsGoals() });
-    this.userWeight.set(this.settingsWeight());
+    this.userWeight.set(this.settingsWeight);
     this.view.set('main');
-    // Persistence logic would go here
+    // Persistence would call supabase.updateUserSettings here
   }
 
   updateNow() {
     this.lastUpdated.set('just now');
-    console.log('Syncing...');
+    // Live sync would go here
   }
 
   // Template Helpers
-  getIntakeValue(key: string): number {
-    return (this.intake() as any)[key] || 0;
+  getIntakeValue(key: 'carbs' | 'fat' | 'protein'): number {
+    return this.intake()[key] || 0;
   }
 
-  getPercentageValue(key: string): number {
-    const val = (this.intake() as any)[key] || 0;
-    const max = (this.targets() as any)[key] || 1;
+  getPercentageValue(key: 'carbs' | 'fat' | 'protein'): number {
+    const val = this.intake()[key] || 0;
+    const max = this.targets()[key] || 1;
     return Math.min(Math.round((val / max) * 100), 100);
   }
 
@@ -279,9 +281,7 @@ export class Widget implements OnInit {
     this.touchStartPos = e.touches[0].clientX;
   }
 
-  onTouchMove(e: TouchEvent) {
-    // Prevent default scroll if needed, but usually fine
-  }
+  onTouchMove(e: TouchEvent) { }
 
   onTouchEnd(e: TouchEvent) {
     if (!this.touchStartPos) return;
