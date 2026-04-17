@@ -1,9 +1,16 @@
-import { Component, inject, OnInit, signal, HostBinding, effect } from '@angular/core';
+import { Component, inject, OnInit, signal, HostBinding, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
-import { Sun01Icon, Moon02Icon, Settings02Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
+import { 
+  Sun01Icon, 
+  Moon01Icon, 
+  Settings01Icon, 
+  Cancel01Icon,
+  ArrowDown01Icon
+} from '@hugeicons/core-free-icons';
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 
@@ -12,7 +19,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-widget',
   standalone: true,
-  imports: [CommonModule, HugeiconsIconComponent, BaseChartDirective],
+  imports: [CommonModule, FormsModule, HugeiconsIconComponent, BaseChartDirective],
   templateUrl: './widget.html',
   styleUrls: ['./widget.css']
 })
@@ -20,35 +27,40 @@ export class Widget implements OnInit {
   private route = inject(ActivatedRoute);
   private supabase = inject(Supabase);
 
+  // Icons for Template
   SunIcon = Sun01Icon;
-  MoonIcon = Moon02Icon;
-  SettingsIcon = Settings02Icon;
+  MoonIcon = Moon01Icon;
+  SettingsIcon = Settings01Icon;
   CancelIcon = Cancel01Icon;
+  ArrowIcon = ArrowDown01Icon;
 
-  theme = signal<'dark' | 'light'>('dark');
-  
-  @HostBinding('attr.data-theme')
-  get hostTheme() {
+  // View & Theme State
+  isLoading = signal(true);
+  view = signal<'main' | 'stats' | 'settings'>('main');
+  theme = signal<'light' | 'dark'>('dark');
+
+  @HostBinding('attr.data-theme') get hostTheme() {
     return this.theme();
   }
 
-  isLoading = signal(true);
-  view = signal<'main' | 'settings' | 'stats'>('main');
+  // User Data Signals
+  userWeight = signal<number>(75.5);
+  intake = signal({ carbs: 105, fat: 35, protein: 85 });
+  targets = signal({ carbs: 250, fat: 70, protein: 150 });
+  lastUpdated = signal<string>('a moment ago');
 
-  userData = signal<any>(null);
-  goals = signal<any>({ carbs: 250, fat: 70, protein: 150 });
-  metrics = signal<any[]>([]);
-
-  actualCalories = signal(1075);
-  currentWeight = signal(70);
+  // Computed Values
+  calories = computed(() => {
+    const cur = (this.intake().carbs * 4) + (this.intake().fat * 9) + (this.intake().protein * 4);
+    const tar = (this.targets().carbs * 4) + (this.targets().fat * 9) + (this.targets().protein * 4);
+    return { current: Math.round(cur), target: Math.round(tar) };
+  });
 
   // Settings Temp State
-  settingsWeight = signal(70);
-  settingsCarbs = signal(250);
-  settingsFat = signal(70);
-  settingsProtein = signal(150);
+  settingsWeight = signal(75.5);
+  settingsGoals = signal({ carbs: 250, fat: 70, protein: 150 });
 
-  // Chart
+  // Chart Properties
   public lineChartType: ChartType = 'line';
   public lineChartData: ChartConfiguration['data'] = {
     labels: ['Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15', 'Apr 16', 'Apr 17'],
@@ -89,9 +101,7 @@ export class Widget implements OnInit {
   public lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    elements: {
-      line: { tension: 0.4 }
-    },
+    elements: { line: { tension: 0.4 } },
     scales: {
       x: {
         grid: { color: '#3a3a3a', drawTicks: false },
@@ -106,10 +116,7 @@ export class Widget implements OnInit {
       }
     },
     plugins: {
-      legend: {
-        labels: { color: '#999', usePointStyle: true, pointStyle: 'circle' },
-        position: 'bottom',
-      },
+      legend: { labels: { color: '#999', usePointStyle: true, pointStyle: 'circle' }, position: 'bottom' },
       tooltip: {
         backgroundColor: '#1a1a1a',
         titleColor: '#fff',
@@ -129,6 +136,43 @@ export class Widget implements OnInit {
     });
   }
 
+  async ngOnInit() {
+    const token = this.route.snapshot.paramMap.get('token');
+    if (token) {
+      await this.loadAllData(token);
+    } else {
+      this.isLoading.set(false);
+    }
+  }
+
+  async loadAllData(token: string) {
+    this.isLoading.set(true);
+    try {
+      const { data: profile } = await this.supabase.getProfileByWidgetToken(token);
+      if (profile) {
+        this.userWeight.set(profile.weight || 75.5);
+        this.settingsWeight.set(profile.weight || 75.5);
+
+        const [goalsRes, metricsRes] = await Promise.all([
+          this.supabase.getUserGoals(profile.id),
+          this.supabase.getDailyMetrics(profile.id),
+        ]);
+
+        if (goalsRes.data) {
+          this.targets.set(goalsRes.data);
+          this.settingsGoals.set({ ...goalsRes.data });
+        }
+        if (metricsRes.data && metricsRes.data.length > 0) {
+          const m = metricsRes.data[0];
+          this.intake.set({ carbs: m.carbs, fat: m.fat, protein: m.protein });
+        }
+      }
+    } catch (e) {
+      console.error('Error loading widget data:', e);
+    }
+    this.isLoading.set(false);
+  }
+
   updateChartTheme(theme: string) {
     const isDark = theme === 'dark';
     const gridColor = isDark ? '#3a3a3a' : '#e9e9e7';
@@ -139,185 +183,118 @@ export class Widget implements OnInit {
     this.lineChartOptions = {
         ...this.lineChartOptions,
         scales: {
-            x: {
-                grid: { color: gridColor, drawTicks: false },
-                ticks: { color: textColor, font: { size: 12 } },
-                border: { display: false }
-            },
-            y: {
-                grid: { color: gridColor, drawTicks: false },
-                ticks: { color: textColor, font: { size: 12 } },
-                border: { display: false },
-                title: { display: true, text: 'Grams (g)', color: textColor, font: { size: 12 } }
-            }
+            x: { ...this.lineChartOptions?.scales?.['x'], grid: { color: gridColor, drawTicks: false }, ticks: { color: textColor } },
+            y: { ...this.lineChartOptions?.scales?.['y'], grid: { color: gridColor, drawTicks: false }, ticks: { color: textColor }, title: { color: textColor, text: 'Grams (g)', display: true } }
         },
         plugins: {
-            legend: {
-                labels: { color: textColor, usePointStyle: true, pointStyle: 'circle' },
-                position: 'bottom',
-            },
-            tooltip: {
-                backgroundColor: bgTooltip,
-                titleColor: textTooltip,
-                bodyColor: textTooltip,
-                borderColor: gridColor,
-                borderWidth: 1,
-                padding: 10,
-                boxPadding: 4,
-                usePointStyle: true,
-            }
+            ...this.lineChartOptions?.plugins,
+            legend: { ...this.lineChartOptions?.plugins?.legend, labels: { color: textColor } },
+            tooltip: { ...this.lineChartOptions?.plugins?.tooltip, backgroundColor: bgTooltip, titleColor: textTooltip, bodyColor: textTooltip, borderColor: gridColor }
         }
     };
     
-    // Updates dataset colors
     if (this.lineChartData.datasets) {
        (this.lineChartData.datasets[0] as any).borderColor = isDark ? '#60a5fa' : '#3b82f6';
-       (this.lineChartData.datasets[0] as any).pointBackgroundColor = isDark ? '#60a5fa' : '#3b82f6';
-       (this.lineChartData.datasets[0] as any).pointBorderColor = isDark ? '#60a5fa' : '#3b82f6';
-
        (this.lineChartData.datasets[1] as any).borderColor = isDark ? '#fb923c' : '#f97316';
-       (this.lineChartData.datasets[1] as any).pointBackgroundColor = isDark ? '#fb923c' : '#f97316';
-       (this.lineChartData.datasets[1] as any).pointBorderColor = isDark ? '#fb923c' : '#f97316';
-
        (this.lineChartData.datasets[2] as any).borderColor = isDark ? '#4ade80' : '#22c55e';
-       (this.lineChartData.datasets[2] as any).pointBackgroundColor = isDark ? '#4ade80' : '#22c55e';
-       (this.lineChartData.datasets[2] as any).pointBorderColor = isDark ? '#4ade80' : '#22c55e';
-       
        this.lineChartData = { ...this.lineChartData };
     }
   }
 
-  async ngOnInit() {
-    const token = this.route.snapshot.paramMap.get('token');
-    if (token) {
-      await this.loadAllData(token);
-    }
-  }
-
-  async loadAllData(token: string) {
-    this.isLoading.set(true);
-
-    const { data: profile, error } = await this.supabase.getProfileByWidgetToken(token);
-
-    if (profile) {
-      this.userData.set(profile);
-      this.currentWeight.set(profile.weight || 70);
-
-      const [goalsRes, metricsRes] = await Promise.all([
-        this.supabase.getUserGoals(profile.id),
-        this.supabase.getDailyMetrics(profile.id),
-      ]);
-
-      if (goalsRes.data) this.goals.set(goalsRes.data);
-      if (metricsRes.data) this.metrics.set(metricsRes.data);
-    }
-
-    this.isLoading.set(false);
-  }
-
-  toggleSettings() {
-    if (this.view() !== 'settings') {
-      this.settingsWeight.set(this.currentWeight());
-      this.settingsCarbs.set(this.goals()?.carbs || 250);
-      this.settingsFat.set(this.goals()?.fat || 70);
-      this.settingsProtein.set(this.goals()?.protein || 150);
-      this.view.set('settings');
-    } else {
-      this.view.set('main');
-    }
-  }
-
-  closeSettings() {
-    this.view.set('main');
-  }
-
   toggleTheme() {
-    this.theme.set(this.theme() === 'dark' ? 'light' : 'dark');
-  }
-
-  async syncWithFatSecret() {
-    console.log('Syncing with FatSecret...');
-  }
-
-  async saveSettings() {
-    const newGoals = {
-      carbs: this.settingsCarbs(),
-      fat: this.settingsFat(),
-      protein: this.settingsProtein()
-    };
-    const newWeight = this.settingsWeight();
-
-    const userId = this.userData()?.id;
-    if (userId) {
-      this.supabase.updateUserSettings(userId, newGoals);
-      // Let's assume updating weight is handled smoothly for now
-    }
-    
-    this.goals.set(newGoals);
-    this.currentWeight.set(newWeight);
-    this.view.set('main');
-  }
-
-  changeSettingsValue(field: 'weight'|'carbs'|'fat'|'protein', event: Event) {
-    const val = (event.target as HTMLInputElement).value;
-    const num = parseFloat(val) || 0;
-    if (field === 'weight') this.settingsWeight.set(num);
-    if (field === 'carbs') this.settingsCarbs.set(num);
-    if (field === 'fat') this.settingsFat.set(num);
-    if (field === 'protein') this.settingsProtein.set(num);
+    this.theme.update(t => t === 'light' ? 'dark' : 'light');
   }
 
   setPage(pageIndex: number) {
     if (pageIndex === 0) this.view.set('main');
-    if (pageIndex === 1) this.view.set('stats');
+    if (pageIndex === 1) {
+      this.view.set('stats');
+      this.timePeriod.set('week');
+    }
   }
 
-  private touchStart: number | null = null;
-  private touchEnd: number | null = null;
+  async saveSettings() {
+    this.targets.set({ ...this.settingsGoals() });
+    this.userWeight.set(this.settingsWeight());
+    this.view.set('main');
+    // Persistence logic would go here
+  }
+
+  updateNow() {
+    this.lastUpdated.set('just now');
+    console.log('Syncing...');
+  }
+
+  // Template Helpers
+  getIntakeValue(key: string): number {
+    return (this.intake() as any)[key] || 0;
+  }
+
+  getPercentageValue(key: string): number {
+    const val = (this.intake() as any)[key] || 0;
+    const max = (this.targets() as any)[key] || 1;
+    return Math.min(Math.round((val / max) * 100), 100);
+  }
+
+  getAvg(index: number) {
+    const data = this.lineChartData.datasets[index].data as number[];
+    if (!data || !data.length) return 0;
+    return Math.round(data.reduce((a, b) => a + (b || 0), 0) / data.length);
+  }
+
+  // Statistics Controls
+  timePeriod = signal<'week'|'month'|'year'>('week');
+
+  changeTimePeriod(event: Event) {
+    const val = (event.target as HTMLSelectElement).value as any;
+    this.timePeriod.set(val);
+    this.updateStatsData(val);
+  }
+
+  updateStatsData(period: 'week'|'month'|'year') {
+    if (period === 'year') {
+      this.lineChartData.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      this.lineChartData.datasets[0].data = [190, 210, 185, 205, 195, 220, 180, 200, 215, 190, 225, 195];
+      this.lineChartData.datasets[1].data = [52, 48, 55, 50, 58, 45, 60, 52, 48, 55, 50, 58];
+      this.lineChartData.datasets[2].data = [125, 135, 118, 130, 122, 140, 115, 128, 135, 120, 145, 125];
+    } else if (period === 'month') {
+        this.lineChartData.labels = Array.from({length: 30}, (_, i) => `Apr ${i+1}`);
+        this.lineChartData.datasets[0].data = Array.from({length: 30}, () => 180 + Math.floor(Math.random() * 70));
+        this.lineChartData.datasets[1].data = Array.from({length: 30}, () => 45 + Math.floor(Math.random() * 20));
+        this.lineChartData.datasets[2].data = Array.from({length: 30}, () => 110 + Math.floor(Math.random() * 50));
+    } else {
+        this.lineChartData.labels = ['Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15', 'Apr 16', 'Apr 17'];
+        this.lineChartData.datasets[0].data = [180, 220, 195, 210, 175, 230, 200];
+        this.lineChartData.datasets[1].data = [50, 45, 55, 60, 48, 52, 58];
+        this.lineChartData.datasets[2].data = [120, 135, 110, 145, 128, 115, 140];
+    }
+    this.lineChartData = { ...this.lineChartData };
+  }
+
+  // Swipe Gestures
+  private touchStartPos: number | null = null;
   private readonly minSwipeDistance = 50;
 
-  getMetrics() {
-    const activeMetrics = this.metrics()?.length ? this.metrics()[0] : { carbs: 105, fat: 35, protein: 85 };
-    return activeMetrics;
-  }
-
-  calculateOffset(value: number | undefined, max: number | undefined): number {
-    const val = value || 0;
-    const m = max || 1;
-    const percentage = Math.min((val / m) * 100, 100);
-    const radius = 54; // size=120, r=(120-12)/2 = 54
-    const circumference = 2 * Math.PI * radius;
-    return circumference - (percentage / 100) * circumference;
-  }
-
-  getCircumference(): number {
-    return 2 * Math.PI * 54;
-  }
-
-  calculatePercent(value: number | undefined, max: number | undefined): number {
-    if (!max || max === 0) return 0;
-    return Math.round(Math.min(((value || 0) / max) * 100, 100));
-  }
-
   onTouchStart(e: TouchEvent) {
-    if (this.view() === 'settings') return;
-    this.touchEnd = null;
-    this.touchStart = e.targetTouches[0].clientX;
+    this.touchStartPos = e.touches[0].clientX;
+  }
+
+  onTouchMove(e: TouchEvent) {
+    // Prevent default scroll if needed, but usually fine
   }
 
   onTouchEnd(e: TouchEvent) {
-    if (this.view() === 'settings') return;
-    this.touchEnd = e.changedTouches[0].clientX;
-    if (!this.touchStart || !this.touchEnd) return;
-
-    const distance = this.touchStart - this.touchEnd;
-    const isLeftSwipe = distance > this.minSwipeDistance;
-    const isRightSwipe = distance < -this.minSwipeDistance;
-
-    if (isLeftSwipe && this.view() === 'main') {
-      this.view.set('stats');
-    } else if (isRightSwipe && this.view() === 'stats') {
-      this.view.set('main');
+    if (!this.touchStartPos) return;
+    const touchEndPos = e.changedTouches[0].clientX;
+    const distance = this.touchStartPos - touchEndPos;
+    
+    if (Math.abs(distance) > this.minSwipeDistance) {
+      if (distance > 0) { // Swipe Left
+        if (this.view() === 'main') this.setPage(1);
+      } else { // Swipe Right
+        if (this.view() === 'stats') this.setPage(0);
+      }
     }
+    this.touchStartPos = null;
   }
 }

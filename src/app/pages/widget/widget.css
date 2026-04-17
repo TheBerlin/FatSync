@@ -28,11 +28,55 @@
   --accent-protein: #22c55e;
 }
 
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+}
+
 /* Base utility classes relying on CSS variables */
+/* Circular Progress SVG Styles */
+.circular-progress {
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  fill: none;
+  stroke: var(--bg-input);
+  stroke-width: 8;
+}
+
+.progress-active {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+/* Page Indicator Dots */
+.page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-sec);
+  opacity: 0.3;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.page-dot.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
 .widget-container {
   background-color: var(--bg-main);
   color: var(--text-main);
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .widget-card {
@@ -40,42 +84,11 @@
   transition: background-color 0.3s ease;
 }
 
-.widget-input {
-  background-color: var(--bg-input);
-  color: var(--text-main);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+.carbs-stroke { stroke: var(--accent-carbs); }
+.fat-stroke { stroke: var(--accent-fat); }
+.protein-stroke { stroke: var(--accent-protein); }
 
-.text-main {
-  color: var(--text-main);
-  transition: color 0.3s ease;
-}
+.carbs-color { color: var(--accent-carbs); }
+.fat-color { color: var(--accent-fat); }
+.protein-color { color: var(--accent-protein); }
 
-.text-sec {
-  color: var(--text-sec);
-  transition: color 0.3s ease;
-}
-
-.widget-btn {
-  background-color: var(--btn-bg);
-  color: var(--btn-text);
-  transition: background-color 0.2s;
-}
-
-.widget-btn:hover {
-  background-color: var(--btn-hover);
-}
-
-.stroke-base {
-  stroke: var(--stroke-color);
-  transition: stroke 0.3s ease;
-}
-
-.fill-base {
-  fill: var(--text-main);
-  transition: fill 0.3s ease;
-}
-
-.carbs-color { stroke: var(--accent-carbs); color: var(--accent-carbs); }
-.fat-color { stroke: var(--accent-fat); color: var(--accent-fat); }
-.protein-color { stroke: var(--accent-protein); color: var(--accent-protein); }

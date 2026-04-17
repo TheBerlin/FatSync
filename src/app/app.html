@@ -18,9 +18,11 @@
   </div>
 }
 
-<main>
-  <router-outlet></router-outlet>
-</main>
+<div [class.pt-24]="!isWidgetRoute()" [class.bg-background]="!isWidgetRoute()" class="min-h-screen">
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
 
 @if (isVisible() && !isWidgetRoute()) {
   <button (click)="scrollToTop()" class="back-to-top" type="button" aria-label="Вернуться наверх">

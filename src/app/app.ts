@@ -1,4 +1,5 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Footer } from './components/footer/footer';
 import { Header } from './components/header/header';
@@ -21,8 +22,11 @@ export class App implements OnInit {
   private router = inject(Router);
 
   isWidgetRoute = signal(false);
+  private location = inject(Location);
 
   constructor() {
+    const initialUrl = this.location.path();
+    this.isWidgetRoute.set(initialUrl.includes('/widget') || initialUrl.includes('/embed'));
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
