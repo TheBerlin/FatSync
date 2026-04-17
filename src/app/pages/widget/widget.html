@@ -1,5 +1,5 @@
-<div class="widget-viewport">
-  <div class="widget-container" [class.stats-view]="view() === 'stats'">
+<div class="widget-viewport" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+  <div class="widget-container">
     <div class="pagination">
       <span [class.active]="view() === 'main'" (click)="view.set('main')"></span>
       <span [class.active]="view() === 'stats'" (click)="view.set('stats')"></span>
@@ -8,77 +8,125 @@
     @if (view() === 'main') {
       <div class="screen">
         <div class="header-row">
-          <div class="weight-block">
+          <div class="weight-info">
             <span class="label">Current Weight</span>
-            <div class="value">{{ currentWeight() }} <small>kg</small></div>
+            <div class="value">{{ currentWeight() }} kg</div>
           </div>
           <hugeicons-icon [icon]="SunIcon" class="sun-icon"></hugeicons-icon>
         </div>
 
-        <div class="calories-main">
-          <div class="cal-display">
-            <span class="current">{{ actualCalories() }}</span>
-            <span class="sep">/</span>
-            <span class="total">{{ goals()?.calories || 2230 }}</span>
+        <div class="calories-center">
+          <div class="cal-main">
+            {{ actualCalories() }}<span class="total">/{{ goals()?.calories || 2230 }}</span>
           </div>
           <div class="label">Calories today</div>
         </div>
 
-        <div class="macros-circles">
-          <div class="macro-item blue">
-            <div class="ring">
-              <span>{{ metrics()[0]?.carbs || 105 }}g</span><small>42%</small>
+        <div class="progress-grid">
+          <div class="circle-item">
+            <div class="svg-box">
+              <svg viewBox="0 0 100 100">
+                <circle class="bg" cx="50" cy="50" r="45"></circle>
+                <circle
+                  class="prog carbs"
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  [style.stroke-dashoffset]="calculateOffset(metrics()[0]?.carbs, goals()?.carbs)"
+                ></circle>
+              </svg>
+              <div class="circle-text">
+                <span class="gram">{{ metrics()[0]?.carbs || 0 }}g</span>
+                <span class="percent"
+                  >{{ calculatePercent(metrics()[0]?.carbs, goals()?.carbs) }}%</span
+                >
+              </div>
             </div>
-            <span>Carbs</span>
+            <span class="label">Carbs</span>
           </div>
-          <div class="macro-item orange">
-            <div class="ring">
-              <span>{{ metrics()[0]?.fat || 35 }}g</span><small>50%</small>
+
+          <div class="circle-item">
+            <div class="svg-box">
+              <svg viewBox="0 0 100 100">
+                <circle class="bg" cx="50" cy="50" r="45"></circle>
+                <circle
+                  class="prog fats"
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  [style.stroke-dashoffset]="calculateOffset(metrics()[0]?.fat, goals()?.fat)"
+                ></circle>
+              </svg>
+              <div class="circle-text">
+                <span class="gram">{{ metrics()[0]?.fat || 0 }}g</span>
+                <span class="percent"
+                  >{{ calculatePercent(metrics()[0]?.fat, goals()?.fat) }}%</span
+                >
+              </div>
             </div>
-            <span>Fats</span>
+            <span class="label">Fats</span>
           </div>
-          <div class="macro-item green">
-            <div class="ring">
-              <span>{{ metrics()[0]?.protein || 85 }}g</span><small>57%</small>
+
+          <div class="circle-item">
+            <div class="svg-box">
+              <svg viewBox="0 0 100 100">
+                <circle class="bg" cx="50" cy="50" r="45"></circle>
+                <circle
+                  class="prog proteins"
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  [style.stroke-dashoffset]="
+                    calculateOffset(metrics()[0]?.protein, goals()?.protein)
+                  "
+                ></circle>
+              </svg>
+              <div class="circle-text">
+                <span class="gram">{{ metrics()[0]?.protein || 0 }}g</span>
+                <span class="percent"
+                  >{{ calculatePercent(metrics()[0]?.protein, goals()?.protein) }}%</span
+                >
+              </div>
             </div>
-            <span>Proteins</span>
+            <span class="label">Proteins</span>
           </div>
         </div>
 
-        <div class="action-area">
+        <div class="footer-row">
           <button class="update-btn" (click)="syncWithFatSecret()">Update now</button>
           <hugeicons-icon
             [icon]="SettingsIcon"
-            class="settings-icon"
+            class="settings-btn"
             (click)="toggleSettings()"
           ></hugeicons-icon>
         </div>
-        <div class="footer-text">Updated a moment ago</div>
       </div>
     } @else {
       <div class="screen stats-screen">
         <div class="stats-header">
           <h2>Statistics</h2>
-          <div class="period-selector">Last Week <i class="chevron-down"></i></div>
+          <div class="period-badge">Last Week</div>
         </div>
 
-        <div class="chart-box">
-          <div class="chart-placeholder">
-            <div class="y-axis">
-              <span>240</span><span>180</span><span>120</span><span>60</span><span>0</span>
+        <div class="chart-container">
+          <div class="fake-chart">
+            <div class="y-axis"><span>240</span><span>120</span><span>0</span></div>
+            <div class="lines">
+              <div class="line blue" style="height: 60%"></div>
+              <div class="line orange" style="height: 40%"></div>
+              <div class="line green" style="height: 55%"></div>
             </div>
-            <div class="chart-line-svg"></div>
           </div>
         </div>
 
-        <div class="chart-legend">
+        <div class="legend">
           <span class="dot blue"></span> Carbs <span class="dot orange"></span> Fat
           <span class="dot green"></span> Protein
         </div>
 
         <hugeicons-icon
           [icon]="SettingsIcon"
-          class="settings-icon-stats"
+          class="settings-btn-alt"
           (click)="toggleSettings()"
         ></hugeicons-icon>
       </div>

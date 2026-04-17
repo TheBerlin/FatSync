@@ -5,9 +5,6 @@ import { Supabase } from '../../services/supabase';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { Sun01Icon, Settings02Icon } from '@hugeicons/core-free-icons';
 
-// Если у тебя есть компоненты для кружков и графиков, импортируй их тут
-// import { MacroCircleComponent } from './components/macro-circle';
-
 @Component({
   selector: 'app-widget',
   standalone: true,
@@ -19,20 +16,16 @@ export class Widget implements OnInit {
   private route = inject(ActivatedRoute);
   private supabase = inject(Supabase);
 
-  // Иконки
   SunIcon = Sun01Icon;
   SettingsIcon = Settings02Icon;
 
-  // Состояния (Signals)
   isLoading = signal(true);
-  view = signal<'main' | 'settings' | 'stats'>('main'); // Переключатель экранов
+  view = signal<'main' | 'settings' | 'stats'>('main');
 
-  // Данные пользователя
   userData = signal<any>(null);
   goals = signal<any>(null);
   metrics = signal<any[]>([]);
 
-  // Текущие показатели (для примера пока статика, потом привяжешь к FatSecret)
   actualCalories = signal(1075);
   currentWeight = signal(0);
 
@@ -47,14 +40,12 @@ export class Widget implements OnInit {
   async loadAllData(token: string) {
     this.isLoading.set(true);
 
-    // 1. Находим пользователя по токену
     const { data: profile, error } = await this.supabase.getProfileByWidgetToken(token);
 
     if (profile) {
       this.userData.set(profile);
       this.currentWeight.set(profile.weight || 0);
 
-      // 2. Параллельно загружаем цели и статистику
       const [goalsRes, metricsRes] = await Promise.all([
         this.supabase.getUserGoals(profile.id),
         this.supabase.getDailyMetrics(profile.id),
@@ -67,7 +58,6 @@ export class Widget implements OnInit {
     this.isLoading.set(false);
   }
 
-  // Методы управления
   toggleSettings() {
     this.view.set(this.view() === 'settings' ? 'main' : 'settings');
   }
@@ -94,10 +84,23 @@ export class Widget implements OnInit {
     const { error } = await this.supabase.updateUserSettings(userId, newGoals);
 
     if (!error) {
-      this.goals.set(newGoals); // Обновляем локальное состояние
-      this.view.set('main'); // Возвращаемся на главный экран
+      this.goals.set(newGoals);
+      this.view.set('main');
     } else {
       console.error('Ошибка сохранения:', error);
     }
+  }
+
+  calculateOffset(value: number | undefined, max: number | undefined): number {
+    const val = value || 0;
+    const m = max || 100;
+    const percentage = Math.min((val / m) * 100, 100);
+    const circumference = 2 * Math.PI * 45;
+    return circumference - (percentage / 100) * circumference;
+  }
+
+  calculatePercent(value: number | undefined, max: number | undefined): number {
+    if (!max) return 0;
+    return Math.round(Math.min(((value || 0) / max) * 100, 100));
   }
 }
