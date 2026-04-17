@@ -50,10 +50,17 @@ export class Dashboard {
 
   /**
    * Copy embed link to clipboard
+   * @returns void
    */
   copyEmbedLink() {
-    const url = `https://fetti-notion.vercel.app/embed/${this.userProfile()?.widget_token}`;
-    navigator.clipboard.writeText(url);
+    const token = this.userProfile()?.widget_token;
+    if (!token) return;
+
+    const url = `${window.location.origin}/embed/${token}`;
+
+    navigator.clipboard.writeText(url).then(() => {
+      console.log('Copied URL:', url);
+    });
   }
 
   /**
