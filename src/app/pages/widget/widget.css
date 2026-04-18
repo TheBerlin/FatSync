@@ -1,17 +1,19 @@
 :host([data-theme='dark']) {
-  --bg-page: #262626;
-  --bg-main: #191919;
-  --bg-card: #1f1f1f;
-  --bg-input: #2a2a2a;
-  --bg-sec: #c4c4c4;
-  --bg-field: #3b3b3b;
-  --text-main: #ffffff;
-  --text-sec: #888888;
-  --text-dark: #191919;
-  --btn-bg: #ffffff;
-  --btn-text: #000000;
-  --btn-hover: #e5e5e5;
-  --stroke-color: rgba(255, 255, 255, 0.08);
+  --bg-page: #242424;
+  --bg-main: #363636;
+  --bg-card: #363636;
+  --bg-input: #969696;
+  --bg-sec: #969696;
+  --bg-field: #525252;
+  --text-main: #f2f2f2;
+  --text-sec: #c4c4c4;
+  --text-feedback: #22fff0;
+  --text-dark: #2222f0;
+  --icon-main: #f2f2f2;
+  --btn-bg: #f2f2f2;
+  --btn-text: #0d0d0d;
+  --btn-hover: #dbdbdb;
+  --stroke-color: #525252;
   --accent-carbs: #3b82f6;
   --accent-fat: #f97316;
   --accent-protein: #22c55e;
@@ -26,18 +28,20 @@
 
 :host([data-theme='light']) {
   --bg-page: #ffffff;
-  --bg-main: #f0f0f0;
-  --bg-card: #ffffff;
-  --bg-input: #e0e0e0;
-  --bg-sec: #191919;
-  --bg-field: #d1d1d1;
-  --text-main: #191919;
-  --text-sec: #787774;
-  --text-dark: #191919;
-  --btn-bg: #191919;
-  --btn-text: #ffffff;
-  --btn-hover: #333333;
-  --stroke-color: rgba(0, 0, 0, 0.08);
+  --bg-main: #ebebeb;
+  --bg-card: #f2f2f2;
+  --bg-input: #c4c4c4;
+  --bg-sec: #363636;
+  --bg-field: #dbdbdb;
+  --text-main: #0d0d0d;
+  --text-sec: #363636;
+  --text-feedback: #22fff0;
+  --text-dark: #2222f0;
+  --icon-main: #0d0d0d;
+  --btn-bg: #0d0d0d;
+  --btn-text: #f2f2f2;
+  --btn-hover: #242424;
+  --stroke-color: #c4c4c4;
   --accent-carbs: #2563eb;
   --accent-fat: #ea580c;
   --accent-protein: #16a34a;
@@ -58,15 +62,14 @@
   width: 100%;
   max-width: 600px;
   min-height: 100%;
-  padding: 32px; /* Slightly reduced padding */
+  padding: 32px;
   background-color: var(--bg-main);
   color: var(--text-main);
   display: flex;
   flex-direction: column;
   position: relative;
   transition: background-color 0.3s ease;
-  overflow: visible; /* Ensure icons aren't clipped */
-
+  overflow: visible;
   border-radius: 16px;
   transition: padding 0.3s ease;
 }
@@ -286,7 +289,7 @@ hugeicons-icon svg {
 }
 
 .save-btn {
-  background-color: var(--bg-sec);
+  color: var(--btn-text);
 }
 
 .update-btn,
@@ -323,7 +326,7 @@ hugeicons-icon svg {
 
 .dropdown-item:hover {
   background-color: var(--btn-bg);
-  color: var(--bg-main);
+  color: var(--text-main);
 }
 
 .dropdown-item.active {

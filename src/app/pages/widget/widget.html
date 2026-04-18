@@ -166,7 +166,7 @@
       <div class="flex flex-col items-center gap-2 w-full mt-4">
         <button
           (click)="updateNow()"
-          class="widget-btn w-fit h-12 px-10 rounded-full text-xl font-black shadow-lg transition-all active:scale-95 cursor-pointer px-4 py-2 update-btn"
+          class="widget-btn w-fit h-12 px-4 py-2 rounded-2xl text-xl font-black shadow-lg transition-all active:scale-95 cursor-pointer px-4 py-2 update-btn"
         >
           Update now
         </button>
@@ -291,13 +291,13 @@
               <input
                 type="number"
                 [(ngModel)]="settingsWeight"
-                class="bg-transparent text-right outline-none text-main font-black text-lg w-20"
+                class="widget-input bg-transparent text-right outline-none text-main font-black text-lg w-20"
               />
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-2">
           <label
             class="text-dark text-[10px] font-black uppercase tracking-[0.2em] mb-1 block opacity-40"
           >
@@ -338,7 +338,7 @@
 
       <button
         (click)="saveSettings()"
-        class="w-fit mx-auto bg-blue-600 text-white rounded-2xl py-4 px-10 mt-12 font-black text-base transition-all active:scale-95 shadow-xl cursor-pointer save-btn"
+        class="w-fit mx-auto bg-blue-600 rounded-2xl px-4 py-2 px-10 mt-12 font-black text-base transition-all active:scale-95 shadow-xl cursor-pointer save-btn"
       >
         Save Changes
       </button>
