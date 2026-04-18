@@ -1,24 +1,39 @@
 :host([data-theme='dark']) {
+  --bg-page: #262626;
   --bg-main: #191919;
   --bg-card: #1f1f1f;
   --bg-input: #2a2a2a;
+  --bg-sec: #c4c4c4;
+  --bg-field: #3b3b3b;
   --text-main: #ffffff;
   --text-sec: #888888;
+  --text-dark: #191919;
   --btn-bg: #ffffff;
   --btn-text: #000000;
   --btn-hover: #e5e5e5;
   --stroke-color: rgba(255, 255, 255, 0.08);
-  --accent-carbs: #3b82f6; 
+  --accent-carbs: #3b82f6;
   --accent-fat: #f97316;
   --accent-protein: #22c55e;
 }
 
+.text-main {
+  color: var(--text-main);
+}
+.text-sec {
+  color: var(--text-sec);
+}
+
 :host([data-theme='light']) {
-  --bg-main: #ffffff;
-  --bg-card: #f7f7f5;
-  --bg-input: #eeeeee;
+  --bg-page: #ffffff;
+  --bg-main: #f0f0f0;
+  --bg-card: #ffffff;
+  --bg-input: #e0e0e0;
+  --bg-sec: #191919;
+  --bg-field: #d1d1d1;
   --text-main: #191919;
   --text-sec: #787774;
+  --text-dark: #191919;
   --btn-bg: #191919;
   --btn-text: #ffffff;
   --btn-hover: #333333;
@@ -35,7 +50,7 @@
   width: 100%;
   height: 100%;
   min-height: 100dvh;
-  background-color: var(--bg-main);
+  background-color: var(--bg-page);
   font-family: 'Inter', sans-serif;
 }
 
@@ -43,7 +58,7 @@
   width: 100%;
   max-width: 600px;
   min-height: 100%;
-  padding: 2rem; /* Slightly reduced padding */
+  padding: 32px; /* Slightly reduced padding */
   background-color: var(--bg-main);
   color: var(--text-main);
   display: flex;
@@ -51,6 +66,34 @@
   position: relative;
   transition: background-color 0.3s ease;
   overflow: visible; /* Ensure icons aren't clipped */
+
+  border-radius: 16px;
+  transition: padding 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .widget-container {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .widget-container {
+    padding: 20px 16px;
+  }
+}
+
+hugeicons-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: inherit;
+}
+
+hugeicons-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* Circular Progress SVG Styles */
@@ -61,28 +104,42 @@
 .progress-bg {
   fill: none;
   stroke: var(--bg-input);
-  stroke-width: 12; /* Slightly thicker based on screenshot */
+  stroke-width: 8;
 }
 
 .progress-active {
   fill: none;
-  stroke-width: 12;
+  stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Page Indicator Dots */
+.page-dot-container {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 50;
+}
+
 .page-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
   background-color: var(--text-main);
   opacity: 0.2;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease;
   cursor: pointer;
 }
 
 .page-dot.active {
+  width: 24px;
   opacity: 1;
 }
 
@@ -91,8 +148,10 @@
   background-color: var(--btn-bg);
   color: var(--btn-text);
   border: none;
-  box-shadow: 0 4px 14px 0 rgba(0,0,0,0.1);
-  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
 }
 
 .widget-btn:hover {
@@ -105,13 +164,60 @@
   transition: background-color 0.3s ease;
 }
 
-.carbs-stroke { stroke: var(--accent-carbs); }
-.fat-stroke { stroke: var(--accent-fat); }
-.protein-stroke { stroke: var(--accent-protein); }
+.widget-card input {
+  background-color: var(--bg-field);
+  border-radius: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
 
-.carbs-color { color: var(--accent-carbs); }
-.fat-color { color: var(--accent-fat); }
-.protein-color { color: var(--accent-protein); }
+.widget-input {
+  background-color: var(--bg-field);
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s;
+  min-width: 44px;
+}
+
+/* Hide number input spinners for a cleaner look */
+.widget-input::-webkit-outer-spin-button,
+.widget-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.widget-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.widget-input:focus {
+  background-color: var(--stroke-color);
+  outline: none;
+}
+
+.carbs-stroke {
+  stroke: var(--accent-carbs);
+}
+.fat-stroke {
+  stroke: var(--accent-fat);
+}
+.protein-stroke {
+  stroke: var(--accent-protein);
+}
+
+.carbs-color {
+  color: var(--accent-carbs);
+}
+.fat-color {
+  color: var(--accent-fat);
+}
+.protein-color {
+  color: var(--accent-protein);
+}
+
+.macro-label {
+  margin-top: -32px;
+}
 
 /* Animations */
 .animate-fade-in {
@@ -119,8 +225,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Scrollbar styling for stats/settings */
@@ -133,4 +245,114 @@
 .overflow-y-auto::-webkit-scrollbar-thumb {
   background: var(--bg-input);
   border-radius: 10px;
+}
+
+/* Responsive Scaling */
+@media (max-width: 420px) {
+  .weight-value {
+    font-size: 1.25rem !important; /* text-xl scale */
+  }
+  .weight-label {
+    font-size: 8px !important;
+  }
+
+  .calories-current,
+  .calories-target {
+    font-size: 1.5rem !important; /* text-2xl scale */
+  }
+
+  .macro-label {
+    font-size: 7px !important;
+    margin-top: -14px;
+  }
+}
+
+@media (max-width: 340px) {
+  .widget-container {
+    padding: 16px !important;
+  }
+
+  .header-right {
+    gap: 0 !important;
+  }
+}
+
+.calories-today {
+  color: var(--bg-sec);
+}
+
+.last-updated {
+  color: var(--bg-sec);
+}
+
+.save-btn {
+  background-color: var(--bg-sec);
+}
+
+.update-btn,
+.save-btn {
+  background-color: var(--btn-bg);
+}
+
+.dropdown-card {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 100;
+  background-color: var(--bg-card);
+  border: 1px solid var(--stroke-color);
+  border-radius: 16px;
+  padding: 8px;
+  min-width: 160px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropdown-item {
+  padding: 8px 8px;
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--btn-bg);
+  color: var(--bg-main);
+}
+
+.dropdown-item.active {
+  background-color: var(--bg-field);
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: 24px;
 }

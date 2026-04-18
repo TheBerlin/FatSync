@@ -1,15 +1,25 @@
-import { Component, inject, OnInit, signal, HostBinding, effect, computed } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  HostBinding,
+  effect,
+  computed,
+  HostListener,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
-import { 
-  Sun01Icon, 
-  Moon01Icon, 
-  Settings01Icon, 
+import {
+  Sun02Icon,
+  Moon02Icon,
+  Settings01Icon,
   Cancel01Icon,
-  ArrowDown01Icon
+  ArrowDown01Icon,
 } from '@hugeicons/core-free-icons';
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
@@ -21,15 +31,16 @@ Chart.register(...registerables);
   standalone: true,
   imports: [CommonModule, FormsModule, HugeiconsIconComponent, BaseChartDirective],
   templateUrl: './widget.html',
-  styleUrls: ['./widget.css']
+  styleUrls: ['./widget.css'],
 })
 export class Widget implements OnInit {
   private route = inject(ActivatedRoute);
   private supabase = inject(Supabase);
+  private el = inject(ElementRef);
 
   // Icons for Template
-  SunIcon = Sun01Icon;
-  MoonIcon = Moon01Icon;
+  SunIcon = Sun02Icon;
+  MoonIcon = Moon02Icon;
   SettingsIcon = Settings01Icon;
   CancelIcon = Cancel01Icon;
   ArrowIcon = ArrowDown01Icon;
@@ -51,8 +62,8 @@ export class Widget implements OnInit {
 
   // Computed Values
   calories = computed(() => {
-    const cur = (this.intake().carbs * 4) + (this.intake().fat * 9) + (this.intake().protein * 4);
-    const tar = (this.targets().carbs * 4) + (this.targets().fat * 9) + (this.targets().protein * 4);
+    const cur = this.intake().carbs * 4 + this.intake().fat * 9 + this.intake().protein * 4;
+    const tar = this.targets().carbs * 4 + this.targets().fat * 9 + this.targets().protein * 4;
     return { current: Math.round(cur), target: Math.round(tar) };
   });
 
@@ -97,8 +108,8 @@ export class Widget implements OnInit {
         pointRadius: 3,
         pointBackgroundColor: '#22c55e',
         pointBorderColor: '#22c55e',
-      } as any
-    ]
+      } as any,
+    ],
   };
 
   public lineChartOptions: ChartConfiguration['options'] = {
@@ -109,13 +120,13 @@ export class Widget implements OnInit {
       x: {
         grid: { display: false },
         ticks: { color: '#666', font: { size: 10 } },
-        border: { display: false }
+        border: { display: false },
       },
       y: {
         grid: { color: 'rgba(255,255,255,0.05)', drawTicks: false },
         ticks: { color: '#666', font: { size: 10 }, stepSize: 50 },
-        border: { display: false }
-      }
+        border: { display: false },
+      },
     },
     plugins: {
       legend: { display: false },
@@ -127,8 +138,8 @@ export class Widget implements OnInit {
         borderWidth: 1,
         padding: 8,
         usePointStyle: true,
-      }
-    }
+      },
+    },
   };
 
   constructor() {
@@ -186,25 +197,25 @@ export class Widget implements OnInit {
       (this.lineChartOptions.scales['y'] as any).grid.color = gridColor;
       (this.lineChartOptions.scales['y'] as any).ticks.color = textColor;
     }
-    
-    if (this.lineChartData.datasets) {
-       this.lineChartData.datasets[0].borderColor = isDark ? '#3b82f6' : '#2563eb';
-       this.lineChartData.datasets[1].borderColor = isDark ? '#f97316' : '#ea580c';
-       this.lineChartData.datasets[2].borderColor = isDark ? '#22c55e' : '#16a34a';
-       
-       // Force point colors to avoid type collision but ensure they are updated
-       this.lineChartData.datasets.forEach((ds: any) => {
-         ds.pointBackgroundColor = ds.borderColor;
-         ds.pointBorderColor = ds.borderColor;
-       });
 
-       this.lineChartData = { ...this.lineChartData };
+    if (this.lineChartData.datasets) {
+      this.lineChartData.datasets[0].borderColor = isDark ? '#3b82f6' : '#2563eb';
+      this.lineChartData.datasets[1].borderColor = isDark ? '#f97316' : '#ea580c';
+      this.lineChartData.datasets[2].borderColor = isDark ? '#22c55e' : '#16a34a';
+
+      // Force point colors to avoid type collision but ensure they are updated
+      this.lineChartData.datasets.forEach((ds: any) => {
+        ds.pointBackgroundColor = ds.borderColor;
+        ds.pointBorderColor = ds.borderColor;
+      });
+
+      this.lineChartData = { ...this.lineChartData };
     }
     this.lineChartOptions = { ...this.lineChartOptions };
   }
 
   toggleTheme() {
-    this.theme.update(t => t === 'light' ? 'dark' : 'light');
+    this.theme.update((t) => (t === 'light' ? 'dark' : 'light'));
   }
 
   setPage(pageIndex: number) {
@@ -245,30 +256,92 @@ export class Widget implements OnInit {
   }
 
   // Statistics Controls
-  timePeriod = signal<'week'|'month'|'year'>('week');
+  timePeriod = signal<'week' | 'month' | 'year'>('week');
+  isPeriodDropdownOpen = signal(false);
+
+  @HostListener('document:click', ['$event'])
+  onOutsideClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    // Check if the click was outside the dropdown container
+    if (!target.closest('.period-dropdown-container')) {
+      this.isPeriodDropdownOpen.set(false);
+    }
+  }
+
+  togglePeriodDropdown() {
+    this.isPeriodDropdownOpen.update((v) => !v);
+  }
+
+  setPeriod(period: 'week' | 'month' | 'year') {
+    this.timePeriod.set(period);
+    this.updateStatsData(period);
+    this.isPeriodDropdownOpen.set(false);
+  }
+
+  getPeriodLabel(): string {
+    const labels = {
+      week: 'Last Week',
+      month: 'Last Month',
+      year: 'Last Year',
+    };
+    return labels[this.timePeriod()];
+  }
 
   changeTimePeriod(event: Event) {
     const val = (event.target as HTMLSelectElement).value as any;
-    this.timePeriod.set(val);
-    this.updateStatsData(val);
+    this.setPeriod(val);
   }
 
-  updateStatsData(period: 'week'|'month'|'year') {
+  updateStatsData(period: 'week' | 'month' | 'year') {
     if (period === 'year') {
-      this.lineChartData.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      this.lineChartData.datasets[0].data = [190, 210, 185, 205, 195, 220, 180, 200, 215, 190, 225, 195];
+      this.lineChartData.labels = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      this.lineChartData.datasets[0].data = [
+        190, 210, 185, 205, 195, 220, 180, 200, 215, 190, 225, 195,
+      ];
       this.lineChartData.datasets[1].data = [52, 48, 55, 50, 58, 45, 60, 52, 48, 55, 50, 58];
-      this.lineChartData.datasets[2].data = [125, 135, 118, 130, 122, 140, 115, 128, 135, 120, 145, 125];
+      this.lineChartData.datasets[2].data = [
+        125, 135, 118, 130, 122, 140, 115, 128, 135, 120, 145, 125,
+      ];
     } else if (period === 'month') {
-        this.lineChartData.labels = Array.from({length: 30}, (_, i) => `Apr ${i+1}`);
-        this.lineChartData.datasets[0].data = Array.from({length: 30}, () => 180 + Math.floor(Math.random() * 70));
-        this.lineChartData.datasets[1].data = Array.from({length: 30}, () => 45 + Math.floor(Math.random() * 20));
-        this.lineChartData.datasets[2].data = Array.from({length: 30}, () => 110 + Math.floor(Math.random() * 50));
+      this.lineChartData.labels = Array.from({ length: 30 }, (_, i) => `Apr ${i + 1}`);
+      this.lineChartData.datasets[0].data = Array.from(
+        { length: 30 },
+        () => 180 + Math.floor(Math.random() * 70),
+      );
+      this.lineChartData.datasets[1].data = Array.from(
+        { length: 30 },
+        () => 45 + Math.floor(Math.random() * 20),
+      );
+      this.lineChartData.datasets[2].data = Array.from(
+        { length: 30 },
+        () => 110 + Math.floor(Math.random() * 50),
+      );
     } else {
-        this.lineChartData.labels = ['Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15', 'Apr 16', 'Apr 17'];
-        this.lineChartData.datasets[0].data = [180, 220, 195, 210, 175, 230, 200];
-        this.lineChartData.datasets[1].data = [50, 45, 55, 60, 48, 52, 58];
-        this.lineChartData.datasets[2].data = [120, 135, 110, 145, 128, 115, 140];
+      this.lineChartData.labels = [
+        'Apr 11',
+        'Apr 12',
+        'Apr 13',
+        'Apr 14',
+        'Apr 15',
+        'Apr 16',
+        'Apr 17',
+      ];
+      this.lineChartData.datasets[0].data = [180, 220, 195, 210, 175, 230, 200];
+      this.lineChartData.datasets[1].data = [50, 45, 55, 60, 48, 52, 58];
+      this.lineChartData.datasets[2].data = [120, 135, 110, 145, 128, 115, 140];
     }
     this.lineChartData = { ...this.lineChartData };
   }
@@ -281,17 +354,19 @@ export class Widget implements OnInit {
     this.touchStartPos = e.touches[0].clientX;
   }
 
-  onTouchMove(e: TouchEvent) { }
+  onTouchMove(e: TouchEvent) {}
 
   onTouchEnd(e: TouchEvent) {
     if (!this.touchStartPos) return;
     const touchEndPos = e.changedTouches[0].clientX;
     const distance = this.touchStartPos - touchEndPos;
-    
+
     if (Math.abs(distance) > this.minSwipeDistance) {
-      if (distance > 0) { // Swipe Left
+      if (distance > 0) {
+        // Swipe Left
         if (this.view() === 'main') this.setPage(1);
-      } else { // Swipe Right
+      } else {
+        // Swipe Right
         if (this.view() === 'stats') this.setPage(0);
       }
     }
