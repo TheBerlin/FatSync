@@ -60,7 +60,7 @@
 
 .widget-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
   min-height: 100%;
   padding: 32px;
   background-color: var(--bg-main);
@@ -142,7 +142,7 @@ hugeicons-icon svg {
 }
 
 .page-dot.active {
-  width: 24px;
+  width: 32px;
   opacity: 1;
 }
 
