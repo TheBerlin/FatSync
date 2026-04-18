@@ -82,10 +82,10 @@
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="text-main text-[15px] font-black leading-none">{{
+                <span class="text-main macro-value font-black leading-none">{{
                   getIntakeValue('carbs')
                 }}</span>
-                <span class="text-sec text-[8px] font-bold opacity-50"
+                <span class="text-sec macro-value font-bold opacity-50"
                   >{{ getPercentageValue('carbs') }}%</span
                 >
               </div>
@@ -111,10 +111,10 @@
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="text-main text-[15px] font-black leading-none">{{
+                <span class="text-main macro-value font-black leading-none">{{
                   getIntakeValue('fat')
                 }}</span>
-                <span class="text-sec text-[8px] font-bold opacity-50"
+                <span class="text-sec macro-value font-bold opacity-50"
                   >{{ getPercentageValue('fat') }}%</span
                 >
               </div>
@@ -140,10 +140,10 @@
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="text-main text-[15px] font-black leading-none">{{
+                <span class="text-main macro-value font-black leading-none">{{
                   getIntakeValue('protein')
                 }}</span>
-                <span class="text-sec text-[8px] font-bold opacity-50"
+                <span class="text-sec macro-value font-bold opacity-50"
                   >{{ getPercentageValue('protein') }}%</span
                 >
               </div>
@@ -287,7 +287,8 @@
                 <input
                   type="number"
                   [(ngModel)]="settingsWeight"
-                  class="widget-input bg-transparent text-right outline-none text-main font-black text-lg w-20"
+                  [style.width.ch]="settingsWeight.toString().length + 2"
+                  class="widget-input text-right outline-none text-main font-black"
                 />
               </div>
             </div>

@@ -222,6 +222,11 @@ hugeicons-icon svg {
   margin-top: -32px;
 }
 
+.macro-value {
+  font-size: 16px;
+  transition: font-size 0.3s ease;
+}
+
 /* Animations */
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out;
@@ -267,6 +272,10 @@ hugeicons-icon svg {
   .macro-label {
     font-size: 7px !important;
     margin-top: -14px;
+  }
+
+  .macro-value {
+    font-size: 10px !important;
   }
 }
 
