@@ -219,7 +219,7 @@ hugeicons-icon svg {
 }
 
 .macro-label {
-  margin-top: -32px;
+  margin-top: -24px;
 }
 
 .macro-value {
@@ -389,4 +389,12 @@ hugeicons-icon svg {
   .stats-row .text-2xl {
     font-size: 1.1rem;
   }
+}
+
+.period-dropdown-container {
+  width: fit-content;
+  align-self: flex-start;
+  background-color: var(--bg-field);
+  border-radius: 8px;
+  padding: 8px 8px;
 }

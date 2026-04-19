@@ -91,7 +91,7 @@
               </div>
             </div>
             <span
-              class="macro-label text-sec text-[8px] font-black uppercase tracking-widest opacity-60"
+              class="macro-label text-sec text-xs font-black uppercase tracking-widest opacity-60"
               >Carbs</span
             >
           </div>
@@ -120,7 +120,7 @@
               </div>
             </div>
             <span
-              class="macro-label text-sec text-[8px] font-black uppercase tracking-widest opacity-60"
+              class="macro-label text-sec text-xs font-black uppercase tracking-widest opacity-60"
               >Fats</span
             >
           </div>
@@ -149,7 +149,7 @@
               </div>
             </div>
             <span
-              class="macro-label text-sec text-[8px] font-black uppercase tracking-widest opacity-60"
+              class="macro-label text-sec text-xs font-black uppercase tracking-widest opacity-60"
               >Proteins</span
             >
           </div>
@@ -176,7 +176,7 @@
           <h1 class="text-main text-2xl font-black tracking-tight">Statistics</h1>
         </div>
 
-        <div class="relative w-max mb-6 period-dropdown-container">
+        <div class="relative w-fit self-start mb-2 period-dropdown-container">
           <button
             (click)="togglePeriodDropdown()"
             class="flex items-center gap-2 text-main text-[10px] font-black uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition-all cursor-pointer"
@@ -278,7 +278,10 @@
         <div class="space-y-4 flex-1 overflow-y-auto pr-1 custom-scroll">
           <!-- Personal Info -->
           <div>
-            <label class="text-dark text-[10px] font-black uppercase tracking-widest mb-2 block opacity-40">Personal Info</label>
+            <label
+              class="text-dark text-[10px] font-black uppercase tracking-widest mb-2 block opacity-40"
+              >Personal Info</label
+            >
             <div class="widget-card rounded-2xl px-4">
               <div class="flex justify-between items-center py-3">
                 <span class="text-main font-bold text-sm">Weight (kg)</span>
@@ -294,7 +297,10 @@
 
           <!-- Daily Targets -->
           <div>
-            <label class="text-dark text-[10px] font-black uppercase tracking-[0.2em] mb-2 block opacity-40">Daily Targets (g)</label>
+            <label
+              class="text-dark text-[10px] font-black uppercase tracking-[0.2em] mb-2 block opacity-40"
+              >Daily Targets (g)</label
+            >
             <div class="widget-card rounded-2xl px-4 divide-y divide-[var(--stroke-color)]">
               <div class="flex justify-between items-center py-3">
                 <span class="text-main font-bold text-sm">Carbohydrates</span>
