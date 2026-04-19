@@ -7,8 +7,8 @@
   --bg-field: #525252;
   --text-main: #f2f2f2;
   --text-sec: #c4c4c4;
-  --text-feedback: #22fff0;
-  --text-dark: #2222f0;
+  --text-dark: #0d0d0d;
+  --field-hover: #525252;
   --icon-main: #f2f2f2;
   --btn-bg: #f2f2f2;
   --btn-text: #0d0d0d;
@@ -35,8 +35,8 @@
   --bg-field: #dbdbdb;
   --text-main: #0d0d0d;
   --text-sec: #363636;
-  --text-feedback: #22fff0;
-  --text-dark: #2222f0;
+  --text-dark: #0d0d0d;
+  --field-hover: #c4c4c4;
   --icon-main: #0d0d0d;
   --btn-bg: #0d0d0d;
   --btn-text: #f2f2f2;
@@ -334,8 +334,7 @@ hugeicons-icon svg {
 }
 
 .dropdown-item:hover {
-  background-color: var(--btn-bg);
-  color: var(--text-main);
+  background-color: var(--bg-field);
 }
 
 .dropdown-item.active {
@@ -394,7 +393,7 @@ hugeicons-icon svg {
 .period-dropdown-container {
   width: fit-content;
   align-self: flex-start;
-  background-color: var(--bg-field);
+  background-color: var(--field-hover);
   border-radius: 8px;
   padding: 8px 8px;
 }
