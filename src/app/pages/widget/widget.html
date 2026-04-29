@@ -71,12 +71,27 @@
           <div class="flex flex-col items-center">
             <div class="relative w-20 h-20 flex items-center justify-center">
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
+                <defs>
+                  <linearGradient id="carbs-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                  </linearGradient>
+                  <filter id="carbs-glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
                 <circle class="progress-bg" cx="50" cy="50" r="25" />
                 <circle
-                  class="progress-active carbs-stroke"
+                  class="progress-active"
                   cx="50"
                   cy="50"
                   r="25"
+                  stroke="url(#carbs-gradient)"
+                  filter="url(#carbs-glow)"
                   [style.strokeDasharray]="157.08"
                   [style.strokeDashoffset]="157.08 - (getPercentageValue('carbs') / 100) * 157.08"
                 />
@@ -100,12 +115,27 @@
           <div class="flex flex-col items-center">
             <div class="relative w-20 h-20 flex items-center justify-center">
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
+                <defs>
+                  <linearGradient id="fat-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#fb923c;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#f97316;stop-opacity:1" />
+                  </linearGradient>
+                  <filter id="fat-glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
                 <circle class="progress-bg" cx="50" cy="50" r="25" />
                 <circle
-                  class="progress-active fat-stroke"
+                  class="progress-active"
                   cx="50"
                   cy="50"
                   r="25"
+                  stroke="url(#fat-gradient)"
+                  filter="url(#fat-glow)"
                   [style.strokeDasharray]="157.08"
                   [style.strokeDashoffset]="157.08 - (getPercentageValue('fat') / 100) * 157.08"
                 />
@@ -129,12 +159,27 @@
           <div class="flex flex-col items-center">
             <div class="relative w-20 h-20 flex items-center justify-center">
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
+                <defs>
+                  <linearGradient id="protein-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#4ade80;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+                  </linearGradient>
+                  <filter id="protein-glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
                 <circle class="progress-bg" cx="50" cy="50" r="25" />
                 <circle
-                  class="progress-active protein-stroke"
+                  class="progress-active"
                   cx="50"
                   cy="50"
                   r="25"
+                  stroke="url(#protein-gradient)"
+                  filter="url(#protein-glow)"
                   [style.strokeDasharray]="157.08"
                   [style.strokeDashoffset]="157.08 - (getPercentageValue('protein') / 100) * 157.08"
                 />

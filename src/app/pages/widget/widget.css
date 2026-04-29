@@ -102,17 +102,19 @@ hugeicons-icon svg {
 /* Circular Progress SVG Styles */
 .circular-progress {
   transform: rotate(-90deg);
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
 }
 
 .progress-bg {
   fill: none;
   stroke: var(--bg-input);
-  stroke-width: 8;
+  stroke-width: 6;
+  opacity: 0.3;
 }
 
 .progress-active {
   fill: none;
-  stroke-width: 8;
+  stroke-width: 10;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -206,16 +208,6 @@ hugeicons-icon svg {
 .widget-input:focus {
   background-color: var(--stroke-color);
   outline: none;
-}
-
-.carbs-stroke {
-  stroke: var(--accent-carbs);
-}
-.fat-stroke {
-  stroke: var(--accent-fat);
-}
-.protein-stroke {
-  stroke: var(--accent-protein);
 }
 
 .carbs-color {
