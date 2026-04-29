@@ -404,6 +404,15 @@ hugeicons-icon svg {
   cursor: pointer;
 }
 
+.theme-dropdown-container {
+  position: relative;
+}
+
+.theme-dropdown-container .dropdown-card {
+  right: 0;
+  left: auto;
+}
+
 /* ── Update button crossfade ── */
 .update-btn {
   position: relative;
