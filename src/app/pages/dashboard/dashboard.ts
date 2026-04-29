@@ -163,7 +163,7 @@ export class Dashboard {
 
     const { error } = await this.supabase.updateProfile(userId, {
       fs_access_token: null,
-      fs_secret_token_secret: null,
+      fs_access_token_secret: null,
       fs_connected: false,
     });
 
