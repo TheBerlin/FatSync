@@ -1,6 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
+// Try to load .env file for local development
+try {
+  require('dotenv').config({ path: path.join(__dirname, '../.env') });
+} catch (e) {
+  // dotenv not installed or .env file doesn't exist - that's ok
+}
+
 const environmentsDir = path.join(__dirname, '../src/environments');
 
 // Check if environment variables are set (Vercel build)
