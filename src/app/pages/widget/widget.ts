@@ -188,9 +188,9 @@ export class Widget implements OnInit {
         if (metricsRes.data && metricsRes.data.length > 0) {
           const today = metricsRes.data[0];
           this.intake.set({
-            carbs: today.carbs || 0,
-            fat: today.fat || 0,
-            protein: today.protein || 0
+            carbs: today.actual_carbs || 0,
+            fat: today.actual_fat || 0,
+            protein: today.actual_protein || 0
           });
 
           // Set last updated time
@@ -333,9 +333,9 @@ export class Widget implements OnInit {
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     });
 
-    this.lineChartData.datasets[0].data = last7Days.map(m => m.carbs || 0);
-    this.lineChartData.datasets[1].data = last7Days.map(m => m.fat || 0);
-    this.lineChartData.datasets[2].data = last7Days.map(m => m.protein || 0);
+    this.lineChartData.datasets[0].data = last7Days.map(m => m.actual_carbs || 0);
+    this.lineChartData.datasets[1].data = last7Days.map(m => m.actual_fat || 0);
+    this.lineChartData.datasets[2].data = last7Days.map(m => m.actual_protein || 0);
 
     this.lineChartData = { ...this.lineChartData };
   }

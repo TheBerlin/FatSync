@@ -53,4 +53,5 @@ src/app/pages/dashboard-test/dashboard-test.ts
 src/app/pages/dashboard-test/dashboard-test.spec.ts
 src/app/pages/dashboard-test/dashboard-test.html
 
-widget
+# Old React widget (removed)
+/widget
