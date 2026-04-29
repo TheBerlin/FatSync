@@ -176,7 +176,6 @@ export class Dashboard {
    * @returns Embed URL
    */
   getEmbedUrl(): string {
-    if (1) return 'http://localhost:4200/embed/114ebc76-ac75-402f-84e0-cdf9ab90f6a8';
     const token = this.supabase.userProfile()?.widget_token;
     if (!token) return '';
 
