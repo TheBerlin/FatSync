@@ -48,7 +48,7 @@ export class Widget implements OnInit {
   // View & Theme State
   isLoading = signal(true);
   view = signal<'main' | 'stats' | 'settings'>('main');
-  theme = signal<'light' | 'dark'>('dark');
+  theme = signal<'light' | 'dark' | 'amoled' | 'nord' | 'dracula' | 'solarized-dark' | 'solarized-light' | 'catppuccin' | 'gruvbox' | 'tokyo-night' | 'sunset' | 'ocean' | 'forest'>('dark');
   userTier = signal<'basic' | 'premium' | 'pro'>('basic'); // Mock tier state
 
   @HostBinding('attr.data-theme') get hostTheme() {
@@ -74,7 +74,7 @@ export class Widget implements OnInit {
 
   // Settings Temp State
   settingsGoals = signal({ carbs: 250, fat: 70, protein: 150 });
-  settingsTheme = signal<'light' | 'dark'>('dark');
+  settingsTheme = signal<'light' | 'dark' | 'amoled' | 'nord' | 'dracula' | 'solarized-dark' | 'solarized-light' | 'catppuccin' | 'gruvbox' | 'tokyo-night' | 'sunset' | 'ocean' | 'forest'>('dark');
   isThemeDropdownOpen = signal(false);
 
   // Chart Properties
@@ -290,13 +290,28 @@ export class Widget implements OnInit {
     this.isThemeDropdownOpen.update((v) => !v);
   }
 
-  selectTheme(theme: 'light' | 'dark') {
+  selectTheme(theme: 'light' | 'dark' | 'amoled' | 'nord' | 'dracula' | 'solarized-dark' | 'solarized-light' | 'catppuccin' | 'gruvbox' | 'tokyo-night' | 'sunset' | 'ocean' | 'forest') {
     this.settingsTheme.set(theme);
     this.isThemeDropdownOpen.set(false);
   }
 
   getThemeLabel(): string {
-    return this.settingsTheme() === 'dark' ? 'Dark' : 'Light';
+    const labels: Record<string, string> = {
+      'light': 'Light',
+      'dark': 'Dark',
+      'amoled': 'AMOLED Black',
+      'nord': 'Nord',
+      'dracula': 'Dracula',
+      'solarized-dark': 'Solarized Dark',
+      'solarized-light': 'Solarized Light',
+      'catppuccin': 'Catppuccin',
+      'gruvbox': 'Gruvbox',
+      'tokyo-night': 'Tokyo Night',
+      'sunset': 'Sunset',
+      'ocean': 'Ocean',
+      'forest': 'Forest'
+    };
+    return labels[this.settingsTheme()] || 'Dark';
   }
 
   setPage(pageIndex: number) {

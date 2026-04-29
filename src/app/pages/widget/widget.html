@@ -374,6 +374,7 @@
                       (click)="selectTheme('dark'); $event.stopPropagation()"
                       class="dropdown-item"
                       [class.active]="settingsTheme() === 'dark'"
+                      data-theme="dark"
                     >
                       Dark
                     </div>
@@ -381,8 +382,97 @@
                       (click)="selectTheme('light'); $event.stopPropagation()"
                       class="dropdown-item"
                       [class.active]="settingsTheme() === 'light'"
+                      data-theme="light"
                     >
                       Light
+                    </div>
+                    <div
+                      (click)="selectTheme('amoled'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'amoled'"
+                      data-theme="amoled"
+                    >
+                      AMOLED Black
+                    </div>
+                    <div
+                      (click)="selectTheme('nord'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'nord'"
+                      data-theme="nord"
+                    >
+                      Nord
+                    </div>
+                    <div
+                      (click)="selectTheme('dracula'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'dracula'"
+                      data-theme="dracula"
+                    >
+                      Dracula
+                    </div>
+                    <div
+                      (click)="selectTheme('solarized-dark'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'solarized-dark'"
+                      data-theme="solarized-dark"
+                    >
+                      Solarized Dark
+                    </div>
+                    <div
+                      (click)="selectTheme('solarized-light'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'solarized-light'"
+                      data-theme="solarized-light"
+                    >
+                      Solarized Light
+                    </div>
+                    <div
+                      (click)="selectTheme('catppuccin'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'catppuccin'"
+                      data-theme="catppuccin"
+                    >
+                      Catppuccin
+                    </div>
+                    <div
+                      (click)="selectTheme('gruvbox'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'gruvbox'"
+                      data-theme="gruvbox"
+                    >
+                      Gruvbox
+                    </div>
+                    <div
+                      (click)="selectTheme('tokyo-night'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'tokyo-night'"
+                      data-theme="tokyo-night"
+                    >
+                      Tokyo Night
+                    </div>
+                    <div
+                      (click)="selectTheme('sunset'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'sunset'"
+                      data-theme="sunset"
+                    >
+                      Sunset
+                    </div>
+                    <div
+                      (click)="selectTheme('ocean'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'ocean'"
+                      data-theme="ocean"
+                    >
+                      Ocean
+                    </div>
+                    <div
+                      (click)="selectTheme('forest'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'forest'"
+                      data-theme="forest"
+                    >
+                      Forest
                     </div>
                   </div>
                 </div>
