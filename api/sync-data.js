@@ -186,6 +186,11 @@ export default async function handler(req, res) {
     const fsToken = decrypt(profile.fs_access_token);
     const fsSecret = decrypt(profile.fs_access_token_secret);
 
+    console.log('Decrypted tokens length:', {
+      token: fsToken?.length,
+      secret: fsSecret?.length
+    });
+
     // Get data from FatSecret
     const nutritionData = await getFatSecretData(fsToken, fsSecret);
     console.log('Nutrition data from FatSecret:', nutritionData);
