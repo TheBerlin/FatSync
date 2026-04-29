@@ -30,7 +30,7 @@
 
     <div class="nav-actions flex items-center">
       <div class="hidden md:flex items-center gap-4">
-        @if (supabase.currentUser() || 1) {
+        @if (supabase.currentUser()) {
           <a [routerLink]="['/dashboard']" class="nav-link mr-2">Dashboard</a>
 
           <div class="relative group flex items-center justify-center">

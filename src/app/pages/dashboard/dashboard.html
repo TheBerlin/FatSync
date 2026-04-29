@@ -105,8 +105,8 @@
               <span class="font-bold">FatSecret</span>
             </div>
 
-            @if (supabase.userProfile()?.is_premium || 1) {
-              @if (supabase.userProfile()?.fs_connected || 1) {
+            @if (supabase.userProfile()?.is_premium) {
+              @if (supabase.userProfile()?.fs_connected) {
                 <button
                   (click)="disconnectFatSecret()"
                   class="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-tertiary/20 text-tertiary hover:bg-red-50 hover:text-red-600 transition-all duration-300 ease-in-out"
@@ -151,8 +151,8 @@
               <span class="font-bold">Notion</span>
             </div>
 
-            @if (supabase.userProfile()?.is_premium || 1) {
-              @if (supabase.userProfile()?.notion_connected || 1) {
+            @if (supabase.userProfile()?.is_premium) {
+              @if (supabase.userProfile()?.notion_connected) {
                 @if (supabase.userProfile()?.notion_connected) {
                   <button
                     (click)="disconnectNotion()"
@@ -183,7 +183,7 @@
           </div>
         </div>
 
-        @if (!supabase.userProfile()?.is_premium || 1) {
+        @if (!supabase.userProfile()?.is_premium) {
           <p class="mt-4 text-[10px] text-primary font-bold animate-pulse text-center">
             Upgrade to Premium to unlock
           </p>
@@ -228,8 +228,7 @@
               @if (
                 (supabase.userProfile()?.is_premium &&
                   supabase.userProfile()?.fs_connected &&
-                  supabase.userProfile()?.notion_connected) ||
-                1
+                  supabase.userProfile()?.notion_connected)
               ) {
                 <div class="p-6 bg-tertiary/10 rounded-3xl border border-tertiary/20">
                   <span
