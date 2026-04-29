@@ -47,6 +47,13 @@ async function getFatSecretData(accessToken, accessSecret) {
     },
   };
 
+  console.log('OAuth consumer keys present:', {
+    hasConsumerKey: !!process.env.FS_CLIENT_ID,
+    hasConsumerSecret: !!process.env.FS_CLIENT_SECRET,
+    consumerKeyLength: process.env.FS_CLIENT_ID?.length,
+    consumerSecretLength: process.env.FS_CLIENT_SECRET?.length
+  });
+
   const authData = oauth.authorize(requestData, {
     key: accessToken,
     secret: accessSecret,
