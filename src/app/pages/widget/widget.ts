@@ -56,10 +56,12 @@ export class Widget implements OnInit {
   }
 
   // User Data Signals
-  userWeight = signal<number>(0);
-  intake = signal({ carbs: 0, fat: 0, protein: 0 });
+  userWeight = signal<number>(75.5);
+  intake = signal({ carbs: 180, fat: 55, protein: 120 });
+  intakeAnimated = signal({ carbs: 0, fat: 0, protein: 0 }); // For number counter animation
+  intakeCircleAnimated = signal({ carbs: 0, fat: 0, protein: 0 }); // For circle fill animation
   targets = signal({ carbs: 250, fat: 70, protein: 150 });
-  lastUpdated = signal<string>('');
+  lastUpdated = signal<string>('2h ago');
   isUpdating = signal(false);
   userId = signal<string>(''); // Store user ID for updates
 
@@ -158,6 +160,14 @@ export class Widget implements OnInit {
     } else {
       this.isLoading.set(false);
     }
+
+    // Reset animated values to 0 before starting animation
+    this.intakeAnimated.set({ carbs: 0, fat: 0, protein: 0 });
+    this.intakeCircleAnimated.set({ carbs: 0, fat: 0, protein: 0 });
+
+    // Animate numbers and circles independently
+    this.animateNumbers();
+    this.animateCircles();
   }
 
   async loadAllData(token: string) {
@@ -299,6 +309,11 @@ export class Widget implements OnInit {
 
     this.isUpdating.set(true);
 
+    // Auto-reset after 10 seconds
+    const timeoutId = setTimeout(() => {
+      this.isUpdating.set(false);
+    }, 10000);
+
     try {
       // Trigger sync for this user
       const response = await fetch('/api/sync-data', {
@@ -317,6 +332,7 @@ export class Widget implements OnInit {
     } catch (error) {
       console.error('Update error:', error);
     } finally {
+      clearTimeout(timeoutId);
       this.isUpdating.set(false);
     }
   }
@@ -342,13 +358,78 @@ export class Widget implements OnInit {
 
   // Template Helpers
   getIntakeValue(key: 'carbs' | 'fat' | 'protein'): number {
-    return this.intake()[key] || 0;
+    return this.intakeAnimated()[key] || 0;
   }
 
   getPercentageValue(key: 'carbs' | 'fat' | 'protein'): number {
-    const val = this.intake()[key] || 0;
+    const val = this.intakeCircleAnimated()[key] || 0;
     const max = this.targets()[key] || 1;
     return Math.min(Math.round((val / max) * 100), 100);
+  }
+
+  animateNumbers() {
+    const duration = 800; // 0.8 seconds - faster for numbers
+    const steps = 50;
+    const interval = duration / steps;
+
+    const targetIntake = this.intake();
+    let currentStep = 0;
+
+    const easeOutQuad = (t: number) => t * (2 - t);
+
+    const animate = () => {
+      currentStep++;
+      const progress = easeOutQuad(currentStep / steps);
+
+      this.intakeAnimated.set({
+        carbs: Math.round(targetIntake.carbs * progress),
+        fat: Math.round(targetIntake.fat * progress),
+        protein: Math.round(targetIntake.protein * progress)
+      });
+
+      if (currentStep < steps) {
+        setTimeout(animate, interval);
+      } else {
+        this.intakeAnimated.set(targetIntake);
+      }
+    };
+
+    animate();
+  }
+
+  animateCircles() {
+    const duration = 1200; // 1.2 seconds
+    const fps = 60;
+    const totalFrames = (duration / 1000) * fps;
+    let frame = 0;
+
+    const targetIntake = this.intake();
+
+    // Custom easing: starts slow, accelerates in middle, slows at end
+    const easeInOutQuart = (t: number) => {
+      return t < 0.5
+        ? 8 * t * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 4) / 2;
+    };
+
+    const animate = () => {
+      frame++;
+      const progress = easeInOutQuart(frame / totalFrames);
+
+      this.intakeCircleAnimated.set({
+        carbs: targetIntake.carbs * progress,
+        fat: targetIntake.fat * progress,
+        protein: targetIntake.protein * progress
+      });
+
+      if (frame < totalFrames) {
+        requestAnimationFrame(animate);
+      } else {
+        this.intakeCircleAnimated.set(targetIntake);
+      }
+    };
+
+    requestAnimationFrame(animate);
   }
 
   getAvg(index: number) {

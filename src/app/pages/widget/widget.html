@@ -68,8 +68,8 @@
         <!-- Circular Progress Indicators -->
         <div class="w-full flex justify-around items-center px-1 mt-1 mb-4">
           <!-- Carbs -->
-          <div class="flex flex-col items-center">
-            <div class="relative w-20 h-20 flex items-center justify-center">
+          <div class="flex flex-col items-center gap-2">
+            <div class="relative w-24 h-24 flex items-center justify-center">
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="carbs-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -84,16 +84,16 @@
                     </feMerge>
                   </filter>
                 </defs>
-                <circle class="progress-bg" cx="50" cy="50" r="25" />
+                <circle class="progress-bg" cx="50" cy="50" r="35" />
                 <circle
                   class="progress-active"
                   cx="50"
                   cy="50"
-                  r="25"
+                  r="35"
                   stroke="url(#carbs-gradient)"
                   filter="url(#carbs-glow)"
-                  [style.strokeDasharray]="157.08"
-                  [style.strokeDashoffset]="157.08 - (getPercentageValue('carbs') / 100) * 157.08"
+                  [style.strokeDasharray]="219.91"
+                  [style.strokeDashoffset]="219.91 - (getPercentageValue('carbs') / 100) * 219.91"
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -112,8 +112,8 @@
           </div>
 
           <!-- Fat -->
-          <div class="flex flex-col items-center">
-            <div class="relative w-20 h-20 flex items-center justify-center">
+          <div class="flex flex-col items-center gap-2">
+            <div class="relative w-24 h-24 flex items-center justify-center">
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="fat-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -128,16 +128,16 @@
                     </feMerge>
                   </filter>
                 </defs>
-                <circle class="progress-bg" cx="50" cy="50" r="25" />
+                <circle class="progress-bg" cx="50" cy="50" r="35" />
                 <circle
                   class="progress-active"
                   cx="50"
                   cy="50"
-                  r="25"
+                  r="35"
                   stroke="url(#fat-gradient)"
                   filter="url(#fat-glow)"
-                  [style.strokeDasharray]="157.08"
-                  [style.strokeDashoffset]="157.08 - (getPercentageValue('fat') / 100) * 157.08"
+                  [style.strokeDasharray]="219.91"
+                  [style.strokeDashoffset]="219.91 - (getPercentageValue('fat') / 100) * 219.91"
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -156,8 +156,8 @@
           </div>
 
           <!-- Protein -->
-          <div class="flex flex-col items-center">
-            <div class="relative w-20 h-20 flex items-center justify-center">
+          <div class="flex flex-col items-center gap-2">
+            <div class="relative w-24 h-24 flex items-center justify-center">
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="protein-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -172,16 +172,16 @@
                     </feMerge>
                   </filter>
                 </defs>
-                <circle class="progress-bg" cx="50" cy="50" r="25" />
+                <circle class="progress-bg" cx="50" cy="50" r="35" />
                 <circle
                   class="progress-active"
                   cx="50"
                   cy="50"
-                  r="25"
+                  r="35"
                   stroke="url(#protein-gradient)"
                   filter="url(#protein-glow)"
-                  [style.strokeDasharray]="157.08"
-                  [style.strokeDashoffset]="157.08 - (getPercentageValue('protein') / 100) * 157.08"
+                  [style.strokeDasharray]="219.91"
+                  [style.strokeDashoffset]="219.91 - (getPercentageValue('protein') / 100) * 219.91"
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -229,13 +229,13 @@
         </div>
 
         @if (userTier() === 'basic') {
-          <div class="absolute inset-0 z-30 flex items-center justify-center bg-[var(--bg-main)]/40 backdrop-blur-[4px] pt-12">
+          <div class="absolute inset-0 z-30 flex items-center justify-center pt-12" style="background: rgba(var(--bg-main-rgb), 0.3);">
             <div class="bg-[var(--bg-card)] p-6 rounded-2xl text-center shadow-2xl border border-[var(--stroke-color)] max-w-[240px] animate-fade-in-up">
               <span class="material-symbols-outlined text-[32px] mb-3 text-[var(--text-main)]" style="font-variation-settings: 'FILL' 1;">lock</span>
               <h3 class="text-[var(--text-main)] font-black text-lg tracking-tight mb-2">Premium Feature</h3>
               <p class="text-[var(--text-sec)] text-[11px] font-medium leading-relaxed mb-5">Statistics and trends are available for Premium and Pro members.</p>
-              <button 
-                class="widget-btn w-full h-10 rounded-[12px] text-sm font-bold shadow-md cursor-pointer transition-transform active:scale-95" 
+              <button
+                class="widget-btn w-full h-10 rounded-[12px] text-sm font-bold shadow-md cursor-pointer transition-transform active:scale-95"
                 style="background-color: var(--btn-bg); color: var(--btn-text);"
               >
                 Upgrade Now
@@ -244,7 +244,7 @@
           </div>
         }
 
-        <div class="flex flex-col flex-1 relative z-10" [class.blur-sm]="userTier() === 'basic'" [class.opacity-30]="userTier() === 'basic'" [class.pointer-events-none]="userTier() === 'basic'">
+        <div class="flex flex-col flex-1 relative z-10" [class.stats-blurred]="userTier() === 'basic'" [class.opacity-30]="userTier() === 'basic'" [class.pointer-events-none]="userTier() === 'basic'">
           <div class="relative w-fit self-start mb-2 period-dropdown-container" (click)="togglePeriodDropdown()">
           <div
             class="flex items-center gap-2 text-main text-[10px] font-black uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition-all cursor-pointer w-full"
