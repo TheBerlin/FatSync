@@ -56,7 +56,7 @@ export class Widget implements OnInit {
   }
 
   // User Data Signals
-  userWeight = signal<number>(75.5);
+  userWeight = signal<number>(0);
   intake = signal({ carbs: 180, fat: 55, protein: 120 });
   intakeAnimated = signal({ carbs: 0, fat: 0, protein: 0 }); // For number counter animation
   intakeCircleAnimated = signal({ carbs: 0, fat: 0, protein: 0 }); // For circle fill animation
@@ -73,7 +73,6 @@ export class Widget implements OnInit {
   });
 
   // Settings Temp State
-  settingsWeight = 75.5;
   settingsGoals = signal({ carbs: 250, fat: 70, protein: 150 });
 
   // Chart Properties
@@ -177,7 +176,6 @@ export class Widget implements OnInit {
       if (profile) {
         this.userId.set(profile.id);
         this.userWeight.set(profile.weight || 0);
-        this.settingsWeight = profile.weight || 0;
 
         const [goalsRes, metricsRes] = await Promise.all([
           this.supabase.getUserGoals(profile.id),
@@ -210,9 +208,9 @@ export class Widget implements OnInit {
             const diffMinutes = Math.floor((now.getTime() - updatedDate.getTime()) / 60000);
 
             if (diffMinutes < 1) {
-              this.lastUpdated.set('just now');
+              this.lastUpdated.set('moment ago');
             } else if (diffMinutes < 60) {
-              this.lastUpdated.set(`${diffMinutes} min ago`);
+              this.lastUpdated.set(`${diffMinutes}m ago`);
             } else {
               const hours = Math.floor(diffMinutes / 60);
               this.lastUpdated.set(`${hours}h ago`);
@@ -228,8 +226,17 @@ export class Widget implements OnInit {
         // Update last sync from profile
         if (profile.last_sync) {
           const syncDate = new Date(profile.last_sync);
-          const time = syncDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          this.lastUpdated.set(`at ${time}`);
+          const now = new Date();
+          const diffMinutes = Math.floor((now.getTime() - syncDate.getTime()) / 60000);
+
+          if (diffMinutes < 1) {
+            this.lastUpdated.set('moment ago');
+          } else if (diffMinutes < 60) {
+            this.lastUpdated.set(`${diffMinutes}m ago`);
+          } else {
+            const hours = Math.floor(diffMinutes / 60);
+            this.lastUpdated.set(`${hours}h ago`);
+          }
         }
       }
     } catch (e) {
@@ -291,14 +298,8 @@ export class Widget implements OnInit {
       target_protein: this.settingsGoals().protein,
     });
 
-    // Update weight in profile
-    await this.supabase.updateProfile(userId, {
-      weight: this.settingsWeight,
-    });
-
     // Update local state
     this.targets.set({ ...this.settingsGoals() });
-    this.userWeight.set(this.settingsWeight);
     this.view.set('main');
   }
 
@@ -495,6 +496,8 @@ export class Widget implements OnInit {
 
   // Swipe Gestures
   private touchStartPos: number | null = null;
+  private mouseStartPos: number | null = null;
+  private isMouseDown = false;
   private readonly minSwipeDistance = 50;
 
   onTouchStart(e: TouchEvent) {
@@ -518,5 +521,34 @@ export class Widget implements OnInit {
       }
     }
     this.touchStartPos = null;
+  }
+
+  onMouseDown(e: MouseEvent) {
+    this.isMouseDown = true;
+    this.mouseStartPos = e.clientX;
+  }
+
+  onMouseMove(e: MouseEvent) {
+    if (!this.isMouseDown) return;
+  }
+
+  onMouseUp(e: MouseEvent) {
+    if (!this.isMouseDown || !this.mouseStartPos) return;
+
+    const mouseEndPos = e.clientX;
+    const distance = this.mouseStartPos - mouseEndPos;
+
+    if (Math.abs(distance) > this.minSwipeDistance) {
+      if (distance > 0) {
+        // Swipe Left
+        if (this.view() === 'main') this.setPage(1);
+      } else {
+        // Swipe Right
+        if (this.view() === 'stats') this.setPage(0);
+      }
+    }
+
+    this.isMouseDown = false;
+    this.mouseStartPos = null;
   }
 }

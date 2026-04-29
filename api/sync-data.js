@@ -116,12 +116,54 @@ async function getFatSecretData(accessToken, accessSecret) {
     }
   }
 
+  // Get weight data from FatSecret
+  let weight = null;
+  try {
+    const weightRequestData = {
+      url,
+      method: 'POST',
+      data: {
+        method: 'weights.get_month',
+        format: 'json',
+      },
+    };
+
+    const weightAuthData = oauth.authorize(weightRequestData, {
+      key: accessToken,
+      secret: accessSecret,
+    });
+
+    const weightResponse = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(weightAuthData).toString(),
+    });
+
+    const weightData = await weightResponse.json();
+    console.log('FatSecret weight response:', JSON.stringify(weightData, null, 2));
+
+    if (weightData.month && weightData.month.day) {
+      const weightDays = Array.isArray(weightData.month.day) ? weightData.month.day : [weightData.month.day];
+
+      // Find most recent weight entry
+      const sortedDays = weightDays.sort((a, b) => parseInt(b.date_int) - parseInt(a.date_int));
+
+      if (sortedDays.length > 0 && sortedDays[0].weight_kg) {
+        weight = parseFloat(sortedDays[0].weight_kg);
+        console.log('Found weight:', weight);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching weight from FatSecret:', error);
+  }
+
   return {
     date: dateStr,
     calories: Math.round(totalCalories),
     carbs: Math.round(totalCarbs),
     fat: Math.round(totalFat),
     protein: Math.round(totalProtein),
+    weight: weight,
   };
 }
 
@@ -235,6 +277,15 @@ export default async function handler(req, res) {
     const nutritionData = await getFatSecretData(fsToken, fsSecret);
     console.log('Nutrition data from FatSecret:', nutritionData);
 
+    // Update weight in profile if available from FatSecret
+    if (nutritionData.weight) {
+      await supabase
+        .from('profiles')
+        .update({ weight: nutritionData.weight })
+        .eq('id', userId);
+      console.log('Updated weight in profile:', nutritionData.weight);
+    }
+
     // Save to Supabase daily_metrics
     const { error: metricsError } = await supabase
       .from('daily_metrics')
@@ -261,7 +312,7 @@ export default async function handler(req, res) {
         profile.notion_token,
         profile.notion_db_id,
         nutritionData,
-        profile.weight
+        nutritionData.weight || profile.weight
       );
     } else {
       console.log('Skipping Notion sync: database ID not configured');

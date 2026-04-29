@@ -1,6 +1,14 @@
 <div class="widget-container h-full w-full relative">
   <!-- Content Area -->
-  <div class="flex-1 w-full relative flex flex-col pt-1">
+  <div
+    class="flex-1 w-full relative flex flex-col pt-1"
+    (touchstart)="onTouchStart($event)"
+    (touchmove)="onTouchMove($event)"
+    (touchend)="onTouchEnd($event)"
+    (mousedown)="onMouseDown($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="onMouseUp($event)"
+  >
     <!-- Page Indicator Dots (HUD Centered) -->
     <div class="page-dot-container">
       <div class="page-dot" [class.active]="view() === 'main'" (click)="setPage(0)"></div>
@@ -17,15 +25,19 @@
               class="weight-label text-sec text-[10px] font-bold uppercase tracking-widest mb-0.5 opacity-60"
               >Current Weight</span
             >
-            <span class="weight-value text-main text-2xl font-black tracking-tight"
-              >{{ userWeight() }} <span class="text-base font-bold opacity-40">kg</span></span
-            >
+            <span class="weight-value text-main text-2xl font-black tracking-tight">
+              @if (userWeight() > 0) {
+                {{ userWeight() }} <span class="text-base font-bold opacity-40">kg</span>
+              } @else {
+                <span class="opacity-40">—</span>
+              }
+            </span>
           </div>
 
           <div class="header-right flex items-center gap-1 -mr-2">
             <button
               (click)="toggleTheme()"
-              class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90"
+              class="p-2 rounded-full transition-all active:scale-90 outline-none focus:outline-none cursor-pointer"
             >
               <hugeicons-icon
                 [icon]="theme() === 'dark' ? SunIcon : MoonIcon"
@@ -37,7 +49,7 @@
             </button>
             <button
               (click)="view.set('settings')"
-              class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90"
+              class="p-2 rounded-full transition-all active:scale-90 outline-none focus:outline-none cursor-pointer"
             >
               <hugeicons-icon
                 [icon]="SettingsIcon"
@@ -345,25 +357,6 @@
         </div>
 
         <div class="space-y-4 flex-1 overflow-y-auto pr-1 custom-scroll">
-          <!-- Personal Info -->
-          <div>
-            <label
-              class="text-dark text-[10px] font-black uppercase tracking-widest mb-2 block opacity-40"
-              >Personal Info</label
-            >
-            <div class="widget-card rounded-2xl px-4">
-              <div class="flex justify-between items-center py-3">
-                <span class="text-main font-bold text-sm">Weight (kg)</span>
-                <input
-                  type="number"
-                  [(ngModel)]="settingsWeight"
-                  [style.width.ch]="settingsWeight.toString().length + 2"
-                  class="widget-input text-right outline-none text-main font-black"
-                />
-              </div>
-            </div>
-          </div>
-
           <!-- Daily Targets -->
           <div>
             <label

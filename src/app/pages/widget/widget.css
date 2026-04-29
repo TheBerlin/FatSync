@@ -133,8 +133,8 @@ hugeicons-icon svg {
 }
 
 .page-dot {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
   border-radius: 4px;
   background-color: var(--text-main);
   opacity: 0.2;
@@ -142,6 +142,8 @@ hugeicons-icon svg {
     width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.4s ease;
   cursor: pointer;
+  padding: 3px;
+  margin: -3px;
 }
 
 .page-dot.active {
