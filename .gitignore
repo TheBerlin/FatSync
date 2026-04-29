@@ -45,6 +45,9 @@ Thumbs.db
 
 # Environment variables
 .env
+# Generated environment files (auto-generated from Vercel variables during build)
+src/environments/environment.ts
+src/environments/environment.development.ts
 src/app/pages/dashboard-test/dashboard-test.css
 src/app/pages/dashboard-test/dashboard-test.ts
 src/app/pages/dashboard-test/dashboard-test.spec.ts
