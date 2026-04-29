@@ -84,7 +84,8 @@ async function getFatSecretData(accessToken, accessSecret) {
  * Save data to Notion database
  */
 async function saveToNotion(notionToken, dbId, data, weight) {
-  const { Client } = await import('@notionhq/client');
+  const notionModule = await import('@notionhq/client');
+  const Client = notionModule.Client || notionModule.default?.Client || notionModule.default;
   const notion = new Client({ auth: notionToken });
 
   // Check if entry for today already exists
