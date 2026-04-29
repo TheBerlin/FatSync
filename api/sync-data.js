@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Client } from '@notionhq/client';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-const ENCRYPTION_KEY = process.env.MASTER_ENCRYPTION_KEY;
+const ENCRYPTION_KEY = Buffer.from(process.env.MASTER_ENCRYPTION_KEY, 'hex');
 
 /**
  * Decrypt function
@@ -13,7 +13,7 @@ function decrypt(text) {
   const parts = text.split(':');
   const iv = Buffer.from(parts.shift(), 'hex');
   const encrypted = Buffer.from(parts.join(':'), 'hex');
-  const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', ENCRYPTION_KEY, iv);
   let decrypted = decipher.update(encrypted);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
