@@ -35,6 +35,8 @@ async function getFatSecretData(accessToken, accessSecret) {
   const url = 'https://platform.fatsecret.com/rest/server.api';
   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
+  console.log('Requesting FatSecret data for date:', today);
+
   const requestData = {
     url,
     method: 'POST',
@@ -66,6 +68,16 @@ async function getFatSecretData(accessToken, accessSecret) {
   const data = await response.json();
 
   console.log('FatSecret API response:', JSON.stringify(data, null, 2));
+
+  // If error, try to get more details
+  if (data.error) {
+    console.error('FatSecret API error details:', {
+      code: data.error.code,
+      message: data.error.message,
+      requestDate: today,
+      requestDateFormatted: today.replace(/-/g, '')
+    });
+  }
 
   // Parse nutrition data
   const entries = data.food_entries?.food_entry || [];
