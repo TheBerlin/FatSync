@@ -58,8 +58,12 @@ async function getFatSecretData(accessToken, accessSecret) {
 
   const data = await response.json();
 
+  console.log('FatSecret API response:', JSON.stringify(data, null, 2));
+
   // Parse nutrition data
   const entries = data.food_entries?.food_entry || [];
+  console.log('Food entries count:', entries.length);
+
   let totalCalories = 0;
   let totalCarbs = 0;
   let totalFat = 0;
@@ -88,6 +92,8 @@ async function saveToNotion(notionToken, dbId, data, weight) {
   if (!dbId) {
     throw new Error('Notion database ID is missing');
   }
+
+  console.log('Saving to Notion:', { dbId, data, weight });
 
   const notion = new Client({ auth: notionToken });
 
@@ -182,6 +188,7 @@ export default async function handler(req, res) {
 
     // Get data from FatSecret
     const nutritionData = await getFatSecretData(fsToken, fsSecret);
+    console.log('Nutrition data from FatSecret:', nutritionData);
 
     // Save to Supabase daily_metrics
     const { error: metricsError } = await supabase
@@ -199,6 +206,8 @@ export default async function handler(req, res) {
 
     if (metricsError) {
       console.error('Supabase error:', metricsError);
+    } else {
+      console.log('Successfully saved to Supabase daily_metrics');
     }
 
     // Save to Notion (only if database ID is configured)
