@@ -65,7 +65,7 @@ async function getFatSecretData(accessToken, accessSecret) {
 
   console.log('FatSecret request:', {
     url,
-    date: today.replace(/-/g, ''),
+    date: dateStr.replace(/-/g, ''),
     hasToken: !!accessToken,
     hasSecret: !!accessSecret
   });
