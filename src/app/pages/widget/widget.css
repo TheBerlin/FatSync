@@ -315,7 +315,7 @@ hugeicons-icon svg {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  z-index: 100;
+  z-index: 1000;
   background-color: var(--bg-card);
   border: 1px solid var(--stroke-color);
   border-radius: 16px;
@@ -409,7 +409,7 @@ hugeicons-icon svg {
 }
 
 .theme-dropdown-container .dropdown-card {
-  right: 0;
+  right: -8px;
   left: auto;
 }
 
