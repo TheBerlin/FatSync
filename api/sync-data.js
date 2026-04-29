@@ -1,6 +1,7 @@
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { Client } from '@notionhq/client';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const ENCRYPTION_KEY = Buffer.from(process.env.MASTER_ENCRYPTION_KEY, 'hex');
@@ -84,9 +85,11 @@ async function getFatSecretData(accessToken, accessSecret) {
  * Save data to Notion database
  */
 async function saveToNotion(notionToken, dbId, data, weight) {
-  const notionModule = await import('@notionhq/client');
-  const Client = notionModule.Client || notionModule.default?.Client || notionModule.default;
   const notion = new Client({ auth: notionToken });
+
+  console.log('Notion client created:', typeof notion);
+  console.log('notion.databases:', typeof notion.databases);
+  console.log('notion.databases.query:', typeof notion.databases?.query);
 
   // Check if entry for today already exists
   const today = new Date().toISOString().split('T')[0];
