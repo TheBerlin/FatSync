@@ -201,13 +201,17 @@ export default async function handler(req, res) {
       console.error('Supabase error:', metricsError);
     }
 
-    // Save to Notion
-    await saveToNotion(
-      profile.notion_token,
-      profile.notion_db_id,
-      nutritionData,
-      profile.weight
-    );
+    // Save to Notion (only if database ID is configured)
+    if (profile.notion_db_id) {
+      await saveToNotion(
+        profile.notion_token,
+        profile.notion_db_id,
+        nutritionData,
+        profile.weight
+      );
+    } else {
+      console.log('Skipping Notion sync: database ID not configured');
+    }
 
     // Update last_sync timestamp
     await supabase
