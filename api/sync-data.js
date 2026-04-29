@@ -89,6 +89,7 @@ async function saveToNotion(notionToken, dbId, data, weight) {
 
   console.log('Notion client created:', typeof notion);
   console.log('notion.databases:', typeof notion.databases);
+  console.log('Available methods:', Object.keys(notion.databases || {}));
   console.log('notion.databases.query:', typeof notion.databases?.query);
 
   // Check if entry for today already exists
