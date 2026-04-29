@@ -87,22 +87,22 @@ async function getFatSecretData(accessToken, accessSecret) {
 async function saveToNotion(notionToken, dbId, data, weight) {
   const notion = new Client({ auth: notionToken });
 
-  console.log('Notion client created:', typeof notion);
-  console.log('notion.databases:', typeof notion.databases);
-  console.log('Available methods:', Object.keys(notion.databases || {}));
-  console.log('notion.databases.query:', typeof notion.databases?.query);
-
   // Check if entry for today already exists
   const today = new Date().toISOString().split('T')[0];
 
-  const existing = await notion.databases.query({
-    database_id: dbId,
+  // Use search instead of databases.query
+  const existing = await notion.search({
     filter: {
-      property: 'Date',
-      date: {
-        equals: today,
-      },
+      property: 'object',
+      value: 'page'
     },
+    query: today,
+  });
+
+  // Filter results to match our database and date
+  const todayPage = existing.results.find(page => {
+    return page.parent?.database_id === dbId.replace(/-/g, '') &&
+           page.properties?.Date?.date?.start === today;
   });
 
   const properties = {
@@ -117,10 +117,10 @@ async function saveToNotion(notionToken, dbId, data, weight) {
     properties.Weight = { number: weight };
   }
 
-  if (existing.results.length > 0) {
+  if (todayPage) {
     // Update existing entry
     await notion.pages.update({
-      page_id: existing.results[0].id,
+      page_id: todayPage.id,
       properties,
     });
   } else {
