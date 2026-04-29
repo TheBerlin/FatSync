@@ -7,7 +7,7 @@
     <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
       <div>
         <h1 class="text-5xl font-headline font-extrabold tracking-tighter text-on-surface">
-          {{ supabase.currentUser()?.user_metadata['full_name']?.split(' ')[0] }}'s
+          {{ supabase.currentUser()?.user_metadata['full_name']?.split(' ')[0] || 'User' }}'s
           <span class="text-primary text-mango-blade">Metrics.</span>
         </h1>
       </div>
@@ -70,10 +70,17 @@
                 <span class="font-bold">2,481 transferred</span>
               </div>
               <button
-                class="bg-primary text-white px-8 py-3 rounded-full font-headline font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 cursor-pointer"
+                (click)="handleSync()"
+                [disabled]="isSyncing()"
+                class="bg-primary text-white px-8 py-3 rounded-full font-headline font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sync Now
+                {{ isSyncing() ? 'Syncing...' : 'Sync Now' }}
               </button>
+              @if (syncStatus()) {
+                <p class="text-xs mt-2 font-bold" [class.text-tertiary]="syncStatus().includes('successful')" [class.text-error]="syncStatus().includes('Error')">
+                  {{ syncStatus() }}
+                </p>
+              }
             </div>
           </div>
         </div>
@@ -98,8 +105,8 @@
               <span class="font-bold">FatSecret</span>
             </div>
 
-            @if (supabase.userProfile()?.is_premium) {
-              @if (supabase.userProfile()?.fs_connected) {
+            @if (supabase.userProfile()?.is_premium || 1) {
+              @if (supabase.userProfile()?.fs_connected || 1) {
                 <button
                   (click)="disconnectFatSecret()"
                   class="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-tertiary/20 text-tertiary hover:bg-red-50 hover:text-red-600 transition-all duration-300 ease-in-out"
@@ -144,8 +151,8 @@
               <span class="font-bold">Notion</span>
             </div>
 
-            @if (supabase.userProfile()?.is_premium) {
-              @if (supabase.userProfile()?.notion_connected) {
+            @if (supabase.userProfile()?.is_premium || 1) {
+              @if (supabase.userProfile()?.notion_connected || 1) {
                 @if (supabase.userProfile()?.notion_connected) {
                   <button
                     (click)="disconnectNotion()"
@@ -160,7 +167,7 @@
                   (click)="connectNotion()"
                   [disabled]="isNotionLoading() || !supabase.userProfile()?.email"
                   class="text-xs bg-primary px-4 py-1.5 rounded-full font-bold cursor-pointer hover:scale-105 transition-all text-on-primary shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[75px] min-h-[32px]"
-                  [class.w-[40px]]="isNotionLoading()"
+                  [class.w-10]="isNotionLoading()"
                   [class.px-0]="isNotionLoading()"
                 >
                   @if (isNotionLoading()) {
@@ -176,7 +183,7 @@
           </div>
         </div>
 
-        @if (!supabase.userProfile()?.is_premium) {
+        @if (!supabase.userProfile()?.is_premium || 1) {
           <p class="mt-4 text-[10px] text-primary font-bold animate-pulse text-center">
             Upgrade to Premium to unlock
           </p>
@@ -219,9 +226,10 @@
               </div>
 
               @if (
-                supabase.userProfile()?.is_premium &&
-                supabase.userProfile()?.fs_connected &&
-                supabase.userProfile()?.notion_connected
+                (supabase.userProfile()?.is_premium &&
+                  supabase.userProfile()?.fs_connected &&
+                  supabase.userProfile()?.notion_connected) ||
+                1
               ) {
                 <div class="p-6 bg-tertiary/10 rounded-3xl border border-tertiary/20">
                   <span
@@ -236,7 +244,7 @@
                     </code>
                     <button
                       (click)="copyEmbedLink()"
-                      class="bg-tertiary text-on-tertiary p-3 rounded-xl hover:scale-105 transition-transform active:scale-95"
+                      class="bg-tertiary text-on-tertiary p-3 rounded-xl transition-transform active:scale-95 cursor-pointer"
                     >
                       <span class="material-symbols-outlined text-sm">content_copy</span>
                     </button>

@@ -2,37 +2,131 @@
   <div class="pricing-container">
     <div class="pricing-header">
       <h2 class="pricing-title">Simple, Transparent Pricing.</h2>
-      <p class="pricing-subtitle">No subscriptions. No hidden fees. Just pure utility.</p>
+      <p class="pricing-subtitle">One-time payment. No subscriptions. No hidden fees.</p>
     </div>
-    <div class="pricing-box-wrapper hover:scale-[1.01] transition-transform">
-    <div class="pricing-card">
-        <span class="pricing-card-title">Lifetime Access</span>
+    <div class="pricing-grid">
+      <!-- Basic -->
+      <div class="pricing-card">
+        <span class="pricing-card-title">Basic</span>
         <div class="pricing-price-wrapper">
           <span class="pricing-currency">$</span>
-          <span class="pricing-amount">14.99</span>
+          <span class="pricing-amount">6.99</span>
         </div>
         <ul class="pricing-features">
           <li class="pricing-feature">
-            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill">check_circle</span>
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Dashboard Access</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>FatSecret & Notion Integration</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Custom Goals & Targets</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Auto Sync (2x daily)</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Basic Widget (Main View)</span>
+          </li>
+        </ul>
+        <app-button variant="secondary" size="md" [fullWidth]="true" class="mt-8 block">
+          Get Started
+        </app-button>
+        <p class="pricing-footer-text">One-time payment.</p>
+      </div>
+
+      <!-- Premium -->
+      <div class="pricing-card popular">
+        <div class="pricing-badge">Most Popular</div>
+        <span class="pricing-card-title">Premium</span>
+        <div class="pricing-price-wrapper">
+          <span class="pricing-currency">$</span>
+          <span class="pricing-amount">12.99</span>
+        </div>
+        <ul class="pricing-features">
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Everything in Basic</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
             <span>Unlimited Daily Syncs</span>
           </li>
           <li class="pricing-feature">
-            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill">check_circle</span>
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Advanced Statistics & Charts</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Premium Widget Themes</span>
+          </li>
+        </ul>
+        <app-button variant="primary" size="md" [fullWidth]="true" class="mt-8 block">
+          Go Premium
+        </app-button>
+        <p class="pricing-footer-text">Best value • One-time payment.</p>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card">
+        <span class="pricing-card-title">Pro</span>
+        <div class="pricing-price-wrapper">
+          <span class="pricing-currency">$</span>
+          <span class="pricing-amount">19.99</span>
+        </div>
+        <ul class="pricing-features">
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Everything in Premium</span>
+          </li>
+          <li class="pricing-feature">
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
             <span>Historical Data Import</span>
           </li>
           <li class="pricing-feature">
-            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill">check_circle</span>
-            <span>Priority 24/7 Support</span>
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Data Export (CSV/PDF)</span>
           </li>
           <li class="pricing-feature">
-            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill">check_circle</span>
-            <span>Future Feature Updates</span>
+            <span class="material-symbols-outlined pricing-feature-icon" data-weight="fill"
+              >check_circle</span
+            >
+            <span>Priority Support</span>
           </li>
         </ul>
-        <app-button variant="primary" size="md" [fullWidth]="true" class="mt-12 block">
-          Purchase Lifetime License
+        <app-button variant="secondary" size="md" [fullWidth]="true" class="mt-8 block">
+          Get Pro
         </app-button>
-        <p class="pricing-footer-text">One-time payment. Never pay again.</p>
+        <p class="pricing-footer-text">For power users • One-time payment.</p>
       </div>
     </div>
   </div>

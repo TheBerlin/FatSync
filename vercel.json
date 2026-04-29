@@ -1,3 +1,13 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "crons": [
+    {
+      "path": "/api/cron-sync",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron-sync",
+      "schedule": "0 18 * * *"
+    }
+  ]
 }

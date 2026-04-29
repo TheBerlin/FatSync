@@ -15,36 +15,48 @@
 .pricing-subtitle {
   @apply text-on-surface-variant;
 }
-.pricing-box-wrapper {
-  @apply max-w-md mx-auto relative;
+.pricing-grid {
+  @apply grid md:grid-cols-3 gap-8 max-w-6xl mx-auto relative;
 }
 .pricing-badge {
   @apply absolute -top-4 -right-4 bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full z-20 transform rotate-12;
 }
 .pricing-card {
-  @apply bg-surface-container-lowest p-12 rounded-xl text-center relative z-10 border border-outline-variant/10;
+  @apply bg-surface-container-lowest p-8 lg:p-10 rounded-2xl text-center relative z-10 border border-outline-variant/10 flex flex-col h-full transition-transform duration-300;
   box-shadow: 0 48px 48px -12px rgba(36, 26, 7, 0.06);
+}
+.pricing-card:not(.popular):hover {
+  @apply scale-[1.02];
+}
+.pricing-card.popular {
+  @apply border-primary/30 ring-2 ring-primary/20 scale-105 z-20;
+}
+.pricing-card.popular:hover {
+  @apply scale-[1.07];
 }
 .pricing-card-title {
   @apply font-headline text-primary font-bold uppercase tracking-[0.2em] text-sm;
 }
 .pricing-price-wrapper {
-  @apply mt-8 flex items-baseline justify-center gap-1;
+  @apply mt-6 flex items-baseline justify-center gap-1 h-[80px];
 }
 .pricing-currency {
-  @apply text-4xl font-bold font-headline;
+  @apply text-3xl font-bold font-headline;
 }
 .pricing-amount {
-  @apply text-8xl font-black font-headline tracking-tighter;
+  @apply text-6xl font-black font-headline tracking-tighter;
+}
+.pricing-amount.free {
+  @apply text-5xl tracking-normal;
 }
 .pricing-features {
-  @apply mt-12 space-y-5 text-left text-on-surface-variant;
+  @apply mt-8 space-y-4 text-left text-on-surface-variant flex-1;
 }
 .pricing-feature {
-  @apply flex items-center gap-3;
+  @apply flex items-center gap-3 text-sm lg:text-base;
 }
 .pricing-feature-icon {
-  @apply text-tertiary-container;
+  @apply text-tertiary-container text-[20px];
 }
 .pricing-footer-text {
   @apply mt-6 text-xs text-on-surface-variant/60 font-medium;

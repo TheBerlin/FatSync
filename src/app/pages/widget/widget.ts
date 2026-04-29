@@ -49,16 +49,19 @@ export class Widget implements OnInit {
   isLoading = signal(true);
   view = signal<'main' | 'stats' | 'settings'>('main');
   theme = signal<'light' | 'dark'>('dark');
+  userTier = signal<'basic' | 'premium' | 'pro'>('basic'); // Mock tier state
 
   @HostBinding('attr.data-theme') get hostTheme() {
     return this.theme();
   }
 
   // User Data Signals
-  userWeight = signal<number>(75.5);
-  intake = signal({ carbs: 105, fat: 35, protein: 85 });
+  userWeight = signal<number>(0);
+  intake = signal({ carbs: 0, fat: 0, protein: 0 });
   targets = signal({ carbs: 250, fat: 70, protein: 150 });
-  lastUpdated = signal<string>('a moment ago');
+  lastUpdated = signal<string>('');
+  isUpdating = signal(false);
+  userId = signal<string>(''); // Store user ID for updates
 
   // Computed Values
   calories = computed(() => {
@@ -162,25 +165,66 @@ export class Widget implements OnInit {
     try {
       const { data: profile } = await this.supabase.getProfileByWidgetToken(token);
       if (profile) {
-        this.userWeight.set(profile.weight || 75.5);
-        this.settingsWeight = profile.weight || 75.5;
+        this.userId.set(profile.id);
+        this.userWeight.set(profile.weight || 0);
+        this.settingsWeight = profile.weight || 0;
 
         const [goalsRes, metricsRes] = await Promise.all([
           this.supabase.getUserGoals(profile.id),
           this.supabase.getDailyMetrics(profile.id),
         ]);
 
+        // Load goals/targets
         if (goalsRes.data) {
-          this.targets.set(goalsRes.data);
-          this.settingsGoals.set({ ...goalsRes.data });
+          this.targets.set({
+            carbs: goalsRes.data.target_carbs || 250,
+            fat: goalsRes.data.target_fat || 70,
+            protein: goalsRes.data.target_protein || 150
+          });
+          this.settingsGoals.set({ ...this.targets() });
         }
+
+        // Load today's metrics
         if (metricsRes.data && metricsRes.data.length > 0) {
-          const m = metricsRes.data[0];
-          this.intake.set({ carbs: m.carbs, fat: m.fat, protein: m.protein });
+          const today = metricsRes.data[0];
+          this.intake.set({
+            carbs: today.carbs || 0,
+            fat: today.fat || 0,
+            protein: today.protein || 0
+          });
+
+          // Set last updated time
+          if (today.updated_at) {
+            const updatedDate = new Date(today.updated_at);
+            const now = new Date();
+            const diffMinutes = Math.floor((now.getTime() - updatedDate.getTime()) / 60000);
+
+            if (diffMinutes < 1) {
+              this.lastUpdated.set('just now');
+            } else if (diffMinutes < 60) {
+              this.lastUpdated.set(`${diffMinutes} min ago`);
+            } else {
+              const hours = Math.floor(diffMinutes / 60);
+              this.lastUpdated.set(`${hours}h ago`);
+            }
+          }
+
+          // Load chart data for stats page
+          this.loadChartData(metricsRes.data);
+        } else {
+          this.lastUpdated.set('no data yet');
+        }
+
+        // Update last sync from profile
+        if (profile.last_sync) {
+          const syncDate = new Date(profile.last_sync);
+          const time = syncDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          this.lastUpdated.set(`at ${time}`);
         }
       }
     } catch (e) {
       console.error('Error loading widget data:', e);
+      this.lastUpdated.set('error loading data');
     }
     this.isLoading.set(false);
   }
@@ -227,15 +271,73 @@ export class Widget implements OnInit {
   }
 
   async saveSettings() {
+    const userId = this.userId();
+    if (!userId) return;
+
+    // Update targets in Supabase
+    await this.supabase.updateUserSettings(userId, {
+      target_carbs: this.settingsGoals().carbs,
+      target_fat: this.settingsGoals().fat,
+      target_protein: this.settingsGoals().protein,
+    });
+
+    // Update weight in profile
+    await this.supabase.updateProfile(userId, {
+      weight: this.settingsWeight,
+    });
+
+    // Update local state
     this.targets.set({ ...this.settingsGoals() });
     this.userWeight.set(this.settingsWeight);
     this.view.set('main');
-    // Persistence would call supabase.updateUserSettings here
   }
 
-  updateNow() {
-    this.lastUpdated.set('just now');
-    // Live sync would go here
+  async updateNow() {
+    if (this.isUpdating()) return;
+    const userId = this.userId();
+    if (!userId) return;
+
+    this.isUpdating.set(true);
+
+    try {
+      // Trigger sync for this user
+      const response = await fetch('/api/sync-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (response.ok) {
+        // Reload data after sync
+        const token = this.route.snapshot.paramMap.get('token');
+        if (token) {
+          await this.loadAllData(token);
+        }
+      }
+    } catch (error) {
+      console.error('Update error:', error);
+    } finally {
+      this.isUpdating.set(false);
+    }
+  }
+
+  // Load chart data from metrics
+  loadChartData(metrics: any[]) {
+    if (!metrics || metrics.length === 0) return;
+
+    // Take last 7 days for week view
+    const last7Days = metrics.slice(0, 7).reverse();
+
+    this.lineChartData.labels = last7Days.map(m => {
+      const date = new Date(m.date);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+
+    this.lineChartData.datasets[0].data = last7Days.map(m => m.carbs || 0);
+    this.lineChartData.datasets[1].data = last7Days.map(m => m.fat || 0);
+    this.lineChartData.datasets[2].data = last7Days.map(m => m.protein || 0);
+
+    this.lineChartData = { ...this.lineChartData };
   }
 
   // Template Helpers
@@ -293,55 +395,19 @@ export class Widget implements OnInit {
   }
 
   updateStatsData(period: 'week' | 'month' | 'year') {
+    // This will be populated with real data from loadChartData
+    // For now, keep the mock structure but it will be overwritten by real data
     if (period === 'year') {
       this.lineChartData.labels = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
       ];
-      this.lineChartData.datasets[0].data = [
-        190, 210, 185, 205, 195, 220, 180, 200, 215, 190, 225, 195,
-      ];
-      this.lineChartData.datasets[1].data = [52, 48, 55, 50, 58, 45, 60, 52, 48, 55, 50, 58];
-      this.lineChartData.datasets[2].data = [
-        125, 135, 118, 130, 122, 140, 115, 128, 135, 120, 145, 125,
-      ];
+      // Real data would be loaded here from metrics
     } else if (period === 'month') {
-      this.lineChartData.labels = Array.from({ length: 30 }, (_, i) => `Apr ${i + 1}`);
-      this.lineChartData.datasets[0].data = Array.from(
-        { length: 30 },
-        () => 180 + Math.floor(Math.random() * 70),
-      );
-      this.lineChartData.datasets[1].data = Array.from(
-        { length: 30 },
-        () => 45 + Math.floor(Math.random() * 20),
-      );
-      this.lineChartData.datasets[2].data = Array.from(
-        { length: 30 },
-        () => 110 + Math.floor(Math.random() * 50),
-      );
+      this.lineChartData.labels = Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
+      // Real data would be loaded here from metrics
     } else {
-      this.lineChartData.labels = [
-        'Apr 11',
-        'Apr 12',
-        'Apr 13',
-        'Apr 14',
-        'Apr 15',
-        'Apr 16',
-        'Apr 17',
-      ];
-      this.lineChartData.datasets[0].data = [180, 220, 195, 210, 175, 230, 200];
-      this.lineChartData.datasets[1].data = [50, 45, 55, 60, 48, 52, 58];
-      this.lineChartData.datasets[2].data = [120, 135, 110, 145, 128, 115, 140];
+      // Week view - already loaded from loadChartData
     }
     this.lineChartData = { ...this.lineChartData };
   }

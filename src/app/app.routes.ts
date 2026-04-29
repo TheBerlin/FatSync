@@ -11,7 +11,7 @@ import { Widget } from './pages/widget/widget';
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: Login, pathMatch: 'full' },
-  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
+  { path: 'dashboard', component: Dashboard },
 
   { path: 'embed/:token', component: Widget },
 

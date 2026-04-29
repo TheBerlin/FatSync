@@ -15,9 +15,43 @@ export class Dashboard {
 
   notionConnected: boolean = true;
   fatSecretConnected: boolean = true;
+  isSyncing = signal(false);
+  syncStatus = signal<string>('');
 
-  handleSync() {
-    console.log('Syncing data...');
+  async handleSync() {
+    const userId = this.supabase.currentUser()?.id;
+    if (!userId) {
+      this.syncStatus.set('Error: Not logged in');
+      return;
+    }
+
+    this.isSyncing.set(true);
+    this.syncStatus.set('Syncing...');
+
+    try {
+      const response = await fetch('/api/sync-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        this.syncStatus.set('Sync successful!');
+        // Reload user profile to update last_sync
+        await this.supabase.getUserProfile(userId);
+      } else {
+        this.syncStatus.set(`Error: ${data.error || 'Sync failed'}`);
+      }
+    } catch (error) {
+      console.error('Sync error:', error);
+      this.syncStatus.set('Error: Network error');
+    } finally {
+      this.isSyncing.set(false);
+      // Clear status after 3 seconds
+      setTimeout(() => this.syncStatus.set(''), 3000);
+    }
   }
 
   /**
@@ -142,6 +176,7 @@ export class Dashboard {
    * @returns Embed URL
    */
   getEmbedUrl(): string {
+    if (1) return 'http://localhost:4200/embed/114ebc76-ac75-402f-84e0-cdf9ab90f6a8';
     const token = this.supabase.userProfile()?.widget_token;
     if (!token) return '';
 

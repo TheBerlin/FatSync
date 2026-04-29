@@ -30,7 +30,7 @@
               <hugeicons-icon
                 [icon]="theme() === 'dark' ? SunIcon : MoonIcon"
                 [size]="24"
-                [color]="'var(--text-main)'"
+                color="currentColor"
                 [strokeWidth]="2"
                 class="cursor-pointer"
               ></hugeicons-icon>
@@ -42,7 +42,7 @@
               <hugeicons-icon
                 [icon]="SettingsIcon"
                 [size]="24"
-                [color]="'var(--text-main)'"
+                color="currentColor"
                 [strokeWidth]="2"
                 class="cursor-pointer"
               ></hugeicons-icon>
@@ -159,27 +159,50 @@
         <div class="flex flex-col items-center gap-2 w-full mt-auto">
           <button
             (click)="updateNow()"
-            class="widget-btn w-fit h-12 px-4 py-2 rounded-2xl text-xl font-black shadow-lg transition-all active:scale-95 cursor-pointer px-4 py-2 update-btn"
+            [disabled]="isUpdating()"
+            [class.is-updating]="isUpdating()"
+            class="widget-btn update-btn w-fit h-12 rounded-2xl text-xl font-black shadow-lg cursor-pointer"
           >
-            Update now
+            <span class="update-btn-idle">Update now</span>
+            <span class="update-btn-loading">
+              <span class="btn-spinner"></span>
+              Updating&hellip;
+            </span>
           </button>
-          <span class="text-sec text-xs font-bold opacity-30 last-updated"
-            >Updated {{ lastUpdated() }}</span
-          >
+          <div class="status-text" [class.is-updating]="isUpdating()">
+            <span class="status-idle">Updated {{ lastUpdated() }}</span>
+            <span class="status-loading">Syncing your data&hellip;</span>
+          </div>
         </div>
       </div>
     }
     <!-- STATISTICS VIEW -->
     @if (view() === 'stats') {
-      <div class="h-full flex flex-col animate-fade-in overflow-hidden">
-        <div class="flex justify-between items-center mb-6">
+      <div class="h-full flex flex-col animate-fade-in overflow-hidden relative">
+        <div class="flex justify-between items-center mb-6 relative z-10">
           <h1 class="text-main text-2xl font-black tracking-tight">Statistics</h1>
         </div>
 
-        <div class="relative w-fit self-start mb-2 period-dropdown-container">
-          <button
-            (click)="togglePeriodDropdown()"
-            class="flex items-center gap-2 text-main text-[10px] font-black uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition-all cursor-pointer"
+        @if (userTier() === 'basic') {
+          <div class="absolute inset-0 z-30 flex items-center justify-center bg-[var(--bg-main)]/40 backdrop-blur-[4px] pt-12">
+            <div class="bg-[var(--bg-card)] p-6 rounded-2xl text-center shadow-2xl border border-[var(--stroke-color)] max-w-[240px] animate-fade-in-up">
+              <span class="material-symbols-outlined text-[32px] mb-3 text-[var(--text-main)]" style="font-variation-settings: 'FILL' 1;">lock</span>
+              <h3 class="text-[var(--text-main)] font-black text-lg tracking-tight mb-2">Premium Feature</h3>
+              <p class="text-[var(--text-sec)] text-[11px] font-medium leading-relaxed mb-5">Statistics and trends are available for Premium and Pro members.</p>
+              <button 
+                class="widget-btn w-full h-10 rounded-[12px] text-sm font-bold shadow-md cursor-pointer transition-transform active:scale-95" 
+                style="background-color: var(--btn-bg); color: var(--btn-text);"
+              >
+                Upgrade Now
+              </button>
+            </div>
+          </div>
+        }
+
+        <div class="flex flex-col flex-1 relative z-10" [class.blur-sm]="userTier() === 'basic'" [class.opacity-30]="userTier() === 'basic'" [class.pointer-events-none]="userTier() === 'basic'">
+          <div class="relative w-fit self-start mb-2 period-dropdown-container" (click)="togglePeriodDropdown()">
+          <div
+            class="flex items-center gap-2 text-main text-[10px] font-black uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition-all cursor-pointer w-full"
           >
             {{ getPeriodLabel() }}
             <hugeicons-icon
@@ -189,25 +212,25 @@
               class="transition-transform duration-300"
               [class.rotate-180]="isPeriodDropdownOpen()"
             ></hugeicons-icon>
-          </button>
+          </div>
 
           <div *ngIf="isPeriodDropdownOpen()" class="dropdown-card animate-fade-in-up">
             <div
-              (click)="setPeriod('week')"
+              (click)="setPeriod('week'); $event.stopPropagation()"
               class="dropdown-item"
               [class.active]="timePeriod() === 'week'"
             >
               Last Week
             </div>
             <div
-              (click)="setPeriod('month')"
+              (click)="setPeriod('month'); $event.stopPropagation()"
               class="dropdown-item"
               [class.active]="timePeriod() === 'month'"
             >
               Last Month
             </div>
             <div
-              (click)="setPeriod('year')"
+              (click)="setPeriod('year'); $event.stopPropagation()"
               class="dropdown-item"
               [class.active]="timePeriod() === 'year'"
             >
@@ -253,6 +276,7 @@
             <div class="text-2xl font-black protein-color leading-tight">{{ getAvg(2) }}g</div>
           </div>
         </div>
+        </div>
       </div>
     }
 
@@ -268,7 +292,7 @@
             <hugeicons-icon
               [icon]="CancelIcon"
               [size]="24"
-              [color]="'var(--text-main)'"
+              color="currentColor"
               [strokeWidth]="2"
               class="cursor-pointer"
             ></hugeicons-icon>

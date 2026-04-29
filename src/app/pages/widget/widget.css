@@ -152,13 +152,23 @@ hugeicons-icon svg {
   color: var(--btn-text);
   border: none;
   box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+  padding: 8px;
   transition:
     background-color 0.2s,
-    transform 0.1s;
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .widget-btn:hover {
   background-color: var(--btn-hover);
+}
+
+.widget-btn:active {
+  transform: scale(0.95);
+}
+
+.widget-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
 }
 
 .widget-card {
@@ -396,4 +406,115 @@ hugeicons-icon svg {
   background-color: var(--field-hover);
   border-radius: 8px;
   padding: 8px 8px;
+  cursor: pointer;
+}
+
+/* ── Update button crossfade ── */
+.update-btn {
+  position: relative;
+  overflow: hidden;
+  min-width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.update-btn-idle,
+.update-btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Idle state visible by default */
+.update-btn-idle {
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Loading state hidden, positioned below */
+.update-btn-loading {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* When updating: idle slides up & fades, loading slides in */
+.update-btn.is-updating .update-btn-idle {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.update-btn.is-updating .update-btn-loading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Loading spinner */
+.btn-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Status text crossfade ── */
+.status-text {
+  position: relative;
+  height: 1.25em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg-sec);
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.3;
+}
+
+.status-idle,
+.status-loading {
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.status-idle {
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-loading {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.status-text.is-updating .status-idle {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.status-text.is-updating .status-loading {
+  opacity: 1;
+  transform: translateY(0);
 }
