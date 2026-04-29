@@ -36,7 +36,7 @@
 
           <div class="header-right flex items-center gap-1 -mr-2">
             <button
-              (click)="view.set('settings')"
+              (click)="openSettings()"
               class="p-2 rounded-full transition-all active:scale-90 outline-none focus:outline-none cursor-pointer"
             >
               <hugeicons-icon
@@ -354,14 +354,38 @@
             <div class="widget-card rounded-2xl px-4">
               <div class="flex justify-between items-center py-3">
                 <span class="text-main font-bold text-sm">Theme</span>
-                <select
-                  [(ngModel)]="theme"
-                  (change)="onThemeChange()"
-                  class="widget-input text-right outline-none text-main font-black cursor-pointer"
-                >
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
-                </select>
+                <div class="relative theme-dropdown-container">
+                  <div
+                    (click)="toggleThemeDropdown()"
+                    class="flex items-center gap-2 text-main text-sm font-black cursor-pointer px-3 py-1 rounded-lg bg-[var(--bg-field)] hover:bg-[var(--field-hover)] transition-all"
+                  >
+                    {{ getThemeLabel() }}
+                    <hugeicons-icon
+                      [icon]="ArrowIcon"
+                      [size]="16"
+                      [strokeWidth]="3"
+                      class="transition-transform duration-300"
+                      [class.rotate-180]="isThemeDropdownOpen()"
+                    ></hugeicons-icon>
+                  </div>
+
+                  <div *ngIf="isThemeDropdownOpen()" class="dropdown-card animate-fade-in-up">
+                    <div
+                      (click)="selectTheme('dark'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'dark'"
+                    >
+                      Dark
+                    </div>
+                    <div
+                      (click)="selectTheme('light'); $event.stopPropagation()"
+                      class="dropdown-item"
+                      [class.active]="settingsTheme() === 'light'"
+                    >
+                      Light
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

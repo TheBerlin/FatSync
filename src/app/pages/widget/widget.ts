@@ -74,6 +74,8 @@ export class Widget implements OnInit {
 
   // Settings Temp State
   settingsGoals = signal({ carbs: 250, fat: 70, protein: 150 });
+  settingsTheme = signal<'light' | 'dark'>('dark');
+  isThemeDropdownOpen = signal(false);
 
   // Chart Properties
   public lineChartType: ChartType = 'line';
@@ -284,12 +286,31 @@ export class Widget implements OnInit {
     this.updateChartTheme(this.theme());
   }
 
+  toggleThemeDropdown() {
+    this.isThemeDropdownOpen.update((v) => !v);
+  }
+
+  selectTheme(theme: 'light' | 'dark') {
+    this.settingsTheme.set(theme);
+    this.isThemeDropdownOpen.set(false);
+  }
+
+  getThemeLabel(): string {
+    return this.settingsTheme() === 'dark' ? 'Dark' : 'Light';
+  }
+
   setPage(pageIndex: number) {
     if (pageIndex === 0) this.view.set('main');
     if (pageIndex === 1) {
       this.view.set('stats');
       this.timePeriod.set('week');
     }
+  }
+
+  openSettings() {
+    // Initialize settings with current values
+    this.settingsTheme.set(this.theme());
+    this.view.set('settings');
   }
 
   async saveSettings() {
@@ -302,6 +323,9 @@ export class Widget implements OnInit {
       target_fat: this.settingsGoals().fat,
       target_protein: this.settingsGoals().protein,
     });
+
+    // Apply theme change
+    this.theme.set(this.settingsTheme());
 
     // Update local state
     this.targets.set({ ...this.settingsGoals() });
@@ -451,9 +475,12 @@ export class Widget implements OnInit {
   @HostListener('document:click', ['$event'])
   onOutsideClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    // Check if the click was outside the dropdown container
+    // Check if the click was outside the dropdown containers
     if (!target.closest('.period-dropdown-container')) {
       this.isPeriodDropdownOpen.set(false);
+    }
+    if (!target.closest('.theme-dropdown-container')) {
+      this.isThemeDropdownOpen.set(false);
     }
   }
 
