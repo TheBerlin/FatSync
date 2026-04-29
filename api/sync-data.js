@@ -85,6 +85,10 @@ async function getFatSecretData(accessToken, accessSecret) {
  * Save data to Notion database
  */
 async function saveToNotion(notionToken, dbId, data, weight) {
+  if (!dbId) {
+    throw new Error('Notion database ID is missing');
+  }
+
   const notion = new Client({ auth: notionToken });
 
   // Check if entry for today already exists
@@ -99,12 +103,15 @@ async function saveToNotion(notionToken, dbId, data, weight) {
     query: today,
   });
 
+  // Normalize database IDs (remove dashes for comparison)
+  const normalizedDbId = dbId.replace(/-/g, '');
+
   // Filter results to match our database and date
   const todayPage = existing.results.find(page => {
     const pageDbId = page.parent?.database_id;
     if (!pageDbId) return false;
 
-    return pageDbId.replace(/-/g, '') === dbId.replace(/-/g, '') &&
+    return pageDbId.replace(/-/g, '') === normalizedDbId &&
            page.properties?.Date?.date?.start === today;
   });
 
