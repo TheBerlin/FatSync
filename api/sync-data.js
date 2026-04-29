@@ -89,10 +89,12 @@ async function getFatSecretData(accessToken, accessSecret) {
   }
 
   // Parse nutrition data from month response
-  const entries = [];
-
-  // food_entries.get_month returns data grouped by date
   // date_int is days since epoch (Jan 1, 1970)
+  let totalCalories = 0;
+  let totalCarbs = 0;
+  let totalFat = 0;
+  let totalProtein = 0;
+
   if (data.month && data.month.day) {
     const days = Array.isArray(data.month.day) ? data.month.day : [data.month.day];
 
@@ -102,25 +104,17 @@ async function getFatSecretData(accessToken, accessSecret) {
 
     const todayData = days.find(d => parseInt(d.date_int) === todayEpoch);
 
-    if (todayData && todayData.food_entry) {
-      const foodEntries = Array.isArray(todayData.food_entry) ? todayData.food_entry : [todayData.food_entry];
-      entries.push(...foodEntries);
+    if (todayData) {
+      console.log('Found today data:', todayData);
+      // The day object contains aggregated totals directly
+      totalCalories = parseFloat(todayData.calories || 0);
+      totalCarbs = parseFloat(todayData.carbohydrate || 0);
+      totalFat = parseFloat(todayData.fat || 0);
+      totalProtein = parseFloat(todayData.protein || 0);
+    } else {
+      console.log('No data found for today');
     }
   }
-
-  console.log('Food entries count:', entries.length);
-
-  let totalCalories = 0;
-  let totalCarbs = 0;
-  let totalFat = 0;
-  let totalProtein = 0;
-
-  entries.forEach(entry => {
-    totalCalories += parseFloat(entry.calories || 0);
-    totalCarbs += parseFloat(entry.carbohydrate || 0);
-    totalFat += parseFloat(entry.fat || 0);
-    totalProtein += parseFloat(entry.protein || 0);
-  });
 
   return {
     date: dateStr,
