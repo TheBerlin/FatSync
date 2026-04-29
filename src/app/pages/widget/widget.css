@@ -1,7 +1,7 @@
 :host([data-theme='dark']) {
   --bg-page: #191919;
-  --bg-main: #363636;
-  --bg-main-rgb: 54, 54, 54;
+  --bg-main: #2a2a2a;
+  --bg-main-rgb: 42, 42, 42;
   --bg-card: #363636;
   --bg-input: #969696;
   --bg-sec: #969696;
@@ -29,12 +29,12 @@
 
 :host([data-theme='light']) {
   --bg-page: #ffffff;
-  --bg-main: #ebebeb;
-  --bg-main-rgb: 235, 235, 235;
-  --bg-card: #f2f2f2;
+  --bg-main: #f5f5f5;
+  --bg-main-rgb: 245, 245, 245;
+  --bg-card: #ffffff;
   --bg-input: #c4c4c4;
   --bg-sec: #363636;
-  --bg-field: #dbdbdb;
+  --bg-field: #e8e8e8;
   --text-main: #0d0d0d;
   --text-sec: #363636;
   --text-dark: #0d0d0d;
@@ -43,7 +43,7 @@
   --btn-bg: #0d0d0d;
   --btn-text: #f2f2f2;
   --btn-hover: #242424;
-  --stroke-color: #c4c4c4;
+  --stroke-color: #d4d4d4;
   --accent-carbs: #2563eb;
   --accent-fat: #ea580c;
   --accent-protein: #16a34a;
@@ -298,7 +298,7 @@
   width: 100%;
   height: 100%;
   min-height: 100dvh;
-  background-color: transparent;
+  background-color: var(--bg-page);
   font-family: 'Inter', sans-serif;
 }
 
@@ -315,7 +315,8 @@
   transition: background-color 0.3s ease;
   overflow: visible;
   border-radius: 16px;
-  transition: padding 0.3s ease;
+  border: 1px solid var(--stroke-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 480px) {
@@ -640,67 +641,81 @@ hugeicons-icon svg {
   opacity: 0.25;
   z-index: -1;
   border-radius: 8px;
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  transition: opacity 0.3s ease, background-position 0.6s ease;
 }
 
-.dropdown-item:hover::before {
+.dropdown-item:hover::before,
+.dropdown-item:active::before {
   opacity: 0.4;
+  animation: gradientSlide 3s linear infinite;
 }
 
 .dropdown-item.active::before {
   opacity: 0.5;
 }
 
+@keyframes gradientSlide {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}
+
 /* Theme-specific gradients */
 .dropdown-item[data-theme='dark']::before {
-  background: linear-gradient(135deg, #363636 0%, #525252 50%, #969696 100%);
+  background-image: linear-gradient(90deg, #363636 0%, #525252 25%, #969696 50%, #525252 75%, #363636 100%);
 }
 
 .dropdown-item[data-theme='light']::before {
-  background: linear-gradient(135deg, #ebebeb 0%, #f2f2f2 50%, #ffffff 100%);
+  background-image: linear-gradient(90deg, #ebebeb 0%, #f2f2f2 25%, #ffffff 50%, #f2f2f2 75%, #ebebeb 100%);
 }
 
 .dropdown-item[data-theme='amoled']::before {
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #60a5fa 100%);
+  background-image: linear-gradient(90deg, #000000 0%, #1a1a1a 25%, #60a5fa 50%, #1a1a1a 75%, #000000 100%);
 }
 
 .dropdown-item[data-theme='nord']::before {
-  background: linear-gradient(135deg, #5e81ac 0%, #88c0d0 33%, #a3be8c 66%, #d08770 100%);
+  background-image: linear-gradient(90deg, #5e81ac 0%, #88c0d0 20%, #a3be8c 40%, #d08770 60%, #88c0d0 80%, #5e81ac 100%);
 }
 
 .dropdown-item[data-theme='dracula']::before {
-  background: linear-gradient(135deg, #bd93f9 0%, #ff79c6 33%, #8be9fd 66%, #50fa7b 100%);
+  background-image: linear-gradient(90deg, #bd93f9 0%, #ff79c6 20%, #8be9fd 40%, #50fa7b 60%, #ff79c6 80%, #bd93f9 100%);
 }
 
 .dropdown-item[data-theme='solarized-dark']::before {
-  background: linear-gradient(135deg, #268bd2 0%, #2aa198 33%, #859900 66%, #cb4b16 100%);
+  background-image: linear-gradient(90deg, #268bd2 0%, #2aa198 20%, #859900 40%, #cb4b16 60%, #2aa198 80%, #268bd2 100%);
 }
 
 .dropdown-item[data-theme='solarized-light']::before {
-  background: linear-gradient(135deg, #268bd2 0%, #2aa198 33%, #859900 66%, #cb4b16 100%);
+  background-image: linear-gradient(90deg, #268bd2 0%, #2aa198 20%, #859900 40%, #cb4b16 60%, #2aa198 80%, #268bd2 100%);
 }
 
 .dropdown-item[data-theme='catppuccin']::before {
-  background: linear-gradient(135deg, #89b4fa 0%, #74c7ec 33%, #a6e3a1 66%, #fab387 100%);
+  background-image: linear-gradient(90deg, #89b4fa 0%, #74c7ec 20%, #a6e3a1 40%, #fab387 60%, #74c7ec 80%, #89b4fa 100%);
 }
 
 .dropdown-item[data-theme='gruvbox']::before {
-  background: linear-gradient(135deg, #fabd2f 0%, #83a598 33%, #b8bb26 66%, #fe8019 100%);
+  background-image: linear-gradient(90deg, #fabd2f 0%, #83a598 20%, #b8bb26 40%, #fe8019 60%, #83a598 80%, #fabd2f 100%);
 }
 
 .dropdown-item[data-theme='tokyo-night']::before {
-  background: linear-gradient(135deg, #7aa2f7 0%, #7dcfff 33%, #9ece6a 66%, #ff9e64 100%);
+  background-image: linear-gradient(90deg, #7aa2f7 0%, #7dcfff 20%, #9ece6a 40%, #ff9e64 60%, #7dcfff 80%, #7aa2f7 100%);
 }
 
 .dropdown-item[data-theme='sunset']::before {
-  background: linear-gradient(135deg, #a29bfe 0%, #fd79a8 33%, #ff6b9d 66%, #fdcb6e 100%);
+  background-image: linear-gradient(90deg, #a29bfe 0%, #fd79a8 20%, #ff6b9d 40%, #fdcb6e 60%, #fd79a8 80%, #a29bfe 100%);
 }
 
 .dropdown-item[data-theme='ocean']::before {
-  background: linear-gradient(135deg, #64ffda 0%, #06ffa5 33%, #57e6c6 66%, #f77f00 100%);
+  background-image: linear-gradient(90deg, #64ffda 0%, #06ffa5 20%, #57e6c6 40%, #f77f00 60%, #06ffa5 80%, #64ffda 100%);
 }
 
 .dropdown-item[data-theme='forest']::before {
-  background: linear-gradient(135deg, #7fb069 0%, #52b788 33%, #95d5b2 66%, #d4a373 100%);
+  background-image: linear-gradient(90deg, #7fb069 0%, #52b788 20%, #95d5b2 40%, #d4a373 60%, #52b788 80%, #7fb069 100%);
 }
 
 .animate-fade-in-up {
