@@ -279,6 +279,11 @@ export class Widget implements OnInit {
     this.theme.update((t) => (t === 'light' ? 'dark' : 'light'));
   }
 
+  onThemeChange() {
+    // Theme is already updated via ngModel, just trigger chart update
+    this.updateChartTheme(this.theme());
+  }
+
   setPage(pageIndex: number) {
     if (pageIndex === 0) this.view.set('main');
     if (pageIndex === 1) {

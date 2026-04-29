@@ -36,18 +36,6 @@
 
           <div class="header-right flex items-center gap-1 -mr-2">
             <button
-              (click)="toggleTheme()"
-              class="p-2 rounded-full transition-all active:scale-90 outline-none focus:outline-none cursor-pointer"
-            >
-              <hugeicons-icon
-                [icon]="theme() === 'dark' ? SunIcon : MoonIcon"
-                [size]="24"
-                color="currentColor"
-                [strokeWidth]="2"
-                class="cursor-pointer"
-              ></hugeicons-icon>
-            </button>
-            <button
               (click)="view.set('settings')"
               class="p-2 rounded-full transition-all active:scale-90 outline-none focus:outline-none cursor-pointer"
             >
@@ -357,6 +345,27 @@
         </div>
 
         <div class="space-y-4 flex-1 overflow-y-auto pr-1 custom-scroll">
+          <!-- Theme Selection -->
+          <div>
+            <label
+              class="text-dark text-[10px] font-black uppercase tracking-[0.2em] mb-2 block opacity-40"
+              >Appearance</label
+            >
+            <div class="widget-card rounded-2xl px-4">
+              <div class="flex justify-between items-center py-3">
+                <span class="text-main font-bold text-sm">Theme</span>
+                <select
+                  [(ngModel)]="theme"
+                  (change)="onThemeChange()"
+                  class="widget-input text-right outline-none text-main font-black cursor-pointer"
+                >
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- Daily Targets -->
           <div>
             <label
