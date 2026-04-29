@@ -148,7 +148,7 @@ export class Supabase {
       .from('daily_metrics')
       .select('*')
       .eq('user_id', userId)
-      .order('data', { ascending: false })
+      .order('date', { ascending: false })
       .limit(30); // Get data for the last 30 days
   }
 
