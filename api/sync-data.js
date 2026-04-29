@@ -33,9 +33,13 @@ async function getFatSecretData(accessToken, accessSecret) {
   });
 
   const url = 'https://platform.fatsecret.com/rest/server.api';
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-  console.log('Requesting FatSecret data for date:', today);
+  // Try yesterday's date as fallback for testing
+  const today = new Date();
+  today.setDate(today.getDate() - 1); // Yesterday
+  const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  console.log('Requesting FatSecret data for date:', dateStr, '(yesterday for testing)');
 
   const requestData = {
     url,
@@ -43,7 +47,7 @@ async function getFatSecretData(accessToken, accessSecret) {
     data: {
       method: 'food_entries.get',
       format: 'json',
-      date: today.replace(/-/g, ''), // YYYYMMDD format
+      date: dateStr.replace(/-/g, ''), // YYYYMMDD format
     },
   };
 
@@ -81,8 +85,8 @@ async function getFatSecretData(accessToken, accessSecret) {
     console.error('FatSecret API error details:', {
       code: data.error.code,
       message: data.error.message,
-      requestDate: today,
-      requestDateFormatted: today.replace(/-/g, '')
+      requestDate: dateStr,
+      requestDateFormatted: dateStr.replace(/-/g, '')
     });
   }
 
@@ -103,7 +107,7 @@ async function getFatSecretData(accessToken, accessSecret) {
   });
 
   return {
-    date: today,
+    date: dateStr,
     calories: Math.round(totalCalories),
     carbs: Math.round(totalCarbs),
     fat: Math.round(totalFat),
