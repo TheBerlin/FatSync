@@ -73,8 +73,8 @@
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="carbs-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                    <stop offset="0%" class="carbs-gradient-start" />
+                    <stop offset="100%" class="carbs-gradient-end" />
                   </linearGradient>
                   <filter id="carbs-glow">
                     <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -86,7 +86,7 @@
                 </defs>
                 <circle class="progress-bg" cx="50" cy="50" r="35" />
                 <circle
-                  class="progress-active"
+                  class="progress-active progress-carbs"
                   cx="50"
                   cy="50"
                   r="35"
@@ -117,8 +117,8 @@
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="fat-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#fb923c;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#f97316;stop-opacity:1" />
+                    <stop offset="0%" class="fat-gradient-start" />
+                    <stop offset="100%" class="fat-gradient-end" />
                   </linearGradient>
                   <filter id="fat-glow">
                     <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -130,7 +130,7 @@
                 </defs>
                 <circle class="progress-bg" cx="50" cy="50" r="35" />
                 <circle
-                  class="progress-active"
+                  class="progress-active progress-fat"
                   cx="50"
                   cy="50"
                   r="35"
@@ -161,8 +161,8 @@
               <svg class="circular-progress w-full h-full" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="protein-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#4ade80;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+                    <stop offset="0%" class="protein-gradient-start" />
+                    <stop offset="100%" class="protein-gradient-end" />
                   </linearGradient>
                   <filter id="protein-glow">
                     <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -174,7 +174,7 @@
                 </defs>
                 <circle class="progress-bg" cx="50" cy="50" r="35" />
                 <circle
-                  class="progress-active"
+                  class="progress-active progress-protein"
                   cx="50"
                   cy="50"
                   r="35"

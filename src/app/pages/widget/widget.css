@@ -362,6 +362,37 @@ hugeicons-icon svg {
   transition: stroke-dashoffset 0.05s linear;
 }
 
+/* SVG Gradient stops - use CSS variables */
+.carbs-gradient-start {
+  stop-color: var(--accent-carbs);
+  stop-opacity: 0.7;
+}
+
+.carbs-gradient-end {
+  stop-color: var(--accent-carbs);
+  stop-opacity: 1;
+}
+
+.fat-gradient-start {
+  stop-color: var(--accent-fat);
+  stop-opacity: 0.7;
+}
+
+.fat-gradient-end {
+  stop-color: var(--accent-fat);
+  stop-opacity: 1;
+}
+
+.protein-gradient-start {
+  stop-color: var(--accent-protein);
+  stop-opacity: 0.7;
+}
+
+.protein-gradient-end {
+  stop-color: var(--accent-protein);
+  stop-opacity: 1;
+}
+
 /* Page Indicator Dots */
 .page-dot-container {
   position: absolute;
@@ -563,7 +594,7 @@ hugeicons-icon svg {
   border-radius: 16px;
   padding: 8px;
   min-width: 160px;
-  max-height: 232px;
+  max-height: 200px;
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -595,6 +626,8 @@ hugeicons-icon svg {
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  min-height: 36px;
 }
 
 .dropdown-item::before {
