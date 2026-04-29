@@ -1,7 +1,6 @@
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
-import { Client } from '@notionhq/client';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const ENCRYPTION_KEY = Buffer.from(process.env.MASTER_ENCRYPTION_KEY, 'hex');
@@ -85,6 +84,7 @@ async function getFatSecretData(accessToken, accessSecret) {
  * Save data to Notion database
  */
 async function saveToNotion(notionToken, dbId, data, weight) {
+  const { Client } = await import('@notionhq/client');
   const notion = new Client({ auth: notionToken });
 
   // Check if entry for today already exists
@@ -178,7 +178,6 @@ export default async function handler(req, res) {
         actual_carbs: nutritionData.carbs,
         actual_fat: nutritionData.fat,
         actual_protein: nutritionData.protein,
-        updated_at: new Date().toISOString(),
       }, {
         onConflict: 'user_id,date',
       });
