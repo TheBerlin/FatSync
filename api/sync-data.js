@@ -101,7 +101,10 @@ async function saveToNotion(notionToken, dbId, data, weight) {
 
   // Filter results to match our database and date
   const todayPage = existing.results.find(page => {
-    return page.parent?.database_id === dbId.replace(/-/g, '') &&
+    const pageDbId = page.parent?.database_id;
+    if (!pageDbId) return false;
+
+    return pageDbId.replace(/-/g, '') === dbId.replace(/-/g, '') &&
            page.properties?.Date?.date?.start === today;
   });
 
