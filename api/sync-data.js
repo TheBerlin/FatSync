@@ -92,9 +92,15 @@ async function getFatSecretData(accessToken, accessSecret) {
   const entries = [];
 
   // food_entries.get_month returns data grouped by date
+  // date_int is days since epoch (Jan 1, 1970)
   if (data.month && data.month.day) {
     const days = Array.isArray(data.month.day) ? data.month.day : [data.month.day];
-    const todayData = days.find(d => d.date_int === dateStr.replace(/-/g, ''));
+
+    // Convert today's date to days since epoch
+    const todayEpoch = Math.floor(new Date(dateStr).getTime() / (1000 * 60 * 60 * 24));
+    console.log('Today epoch days:', todayEpoch);
+
+    const todayData = days.find(d => parseInt(d.date_int) === todayEpoch);
 
     if (todayData && todayData.food_entry) {
       const foodEntries = Array.isArray(todayData.food_entry) ? todayData.food_entry : [todayData.food_entry];
