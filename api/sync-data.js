@@ -50,6 +50,13 @@ async function getFatSecretData(accessToken, accessSecret) {
     secret: accessSecret,
   });
 
+  console.log('FatSecret request:', {
+    url,
+    date: today.replace(/-/g, ''),
+    hasToken: !!accessToken,
+    hasSecret: !!accessSecret
+  });
+
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
