@@ -57,11 +57,11 @@ export class Widget implements OnInit {
 
   // User Data Signals
   userWeight = signal<number>(0);
-  intake = signal({ carbs: 180, fat: 55, protein: 120 });
+  intake = signal({ carbs: 0, fat: 0, protein: 0 });
   intakeAnimated = signal({ carbs: 0, fat: 0, protein: 0 }); // For number counter animation
   intakeCircleAnimated = signal({ carbs: 0, fat: 0, protein: 0 }); // For circle fill animation
   targets = signal({ carbs: 250, fat: 70, protein: 150 });
-  lastUpdated = signal<string>('2h ago');
+  lastUpdated = signal<string>('');
   isUpdating = signal(false);
   userId = signal<string>(''); // Store user ID for updates
 
