@@ -34,20 +34,19 @@ async function getFatSecretData(accessToken, accessSecret) {
 
   const url = 'https://platform.fatsecret.com/rest/server.api';
 
-  // Try yesterday's date as fallback for testing
+  // Get current date
   const today = new Date();
-  today.setDate(today.getDate() - 1); // Yesterday
   const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
 
-  console.log('Requesting FatSecret data for date:', dateStr, '(yesterday for testing)');
+  console.log('Requesting FatSecret data for date:', dateStr);
 
+  // Try using food_entries.get_month instead
   const requestData = {
     url,
     method: 'POST',
     data: {
-      method: 'food_entries.get',
+      method: 'food_entries.get_month',
       format: 'json',
-      date: dateStr.replace(/-/g, ''), // YYYYMMDD format
     },
   };
 
@@ -85,13 +84,24 @@ async function getFatSecretData(accessToken, accessSecret) {
     console.error('FatSecret API error details:', {
       code: data.error.code,
       message: data.error.message,
-      requestDate: dateStr,
-      requestDateFormatted: dateStr.replace(/-/g, '')
+      method: 'food_entries.get_month'
     });
   }
 
-  // Parse nutrition data
-  const entries = data.food_entries?.food_entry || [];
+  // Parse nutrition data from month response
+  const entries = [];
+
+  // food_entries.get_month returns data grouped by date
+  if (data.month && data.month.day) {
+    const days = Array.isArray(data.month.day) ? data.month.day : [data.month.day];
+    const todayData = days.find(d => d.date_int === dateStr.replace(/-/g, ''));
+
+    if (todayData && todayData.food_entry) {
+      const foodEntries = Array.isArray(todayData.food_entry) ? todayData.food_entry : [todayData.food_entry];
+      entries.push(...foodEntries);
+    }
+  }
+
   console.log('Food entries count:', entries.length);
 
   let totalCalories = 0;
