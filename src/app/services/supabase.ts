@@ -140,7 +140,7 @@ export class Supabase {
   }
 
   async getUserGoals(userId: string) {
-    return await this.supabase.from('goals').select('*').eq('user_id', userId).single();
+    return await this.supabase.from('user_goals').select('*').eq('user_id', userId).single();
   }
 
   async getDailyMetrics(userId: string) {
