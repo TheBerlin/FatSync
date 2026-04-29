@@ -174,10 +174,10 @@ export default async function handler(req, res) {
       .upsert({
         user_id: userId,
         date: nutritionData.date,
-        calories: nutritionData.calories,
-        carbs: nutritionData.carbs,
-        fat: nutritionData.fat,
-        protein: nutritionData.protein,
+        actual_calories: nutritionData.calories,
+        actual_carbs: nutritionData.carbs,
+        actual_fat: nutritionData.fat,
+        actual_protein: nutritionData.protein,
         updated_at: new Date().toISOString(),
       }, {
         onConflict: 'user_id,date',
