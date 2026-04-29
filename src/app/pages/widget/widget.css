@@ -563,15 +563,29 @@ hugeicons-icon svg {
   border-radius: 16px;
   padding: 8px;
   min-width: 160px;
+  max-height: 280px;
+  overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+.dropdown-card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dropdown-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dropdown-card::-webkit-scrollbar-thumb {
+  background: var(--bg-input);
+  border-radius: 10px;
+}
+
 .dropdown-item {
-  padding: 8px 8px;
+  padding: 10px 12px;
   border-radius: 8px;
   color: var(--text-main);
   font-size: 13px;
@@ -580,6 +594,7 @@ hugeicons-icon svg {
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dropdown-item::before {
@@ -589,18 +604,17 @@ hugeicons-icon svg {
   left: 0;
   right: 0;
   bottom: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: 0.25;
   z-index: -1;
   border-radius: 8px;
 }
 
 .dropdown-item:hover::before {
-  opacity: 0.15;
+  opacity: 0.4;
 }
 
 .dropdown-item.active::before {
-  opacity: 0.2;
+  opacity: 0.5;
 }
 
 /* Theme-specific gradients */
