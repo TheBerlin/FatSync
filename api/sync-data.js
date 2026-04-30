@@ -34,28 +34,24 @@ async function getFatSecretData(accessToken, accessSecret) {
 
   const url = 'https://platform.fatsecret.com/rest/server.api';
 
-  // Get current date
+  // Get current date in FatSecret format (integer: days since epoch)
   const today = new Date();
   const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+  const dateInt = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
 
-  console.log('Requesting FatSecret data for date:', dateStr);
+  console.log('Requesting FatSecret data for date:', dateStr, 'date_int:', dateInt);
 
-  // Try using food_entries.get_month instead
+  // Use v2 API endpoint for food entries
+  const foodEntriesUrl = 'https://platform.fatsecret.com/rest/food-entries/v2';
+
   const requestData = {
-    url,
-    method: 'POST',
+    url: foodEntriesUrl,
+    method: 'GET',
     data: {
-      method: 'food_entries.get_month',
+      date: dateInt.toString(),
       format: 'json',
     },
   };
-
-  console.log('OAuth consumer keys present:', {
-    hasConsumerKey: !!process.env.FS_CLIENT_ID,
-    hasConsumerSecret: !!process.env.FS_CLIENT_SECRET,
-    consumerKeyLength: process.env.FS_CLIENT_ID?.length,
-    consumerSecretLength: process.env.FS_CLIENT_SECRET?.length
-  });
 
   const authData = oauth.authorize(requestData, {
     key: accessToken,
@@ -63,68 +59,67 @@ async function getFatSecretData(accessToken, accessSecret) {
   });
 
   console.log('FatSecret request:', {
-    url,
-    date: dateStr.replace(/-/g, ''),
+    url: foodEntriesUrl,
+    method: 'GET',
+    date: dateInt,
     hasToken: !!accessToken,
     hasSecret: !!accessSecret
   });
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(authData).toString(),
+  // Build query string for GET request
+  const queryParams = new URLSearchParams(authData).toString();
+  const response = await fetch(`${foodEntriesUrl}?${queryParams}`, {
+    method: 'GET',
   });
 
   const data = await response.json();
 
   console.log('FatSecret API response:', JSON.stringify(data, null, 2));
 
-  // If error, try to get more details
+  // If error, log details
   if (data.error) {
     console.error('FatSecret API error details:', {
       code: data.error.code,
       message: data.error.message,
-      method: 'food_entries.get_month'
+      method: 'food_entries.get.v2'
     });
   }
 
-  // Parse nutrition data from month response
-  // date_int is days since epoch (Jan 1, 1970)
+  // Parse nutrition data from food_entries response
   let totalCalories = 0;
   let totalCarbs = 0;
   let totalFat = 0;
   let totalProtein = 0;
 
-  if (data.month && data.month.day) {
-    const days = Array.isArray(data.month.day) ? data.month.day : [data.month.day];
+  if (data.food_entries && data.food_entries.food_entry) {
+    // v2 API always returns an array
+    const entries = data.food_entries.food_entry;
 
-    // Convert today's date to days since epoch
-    const todayEpoch = Math.floor(new Date(dateStr).getTime() / (1000 * 60 * 60 * 24));
-    console.log('Today epoch days:', todayEpoch);
+    console.log(`Found ${entries.length} food entries for today`);
 
-    const todayData = days.find(d => parseInt(d.date_int) === todayEpoch);
+    // Sum up all entries for the day
+    entries.forEach(entry => {
+      totalCalories += parseFloat(entry.calories || 0);
+      totalCarbs += parseFloat(entry.carbohydrate || 0);
+      totalFat += parseFloat(entry.fat || 0);
+      totalProtein += parseFloat(entry.protein || 0);
+    });
 
-    if (todayData) {
-      console.log('Found today data:', todayData);
-      // The day object contains aggregated totals directly
-      totalCalories = parseFloat(todayData.calories || 0);
-      totalCarbs = parseFloat(todayData.carbohydrate || 0);
-      totalFat = parseFloat(todayData.fat || 0);
-      totalProtein = parseFloat(todayData.protein || 0);
-    } else {
-      console.log('No data found for today');
-    }
+    console.log('Totals:', { totalCalories, totalCarbs, totalFat, totalProtein });
+  } else {
+    console.log('No food entries found for today');
   }
 
-  // Get weight data from FatSecret
+  // Get weight data from FatSecret for today
   let weight = null;
   try {
     const weightRequestData = {
       url,
       method: 'POST',
       data: {
-        method: 'weights.get_month',
+        method: 'weight.get',
         format: 'json',
+        date: dateInt.toString(),
       },
     };
 
@@ -142,16 +137,12 @@ async function getFatSecretData(accessToken, accessSecret) {
     const weightData = await weightResponse.json();
     console.log('FatSecret weight response:', JSON.stringify(weightData, null, 2));
 
-    if (weightData.month && weightData.month.day) {
-      const weightDays = Array.isArray(weightData.month.day) ? weightData.month.day : [weightData.month.day];
-
-      // Find most recent weight entry
-      const sortedDays = weightDays.sort((a, b) => parseInt(b.date_int) - parseInt(a.date_int));
-
-      if (sortedDays.length > 0 && sortedDays[0].weight_kg) {
-        weight = parseFloat(sortedDays[0].weight_kg);
-        console.log('Found weight:', weight);
-      }
+    // Check if weight data exists for today
+    if (weightData.weight && weightData.weight.weight_kg) {
+      weight = parseFloat(weightData.weight.weight_kg);
+      console.log('Found weight for today:', weight);
+    } else if (!weightData.error) {
+      console.log('No weight entry found for today');
     }
   } catch (error) {
     console.error('Error fetching weight from FatSecret:', error);
