@@ -165,4 +165,13 @@ export class Supabase {
       { onConflict: 'user_id' },
     );
   }
+
+  async getMealBreakdown(userId: string) {
+    return await this.supabase
+      .from('meal_entries')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('date', new Date().toISOString().split('T')[0])
+      .order('meal_type', { ascending: true });
+  }
 }

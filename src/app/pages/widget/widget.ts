@@ -47,9 +47,9 @@ export class Widget implements OnInit {
 
   // View & Theme State
   isLoading = signal(true);
-  view = signal<'main' | 'stats' | 'settings'>('main');
+  view = signal<'main' | 'stats' | 'settings' | 'breakdown'>('main');
   theme = signal<'light' | 'dark' | 'amoled' | 'nord' | 'dracula' | 'solarized-dark' | 'solarized-light' | 'catppuccin' | 'gruvbox' | 'tokyo-night' | 'sunset' | 'ocean' | 'forest'>('dark');
-  userTier = signal<'basic' | 'premium' | 'pro'>('basic'); // Mock tier state
+  userTier = signal<'basic' | 'premium' | 'pro'>('pro'); // Mock tier state
 
   @HostBinding('attr.data-theme') get hostTheme() {
     return this.theme();
@@ -543,59 +543,173 @@ export class Widget implements OnInit {
 
   // Swipe Gestures
   private touchStartPos: number | null = null;
+  private touchStartPosY: number | null = null;
   private mouseStartPos: number | null = null;
+  private mouseStartPosY: number | null = null;
   private isMouseDown = false;
   private readonly minSwipeDistance = 50;
 
+  // Breakdown View State
+  mealBreakdown = signal<any[]>([]);
+  expandedMeals = signal<Set<string>>(new Set());
+
   onTouchStart(e: TouchEvent) {
     this.touchStartPos = e.touches[0].clientX;
+    this.touchStartPosY = e.touches[0].clientY;
   }
 
   onTouchMove(e: TouchEvent) {}
 
   onTouchEnd(e: TouchEvent) {
-    if (!this.touchStartPos) return;
+    if (!this.touchStartPos || !this.touchStartPosY) return;
     const touchEndPos = e.changedTouches[0].clientX;
-    const distance = this.touchStartPos - touchEndPos;
+    const touchEndPosY = e.changedTouches[0].clientY;
+    const distanceX = this.touchStartPos - touchEndPos;
+    const distanceY = this.touchStartPosY - touchEndPosY;
 
-    if (Math.abs(distance) > this.minSwipeDistance) {
-      if (distance > 0) {
-        // Swipe Left
-        if (this.view() === 'main') this.setPage(1);
-      } else {
-        // Swipe Right
-        if (this.view() === 'stats') this.setPage(0);
+    // Determine if swipe is more horizontal or vertical
+    if (Math.abs(distanceX) > Math.abs(distanceY)) {
+      // Horizontal swipe
+      if (Math.abs(distanceX) > this.minSwipeDistance) {
+        if (distanceX > 0) {
+          // Swipe Left
+          if (this.view() === 'main') this.setPage(1);
+        } else {
+          // Swipe Right
+          if (this.view() === 'stats') this.setPage(0);
+        }
+      }
+    } else {
+      // Vertical swipe
+      if (Math.abs(distanceY) > this.minSwipeDistance) {
+        if (distanceY > 0) {
+          // Swipe Up - show breakdown
+          if (this.view() === 'main') this.openBreakdown();
+        } else {
+          // Swipe Down - close breakdown
+          if (this.view() === 'breakdown') this.closeBreakdown();
+        }
       }
     }
     this.touchStartPos = null;
+    this.touchStartPosY = null;
   }
 
   onMouseDown(e: MouseEvent) {
     this.isMouseDown = true;
     this.mouseStartPos = e.clientX;
+    this.mouseStartPosY = e.clientY;
   }
 
-  onMouseMove(e: MouseEvent) {
+  onMouseMove(_e: MouseEvent) {
     if (!this.isMouseDown) return;
   }
 
   onMouseUp(e: MouseEvent) {
-    if (!this.isMouseDown || !this.mouseStartPos) return;
+    if (!this.isMouseDown || !this.mouseStartPos || !this.mouseStartPosY) return;
 
     const mouseEndPos = e.clientX;
-    const distance = this.mouseStartPos - mouseEndPos;
+    const mouseEndPosY = e.clientY;
+    const distanceX = this.mouseStartPos - mouseEndPos;
+    const distanceY = this.mouseStartPosY - mouseEndPosY;
 
-    if (Math.abs(distance) > this.minSwipeDistance) {
-      if (distance > 0) {
-        // Swipe Left
-        if (this.view() === 'main') this.setPage(1);
-      } else {
-        // Swipe Right
-        if (this.view() === 'stats') this.setPage(0);
+    // Determine if swipe is more horizontal or vertical
+    if (Math.abs(distanceX) > Math.abs(distanceY)) {
+      // Horizontal swipe
+      if (Math.abs(distanceX) > this.minSwipeDistance) {
+        if (distanceX > 0) {
+          // Swipe Left
+          if (this.view() === 'main') this.setPage(1);
+        } else {
+          // Swipe Right
+          if (this.view() === 'stats') this.setPage(0);
+        }
+      }
+    } else {
+      // Vertical swipe
+      if (Math.abs(distanceY) > this.minSwipeDistance) {
+        if (distanceY > 0) {
+          // Swipe Up - show breakdown
+          if (this.view() === 'main') this.openBreakdown();
+        } else {
+          // Swipe Down - close breakdown
+          if (this.view() === 'breakdown') this.closeBreakdown();
+        }
       }
     }
 
     this.isMouseDown = false;
     this.mouseStartPos = null;
+    this.mouseStartPosY = null;
+  }
+
+  async openBreakdown() {
+    if (this.userTier() === 'basic') return; // Only for premium/pro
+
+    const userId = this.userId();
+    if (!userId) return;
+
+    // Fetch meal breakdown data
+    const { data } = await this.supabase.getMealBreakdown(userId);
+    if (data) {
+      this.mealBreakdown.set(data);
+    }
+
+    this.view.set('breakdown');
+  }
+
+  closeBreakdown() {
+    this.view.set('main');
+    this.expandedMeals.set(new Set());
+  }
+
+  toggleMealExpansion(mealType: string) {
+    const expanded = new Set(this.expandedMeals());
+    if (expanded.has(mealType)) {
+      expanded.delete(mealType);
+    } else {
+      expanded.add(mealType);
+    }
+    this.expandedMeals.set(expanded);
+  }
+
+  isMealExpanded(mealType: string): boolean {
+    return this.expandedMeals().has(mealType);
+  }
+
+  getMealIcon(mealType: string): string {
+    const icons: Record<string, string> = {
+      'Breakfast': '🌅',
+      'Lunch': '☀️',
+      'Dinner': '🌙',
+      'Snack': '🍎'
+    };
+    return icons[mealType] || '🍽️';
+  }
+
+  getMealsByType() {
+    const meals = this.mealBreakdown();
+    const grouped: Record<string, any> = {};
+
+    meals.forEach(meal => {
+      const type = meal.meal_type || 'Other';
+      if (!grouped[type]) {
+        grouped[type] = {
+          type,
+          items: [],
+          totalCalories: 0,
+          totalCarbs: 0,
+          totalFat: 0,
+          totalProtein: 0
+        };
+      }
+      grouped[type].items.push(meal);
+      grouped[type].totalCalories += meal.calories || 0;
+      grouped[type].totalCarbs += meal.carbs || 0;
+      grouped[type].totalFat += meal.fat || 0;
+      grouped[type].totalProtein += meal.protein || 0;
+    });
+
+    return Object.values(grouped);
   }
 }
